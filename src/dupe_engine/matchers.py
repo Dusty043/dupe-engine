@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from collections import Counter, defaultdict
 import re
 from typing import Iterable
@@ -38,6 +39,8 @@ def compare_groups(pages_a: list[PageRecord], pages_b: list[PageRecord], config:
     raw_matches.extend(perceptual_image_matches(pages_a, pages_b, config))
     raw_matches.extend(weighted_text_matches(pages_a, pages_b, config))
     merged = merge_pair_matches(raw_matches, unordered=False, config=config)
+    # v0.10.9 embedding precision guard insertion
+    merged = apply_embedding_precision_guard(merged, config)
     return apply_candidate_controls(merged, config)
 
 
@@ -83,6 +86,7 @@ def compare_groups_multipass(pages_a: list[PageRecord], pages_b: list[PageRecord
         sequence_matches = sequence_neighbor_matches(merged, pages_a, pages_b, config)
         if sequence_matches:
             merged = merge_pair_matches([*merged, *sequence_matches], unordered=False, config=config)
+    merged = apply_embedding_precision_guard(merged, config)
     return apply_candidate_controls(merged, config)
 
 
@@ -1275,3 +1279,222 @@ def choose_recommendation(match: PageMatch) -> str:
     if match.escalation.embedding_required or match.escalation.llm_detector_required:
         return "review_with_ai_escalation_available"
     return "review"
+
+# v0.10.9 embedding precision guard
+#
+# Default-off precision layer for pure vector recall candidates.
+# Enable with:
+#   DUPE_EMBEDDING_PRECISION_GUARD=1
+#
+# This intentionally filters only pure `embedding_similarity_candidate` pairs.
+# Merged / supported candidates such as `embedding_supported_candidate` and
+# `multi_signal_candidate` continue through the normal candidate controls.
+
+def _dupe_env_bool(name: str, default: bool = False) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _dupe_env_float(name: str, default: float) -> float:
+    value = os.getenv(name)
+    if value is None or not value.strip():
+        return default
+    try:
+        return float(value)
+    except ValueError:
+        return default
+
+
+def _dupe_env_int(name: str, default: int) -> int:
+    value = os.getenv(name)
+    if value is None or not value.strip():
+        return default
+    try:
+        return int(float(value))
+    except ValueError:
+        return default
+
+
+def _dupe_token_support(tokens_a: set[str], tokens_b: set[str], min_overlap: int, min_jaccard: float) -> bool:
+    if not tokens_a or not tokens_b:
+        return False
+    overlap = tokens_a & tokens_b
+    if len(overlap) < min_overlap:
+        return False
+    union = tokens_a | tokens_b
+    if not union:
+        return False
+    return (len(overlap) / len(union)) >= min_jaccard
+
+
+def _dupe_combined_tokens(page: PageRecord, config: EngineConfig) -> set[str]:
+    try:
+        text = build_combined_source_text(page, config)
+        return set(tokenize_for_similarity(text or "", config.domain_stopwords))
+    except Exception:
+        return set()
+
+
+def embedding_pair_has_precision_support(match: PageMatch, config: EngineConfig) -> bool:
+    page_a = match.page_a
+    page_b = match.page_b
+
+    # Optional high-confidence escape hatch. Disabled by default because v3
+    # showed high-similarity semantic false positives.
+    high_conf_keep = _dupe_env_float("DUPE_EMBEDDING_GUARD_KEEP_HIGH_CONF", 0.0)
+    try:
+        confidence = float(match.confidence or 0.0)
+    except Exception:
+        confidence = 0.0
+    if high_conf_keep > 0 and confidence >= high_conf_keep:
+        return True
+
+    # Key-token support: identifiers / meaningful domain tokens.
+    try:
+        key_tokens_a = source_key_tokens(page_a)
+        key_tokens_b = source_key_tokens(page_b)
+        if _dupe_token_support(
+            key_tokens_a,
+            key_tokens_b,
+            _dupe_env_int("DUPE_EMBEDDING_GUARD_MIN_KEY_OVERLAP", 2),
+            _dupe_env_float("DUPE_EMBEDDING_GUARD_MIN_KEY_JACCARD", 0.10),
+        ):
+            return True
+    except Exception:
+        pass
+
+    # Rare-token support: uncommon OCR/native tokens that are more discriminative
+    # than general semantic similarity.
+    try:
+        rare_tokens_a = source_rare_tokens(page_a, config)
+        rare_tokens_b = source_rare_tokens(page_b, config)
+        if _dupe_token_support(
+            rare_tokens_a,
+            rare_tokens_b,
+            _dupe_env_int("DUPE_EMBEDDING_GUARD_MIN_RARE_OVERLAP", 1),
+            _dupe_env_float("DUPE_EMBEDDING_GUARD_MIN_RARE_JACCARD", 0.06),
+        ):
+            return True
+    except Exception:
+        pass
+
+    # Combined text support: catches OCR/native mixed-source pairs that did not
+    # reach TF-IDF threshold but still share concrete lexical evidence.
+    try:
+        combined_a = _dupe_combined_tokens(page_a, config)
+        combined_b = _dupe_combined_tokens(page_b, config)
+        if _dupe_token_support(
+            combined_a,
+            combined_b,
+            _dupe_env_int("DUPE_EMBEDDING_GUARD_MIN_TEXT_OVERLAP", 5),
+            _dupe_env_float("DUPE_EMBEDDING_GUARD_MIN_TEXT_JACCARD", 0.12),
+        ):
+            return True
+    except Exception:
+        pass
+
+    # Optional visual support. Conservative by default.
+    try:
+        if page_a.perceptual_hash and page_b.perceptual_hash:
+            visual_dist = hamming_distance(page_a.perceptual_hash, page_b.perceptual_hash)
+            if visual_dist <= _dupe_env_int("DUPE_EMBEDDING_GUARD_VISUAL_PHASH_THRESHOLD", 14):
+                return True
+    except Exception:
+        pass
+
+    return False
+
+
+def apply_embedding_precision_guard(matches: list[PageMatch], config: EngineConfig) -> list[PageMatch]:
+    if not _dupe_env_bool("DUPE_EMBEDDING_PRECISION_GUARD", False):
+        return matches
+
+    min_conf = _dupe_env_float("DUPE_EMBEDDING_GUARD_MIN_CONF", 0.68)
+    max_pure_per_page = _dupe_env_int("DUPE_EMBEDDING_GUARD_MAX_PURE_PER_PAGE", 0)
+
+    non_pure: list[PageMatch] = []
+    pure_candidates: list[PageMatch] = []
+
+    for match in matches:
+        if match.match_type != "embedding_similarity_candidate":
+            non_pure.append(match)
+            continue
+
+        try:
+            confidence = float(match.confidence or 0.0)
+        except Exception:
+            confidence = 0.0
+
+        if confidence < min_conf:
+            continue
+
+        if not embedding_pair_has_precision_support(match, config):
+            continue
+
+        pure_candidates.append(match)
+
+    if max_pure_per_page > 0:
+        def confidence_key(match: PageMatch) -> float:
+            try:
+                return float(match.confidence or 0.0)
+            except Exception:
+                return 0.0
+
+        def page_key(page: PageRecord) -> str:
+            for attr in ("page_id", "stable_id", "id"):
+                value = getattr(page, attr, None)
+                if value:
+                    return str(value)
+
+            doc_value = ""
+            for attr in (
+                "document_path",
+                "source_path",
+                "source_file",
+                "file_path",
+                "path",
+                "pdf_path",
+                "document_name",
+                "source_name",
+            ):
+                value = getattr(page, attr, None)
+                if value:
+                    doc_value = str(value)
+                    break
+
+            page_value = ""
+            for attr in ("page_number", "page_index", "index", "page"):
+                value = getattr(page, attr, None)
+                if value is not None:
+                    page_value = str(value)
+                    break
+
+            if doc_value or page_value:
+                return f"{doc_value}:{page_value}"
+
+            return f"object:{id(page)}"
+
+        pure_candidates.sort(key=confidence_key, reverse=True)
+        page_counts: Counter[str] = Counter()
+        capped: list[PageMatch] = []
+
+        for match in pure_candidates:
+            key_a = page_key(match.page_a)
+            key_b = page_key(match.page_b)
+
+            if page_counts[key_a] >= max_pure_per_page:
+                continue
+            if page_counts[key_b] >= max_pure_per_page:
+                continue
+
+            capped.append(match)
+            page_counts[key_a] += 1
+            page_counts[key_b] += 1
+
+        pure_candidates = capped
+
+    return non_pure + pure_candidates
+
+
