@@ -1,0 +1,14 @@
+services:
+  dupe-worker:
+    build: .
+    image: dupe-engine-worker:v0.10.7
+    env_file:
+      - .env
+    volumes:
+      - /srv/data/dupe-engine/corpora:/data/corpora
+      - /srv/data/dupe-engine/truth:/data/truth
+      - /srv/data/dupe-engine/runs:/data/runs
+      - /srv/data/dupe-engine/logs:/data/logs
+      - /srv/data/dupe-engine/cache:/data/cache
+    working_dir: /app
+    command: ["dupe-engine", "doctor"]

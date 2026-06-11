@@ -1,0 +1,103 @@
+{
+  "must_match": [
+    {
+      "a": {"document": "case01_exact_duplicate_pages.pdf", "page": 1},
+      "b": {"document": "case01_exact_duplicate_pages.pdf", "page": 2},
+      "type": "exact_image"
+    },
+    {
+      "a": {"document": "case02_near_duplicate_visual_pages.pdf", "page": 1},
+      "b": {"document": "case02_near_duplicate_visual_pages.pdf", "page": 2},
+      "type": "near_visual"
+    },
+    {
+      "a": {"document": "case03_same_text_different_formatting.pdf", "page": 1},
+      "b": {"document": "case03_same_text_different_formatting.pdf", "page": 2},
+      "type": "same_text_different_formatting"
+    },
+    {
+      "a": {"document": "case04_same_page_different_scan_quality.pdf", "page": 1},
+      "b": {"document": "case04_same_page_different_scan_quality.pdf", "page": 2},
+      "type": "same_page_different_scan_quality"
+    },
+    {
+      "a": {"document": "case07_header_footer_page_number_noise.pdf", "page": 1},
+      "b": {"document": "case07_header_footer_page_number_noise.pdf", "page": 2},
+      "type": "same_body_header_footer_noise"
+    },
+    {
+      "a": {"document": "case07_header_footer_page_number_noise.pdf", "page": 1},
+      "b": {"document": "case07_header_footer_page_number_noise.pdf", "page": 3},
+      "type": "same_body_header_footer_noise"
+    },
+    {
+      "a": {"document": "case07_header_footer_page_number_noise.pdf", "page": 2},
+      "b": {"document": "case07_header_footer_page_number_noise.pdf", "page": 3},
+      "type": "same_body_header_footer_noise"
+    },
+    {
+      "a": {"document": "case01_exact_duplicate_pages.pdf", "page": 1},
+      "b": {"document": "case09_multidocument_batch_B.pdf", "page": 4},
+      "type": "near_duplicate_reprint"
+    },
+    {
+      "a": {"document": "case01_exact_duplicate_pages.pdf", "page": 2},
+      "b": {"document": "case09_multidocument_batch_B.pdf", "page": 4},
+      "type": "near_duplicate_reprint"
+    }
+  ],
+  "should_not_match": [
+    {
+      "a": {"document": "case05_similar_medical_not_duplicate.pdf", "page": 1},
+      "b": {"document": "case05_similar_medical_not_duplicate.pdf", "page": 2},
+      "type": "similar_template_false_positive_trap"
+    },
+    {
+      "a": {"document": "case05_similar_medical_not_duplicate.pdf", "page": 1},
+      "b": {"document": "case05_similar_medical_not_duplicate.pdf", "page": 3},
+      "type": "similar_template_false_positive_trap"
+    },
+    {
+      "a": {"document": "case05_similar_medical_not_duplicate.pdf", "page": 2},
+      "b": {"document": "case05_similar_medical_not_duplicate.pdf", "page": 3},
+      "type": "similar_template_false_positive_trap"
+    },
+    {
+      "a": {"document": "case09_multidocument_batch_A.pdf", "page": 1},
+      "b": {"document": "case09_multidocument_batch_B.pdf", "page": 1},
+      "type": "cover_page_template_trap"
+    },
+    {
+      "a": {"document": "case09_multidocument_batch_A.pdf", "page": 2},
+      "b": {"document": "case09_multidocument_batch_A.pdf", "page": 3},
+      "type": "same_document_family_not_duplicate"
+    },
+    {
+      "a": {"document": "case09_multidocument_batch_A.pdf", "page": 2},
+      "b": {"document": "case09_multidocument_batch_B.pdf", "page": 2},
+      "type": "similar_template_different_patient"
+    }
+  ],
+  "partial_overlap": [
+    {
+      "a": {"document": "case08_partial_overlaps.pdf", "page": 1},
+      "b": {"document": "case08_partial_overlaps.pdf", "page": 2},
+      "type": "partial_overlap"
+    },
+    {
+      "a": {"document": "case08_partial_overlaps.pdf", "page": 1},
+      "b": {"document": "case08_partial_overlaps.pdf", "page": 3},
+      "type": "partial_overlap"
+    },
+    {
+      "a": {"document": "case08_partial_overlaps.pdf", "page": 2},
+      "b": {"document": "case08_partial_overlaps.pdf", "page": 3},
+      "type": "partial_overlap"
+    },
+    {
+      "a": {"document": "case09_multidocument_batch_A.pdf", "page": 4},
+      "b": {"document": "case09_multidocument_batch_B.pdf", "page": 3},
+      "type": "partial_overlap_med_list"
+    }
+  ]
+}

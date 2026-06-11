@@ -1,0 +1,53 @@
+[
+  {
+    "document_truth_id": "doc_truth_0001",
+    "truth_group_id": "grp_partial_evidence_bundle_0001",
+    "left_file": "source_D_legacy_export/evidence_bundle_partial_0001_full.pdf",
+    "right_file": "source_F_fax_batch/evidence_bundle_partial_0001_excerpt.pdf",
+    "truth_label": "partial_overlap",
+    "expected_min_layer": "ocr",
+    "overlap_left_pages": [
+      2,
+      3
+    ],
+    "overlap_right_pages": [
+      1,
+      2
+    ],
+    "notes": "Full bundle overlaps excerpt on two pages only; document-level duplicate detection should not mark full duplicate."
+  },
+  {
+    "document_truth_id": "doc_truth_0002",
+    "truth_group_id": "grp_partial_evidence_bundle_0002",
+    "left_file": "source_B_email_attachment/evidence_bundle_partial_0002_full.pdf",
+    "right_file": "source_A_client_upload/evidence_bundle_partial_0002_excerpt.pdf",
+    "truth_label": "partial_overlap",
+    "expected_min_layer": "ocr",
+    "overlap_left_pages": [
+      2,
+      3
+    ],
+    "overlap_right_pages": [
+      1,
+      2
+    ],
+    "notes": "Full bundle overlaps excerpt on two pages only; document-level duplicate detection should not mark full duplicate."
+  },
+  {
+    "document_truth_id": "doc_truth_0003",
+    "truth_group_id": "grp_partial_evidence_bundle_0003",
+    "left_file": "source_B_email_attachment/evidence_bundle_partial_0003_full.pdf",
+    "right_file": "source_E_manual_rescan/evidence_bundle_partial_0003_excerpt.pdf",
+    "truth_label": "partial_overlap",
+    "expected_min_layer": "ocr",
+    "overlap_left_pages": [
+      2,
+      3
+    ],
+    "overlap_right_pages": [
+      1,
+      2
+    ],
+    "notes": "Full bundle overlaps excerpt on two pages only; document-level duplicate detection should not mark full duplicate."
+  }
+]

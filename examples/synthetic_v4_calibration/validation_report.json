@@ -1,0 +1,10 @@
+{
+  "acceptance_windows": "passed",
+  "negative_pairs_checked": 70,
+  "pages_checked": 420,
+  "pdfs_checked": 60,
+  "relationships_checked": 216,
+  "status": "ok",
+  "truth_groups_checked": 73,
+  "truth_pairs_checked": 146
+}

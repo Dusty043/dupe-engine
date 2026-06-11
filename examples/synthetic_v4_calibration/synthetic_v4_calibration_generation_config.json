@@ -1,0 +1,216 @@
+{
+  "config": {
+    "corpus_id": "synthetic_v4_calibration",
+    "description": "Fresh tuning corpus for pushing recall beyond the v3 calibration ceiling.",
+    "ere_pdf_count": 28,
+    "low_information_negative_pairs": 25,
+    "low_information_pages": 40,
+    "max_pages_per_pdf": 11,
+    "partial_overlap_pairs": 30,
+    "positive_pair_targets": {
+      "bundle_sequence": 12,
+      "deterministic_text": 23,
+      "exact_native": 23,
+      "openai_ocr": 29,
+      "vector_semantic": 12,
+      "vision_fallback": 17
+    },
+    "received_pdf_count": 32,
+    "same_template_negative_pairs": 45,
+    "seed": 44040,
+    "target_pages": 420
+  },
+  "corpus_id": "synthetic_v4_calibration",
+  "document_families": [
+    "hearing_notice",
+    "case_cover_sheet",
+    "medical_summary",
+    "medical_visit_note",
+    "benefit_determination_letter",
+    "appeal_statement",
+    "employer_letter",
+    "tribunal_order",
+    "evidence_packet_cover",
+    "id_information_page",
+    "receipt_proof_of_payment",
+    "checkbox_form",
+    "signature_statement",
+    "fax_correspondence",
+    "email_printout",
+    "records_request",
+    "ere_index_page",
+    "evidence_bundle"
+  ],
+  "expected_min_layers": [
+    "deterministic",
+    "openai_ocr",
+    "vision_fallback",
+    "embedding",
+    "llm_adjudication",
+    "group_level_sequence",
+    "human_review"
+  ],
+  "failure_categories": [
+    "fallback_not_selected",
+    "fallback_selected_but_still_weak",
+    "ocr_or_vision_layer_miss",
+    "semantic_or_adjudication_layer_miss",
+    "low_information_suppressed",
+    "same_template_hard_negative",
+    "partial_overlap_needs_review"
+  ],
+  "low_information_types": [
+    "blank_separator",
+    "fax_transmission_receipt",
+    "ere_barcode_cover",
+    "one_line_index",
+    "signature_only",
+    "page_number_only",
+    "email_attachment_stub"
+  ],
+  "page_quality_mix": {
+    "image_only_blurry": 0.07,
+    "image_only_clean_scan": 0.2,
+    "image_only_fax_quality": 0.11,
+    "image_only_low_contrast": 0.07,
+    "image_only_low_quality_scan": 0.2,
+    "image_only_partial_crop": 0.04,
+    "image_only_stamp_or_watermark": 0.04,
+    "mixed_native_and_scanned": 0.03,
+    "native_text_clean": 0.16,
+    "native_text_poor_extraction": 0.08
+  },
+  "profile": "calibration",
+  "seed": 44040,
+  "text_layer_meta": {
+    "image_only_blurry": {
+      "degradation_level": 4,
+      "expected_ocr_quality": "corrupted",
+      "noise_profile": [
+        "motion_blur",
+        "soft_focus"
+      ],
+      "requires_ocr": true,
+      "scan_dpi": 130
+    },
+    "image_only_clean_scan": {
+      "degradation_level": 1,
+      "expected_ocr_quality": "good",
+      "noise_profile": [
+        "minor_jpeg_artifacts"
+      ],
+      "requires_ocr": true,
+      "scan_dpi": 300
+    },
+    "image_only_fax_quality": {
+      "degradation_level": 3,
+      "expected_ocr_quality": "corrupted",
+      "noise_profile": [
+        "fax_banding",
+        "thresholding",
+        "speckle_noise"
+      ],
+      "requires_ocr": true,
+      "scan_dpi": 120
+    },
+    "image_only_low_contrast": {
+      "degradation_level": 4,
+      "expected_ocr_quality": "minimal",
+      "noise_profile": [
+        "low_contrast",
+        "faded_text"
+      ],
+      "requires_ocr": true,
+      "scan_dpi": 150
+    },
+    "image_only_low_quality_scan": {
+      "degradation_level": 2,
+      "expected_ocr_quality": "partial",
+      "noise_profile": [
+        "low_contrast",
+        "speckle_noise",
+        "jpeg_artifacts"
+      ],
+      "requires_ocr": true,
+      "scan_dpi": 160
+    },
+    "image_only_partial_crop": {
+      "degradation_level": 4,
+      "expected_ocr_quality": "minimal",
+      "noise_profile": [
+        "partial_crop",
+        "missing_margin"
+      ],
+      "requires_ocr": true,
+      "scan_dpi": 150
+    },
+    "image_only_photo_angle": {
+      "degradation_level": 5,
+      "expected_ocr_quality": "minimal",
+      "noise_profile": [
+        "perspective_warp",
+        "uneven_lighting",
+        "camera_capture"
+      ],
+      "requires_ocr": true,
+      "scan_dpi": 110
+    },
+    "image_only_stamp_or_watermark": {
+      "degradation_level": 3,
+      "expected_ocr_quality": "corrupted",
+      "noise_profile": [
+        "stamp_overlay",
+        "watermark_overlay"
+      ],
+      "requires_ocr": true,
+      "scan_dpi": 180
+    },
+    "low_information_native": {
+      "degradation_level": 0,
+      "expected_ocr_quality": "low_information_native",
+      "noise_profile": [
+        "low_information"
+      ],
+      "requires_ocr": false,
+      "scan_dpi": null
+    },
+    "low_information_scan": {
+      "degradation_level": 3,
+      "expected_ocr_quality": "low_information_scan",
+      "noise_profile": [
+        "low_information",
+        "fax_or_scan_noise"
+      ],
+      "requires_ocr": true,
+      "scan_dpi": 120
+    },
+    "mixed_native_and_scanned": {
+      "degradation_level": 2,
+      "expected_ocr_quality": "partial",
+      "noise_profile": [
+        "native_header",
+        "scanned_body"
+      ],
+      "requires_ocr": true,
+      "scan_dpi": 200
+    },
+    "native_text_clean": {
+      "degradation_level": 0,
+      "expected_ocr_quality": "native_clean",
+      "noise_profile": [],
+      "requires_ocr": false,
+      "scan_dpi": null
+    },
+    "native_text_poor_extraction": {
+      "degradation_level": 1,
+      "expected_ocr_quality": "weak_native",
+      "noise_profile": [
+        "poor_text_order",
+        "small_font",
+        "two_column_extraction"
+      ],
+      "requires_ocr": false,
+      "scan_dpi": null
+    }
+  }
+}

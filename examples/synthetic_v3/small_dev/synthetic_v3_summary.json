@@ -1,0 +1,92 @@
+{
+  "profile_name": "small_dev",
+  "profile_label": "Small dev corpus",
+  "generated_at_unix": 1779931026,
+  "seed": 13001,
+  "pdf_file_count": 18,
+  "page_count": 100,
+  "target_pages": 100,
+  "truth_group_count": 28,
+  "truth_pair_count": 53,
+  "document_truth_count": 3,
+  "must_match_pair_count": 33,
+  "hard_negative_pair_count": 18,
+  "ocr_or_weak_native_page_count": 66,
+  "ocr_or_weak_native_page_percent": 66.0,
+  "vision_fallback_expected_page_count": 20,
+  "text_layer_type_counts": {
+    "image_only_blurry": 3,
+    "image_only_clean_scan": 17,
+    "image_only_fax_quality": 7,
+    "image_only_low_contrast": 2,
+    "image_only_low_quality_scan": 22,
+    "image_only_skewed": 1,
+    "image_only_stamp_or_watermark": 5,
+    "mixed_native_and_scanned": 8,
+    "native_text_clean": 34,
+    "native_text_poor_extraction": 1
+  },
+  "expected_ocr_quality_counts": {
+    "corrupted": 15,
+    "good": 17,
+    "minimal": 2,
+    "native_clean": 34,
+    "partial": 31,
+    "weak_native": 1
+  },
+  "truth_label_counts": {
+    "duplicate": 18,
+    "likely_duplicate": 7,
+    "not_duplicate": 20,
+    "partial_overlap": 6,
+    "possible_duplicate": 2
+  },
+  "expected_min_layer_pair_counts": {
+    "deterministic": 10,
+    "embedding": 10,
+    "human_review": 5,
+    "llm_adjudication": 11,
+    "ocr": 13,
+    "vision_fallback": 4
+  },
+  "difficulty_counts": {
+    "adjudication_required": 4,
+    "easy": 8,
+    "hard_negative": 18,
+    "ocr_corrupted": 2,
+    "ocr_required": 11,
+    "partial_overlap": 2,
+    "semantic_required": 4,
+    "vision_required": 4
+  },
+  "source_group_page_counts": {
+    "source_A_client_upload": 13,
+    "source_B_email_attachment": 26,
+    "source_C_scanned_mail": 11,
+    "source_D_legacy_export": 23,
+    "source_E_manual_rescan": 13,
+    "source_F_fax_batch": 14
+  },
+  "document_family_page_counts": {
+    "appeal_letter": 3,
+    "benefit_determination_letter": 4,
+    "case_cover_sheet": 5,
+    "checkbox_form": 6,
+    "email_printout": 5,
+    "evidence_bundle": 22,
+    "fax_correspondence": 4,
+    "hearing_notice": 11,
+    "id_information_page": 1,
+    "medical_appointment_note": 2,
+    "medical_summary": 12,
+    "receipt_proof_of_payment": 8,
+    "signature_form": 8,
+    "tribunal_order": 9
+  },
+  "validation": {
+    "status": "ok",
+    "sampled_pdf_count": 12,
+    "errors": [],
+    "contact_sheet": "validation_contact_sheet.png"
+  }
+}

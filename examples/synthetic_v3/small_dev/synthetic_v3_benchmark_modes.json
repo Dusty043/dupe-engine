@@ -1,0 +1,65 @@
+{
+  "modes": [
+    {
+      "mode_id": "deterministic_only",
+      "description": "Native text/hash/layout deterministic matching only; no OCR or semantic expansion.",
+      "enabled_layers": [
+        "deterministic"
+      ]
+    },
+    {
+      "mode_id": "deterministic_plus_ocr",
+      "description": "Deterministic matching after OCR text is generated for image-only or weak-text pages.",
+      "enabled_layers": [
+        "deterministic",
+        "ocr"
+      ]
+    },
+    {
+      "mode_id": "deterministic_plus_ocr_plus_vision_dry_run",
+      "description": "Vision fallback is not used to match, but pages are flagged when fallback should be considered.",
+      "enabled_layers": [
+        "deterministic",
+        "ocr",
+        "vision_fallback_dry_run"
+      ]
+    },
+    {
+      "mode_id": "deterministic_plus_ocr_plus_vision_live",
+      "description": "Vision fallback can recover OCR-hostile visual duplicates.",
+      "enabled_layers": [
+        "deterministic",
+        "ocr",
+        "vision_fallback"
+      ]
+    },
+    {
+      "mode_id": "deterministic_plus_ocr_plus_embeddings",
+      "description": "Semantic/vector expansion retrieves wording changes and same-template candidates.",
+      "enabled_layers": [
+        "deterministic",
+        "ocr",
+        "embedding"
+      ]
+    },
+    {
+      "mode_id": "deterministic_plus_ocr_plus_embeddings_plus_llm",
+      "description": "LLM adjudication labels candidate pairs and rejects hard negatives/template traps.",
+      "enabled_layers": [
+        "deterministic",
+        "ocr",
+        "embedding",
+        "llm_adjudication"
+      ]
+    }
+  ],
+  "report_columns": [
+    "mode_id",
+    "recall",
+    "review_queue",
+    "false_positives",
+    "recall_by_expected_min_layer",
+    "hard_negative_false_positive_rate",
+    "partial_overlap_detection_rate"
+  ]
+}

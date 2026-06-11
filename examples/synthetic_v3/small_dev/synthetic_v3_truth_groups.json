@@ -1,0 +1,439 @@
+[
+  {
+    "truth_group_id": "grp_deterministic_receipt_proof_of_payment_0001",
+    "scenario_kind": "deterministic",
+    "document_family": "receipt_proof_of_payment",
+    "page_ids": [
+      "page_000001",
+      "page_000002",
+      "page_000003"
+    ],
+    "files": [
+      "source_C_scanned_mail/intake_batch_001.pdf",
+      "source_D_legacy_export/intake_batch_001.pdf",
+      "source_F_fax_batch/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "deterministic",
+    "notes": "Exact native duplicate baseline."
+  },
+  {
+    "truth_group_id": "grp_deterministic_hearing_notice_0002",
+    "scenario_kind": "deterministic",
+    "document_family": "hearing_notice",
+    "page_ids": [
+      "page_000004",
+      "page_000005"
+    ],
+    "files": [
+      "source_B_email_attachment/intake_batch_001.pdf",
+      "source_D_legacy_export/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "deterministic",
+    "notes": "Exact native duplicate baseline."
+  },
+  {
+    "truth_group_id": "grp_deterministic_case_cover_sheet_0003",
+    "scenario_kind": "deterministic",
+    "document_family": "case_cover_sheet",
+    "page_ids": [
+      "page_000006",
+      "page_000007"
+    ],
+    "files": [
+      "source_A_client_upload/intake_batch_001.pdf",
+      "source_E_manual_rescan/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "deterministic",
+    "notes": "Exact native duplicate baseline."
+  },
+  {
+    "truth_group_id": "grp_deterministic_tribunal_order_0004",
+    "scenario_kind": "deterministic",
+    "document_family": "tribunal_order",
+    "page_ids": [
+      "page_000008",
+      "page_000009"
+    ],
+    "files": [
+      "source_C_scanned_mail/intake_batch_001.pdf",
+      "source_D_legacy_export/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "deterministic",
+    "notes": "Exact native duplicate baseline."
+  },
+  {
+    "truth_group_id": "grp_deterministic_case_cover_sheet_0005",
+    "scenario_kind": "deterministic",
+    "document_family": "case_cover_sheet",
+    "page_ids": [
+      "page_000010",
+      "page_000011"
+    ],
+    "files": [
+      "source_F_fax_batch/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "deterministic",
+    "notes": "Exact native duplicate baseline."
+  },
+  {
+    "truth_group_id": "grp_deterministic_hearing_notice_0006",
+    "scenario_kind": "deterministic",
+    "document_family": "hearing_notice",
+    "page_ids": [
+      "page_000012",
+      "page_000013"
+    ],
+    "files": [
+      "source_D_legacy_export/intake_batch_001.pdf",
+      "source_E_manual_rescan/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "deterministic",
+    "notes": "Exact native duplicate baseline."
+  },
+  {
+    "truth_group_id": "grp_ocr_signature_form_0001",
+    "scenario_kind": "ocr",
+    "document_family": "signature_form",
+    "page_ids": [
+      "page_000014",
+      "page_000015"
+    ],
+    "files": [
+      "source_B_email_attachment/intake_batch_001.pdf",
+      "source_C_scanned_mail/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "ocr",
+    "notes": "Scanned/native duplicates that justify v1 OCR."
+  },
+  {
+    "truth_group_id": "grp_ocr_signature_form_0002",
+    "scenario_kind": "ocr",
+    "document_family": "signature_form",
+    "page_ids": [
+      "page_000016",
+      "page_000017",
+      "page_000018"
+    ],
+    "files": [
+      "source_B_email_attachment/intake_batch_001.pdf",
+      "source_D_legacy_export/intake_batch_001.pdf",
+      "source_E_manual_rescan/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "ocr",
+    "notes": "Scanned/native duplicates that justify v1 OCR."
+  },
+  {
+    "truth_group_id": "grp_ocr_hearing_notice_0003",
+    "scenario_kind": "ocr",
+    "document_family": "hearing_notice",
+    "page_ids": [
+      "page_000019",
+      "page_000020",
+      "page_000021"
+    ],
+    "files": [
+      "source_B_email_attachment/intake_batch_001.pdf",
+      "source_C_scanned_mail/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "ocr",
+    "notes": "Scanned/native duplicates that justify v1 OCR."
+  },
+  {
+    "truth_group_id": "grp_ocr_appeal_letter_0004",
+    "scenario_kind": "ocr",
+    "document_family": "appeal_letter",
+    "page_ids": [
+      "page_000022",
+      "page_000023"
+    ],
+    "files": [
+      "source_C_scanned_mail/intake_batch_001.pdf",
+      "source_D_legacy_export/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "ocr",
+    "notes": "Scanned/native duplicates that justify v1 OCR."
+  },
+  {
+    "truth_group_id": "grp_ocr_signature_form_0005",
+    "scenario_kind": "ocr",
+    "document_family": "signature_form",
+    "page_ids": [
+      "page_000024",
+      "page_000025"
+    ],
+    "files": [
+      "source_B_email_attachment/intake_batch_001.pdf",
+      "source_D_legacy_export/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "ocr",
+    "notes": "Scanned/native duplicates that justify v1 OCR."
+  },
+  {
+    "truth_group_id": "grp_ocr_receipt_proof_of_payment_0006",
+    "scenario_kind": "ocr",
+    "document_family": "receipt_proof_of_payment",
+    "page_ids": [
+      "page_000026",
+      "page_000027"
+    ],
+    "files": [
+      "source_A_client_upload/intake_batch_001.pdf",
+      "source_B_email_attachment/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "ocr",
+    "notes": "Scanned/native duplicates that justify v1 OCR."
+  },
+  {
+    "truth_group_id": "grp_ocr_receipt_proof_of_payment_0007",
+    "scenario_kind": "ocr",
+    "document_family": "receipt_proof_of_payment",
+    "page_ids": [
+      "page_000028",
+      "page_000029"
+    ],
+    "files": [
+      "source_A_client_upload/intake_batch_001.pdf",
+      "source_B_email_attachment/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "ocr",
+    "notes": "Scanned/native duplicates that justify v1 OCR."
+  },
+  {
+    "truth_group_id": "grp_vision_hearing_notice_0001",
+    "scenario_kind": "vision",
+    "document_family": "hearing_notice",
+    "page_ids": [
+      "page_000030",
+      "page_000031"
+    ],
+    "files": [
+      "source_B_email_attachment/intake_batch_001.pdf",
+      "source_F_fax_batch/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "vision_fallback",
+    "notes": "OCR-hostile visual duplicate that justifies vision fallback."
+  },
+  {
+    "truth_group_id": "grp_vision_checkbox_form_0002",
+    "scenario_kind": "vision",
+    "document_family": "checkbox_form",
+    "page_ids": [
+      "page_000032",
+      "page_000033"
+    ],
+    "files": [
+      "source_A_client_upload/intake_batch_001.pdf",
+      "source_F_fax_batch/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "vision_fallback",
+    "notes": "OCR-hostile visual duplicate that justifies vision fallback."
+  },
+  {
+    "truth_group_id": "grp_vision_medical_summary_0003",
+    "scenario_kind": "vision",
+    "document_family": "medical_summary",
+    "page_ids": [
+      "page_000034",
+      "page_000035"
+    ],
+    "files": [
+      "source_E_manual_rescan/intake_batch_001.pdf",
+      "source_F_fax_batch/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "vision_fallback",
+    "notes": "OCR-hostile visual duplicate that justifies vision fallback."
+  },
+  {
+    "truth_group_id": "grp_vision_medical_summary_0004",
+    "scenario_kind": "vision",
+    "document_family": "medical_summary",
+    "page_ids": [
+      "page_000036",
+      "page_000037"
+    ],
+    "files": [
+      "source_C_scanned_mail/intake_batch_001.pdf",
+      "source_F_fax_batch/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "vision_fallback",
+    "notes": "OCR-hostile visual duplicate that justifies vision fallback."
+  },
+  {
+    "truth_group_id": "grp_embedding_medical_summary_0001",
+    "scenario_kind": "embedding",
+    "document_family": "medical_summary",
+    "page_ids": [
+      "page_000038",
+      "page_000039"
+    ],
+    "files": [
+      "source_D_legacy_export/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "embedding",
+    "notes": "Near duplicate requiring semantic similarity."
+  },
+  {
+    "truth_group_id": "grp_embedding_benefit_determination_letter_0002",
+    "scenario_kind": "embedding",
+    "document_family": "benefit_determination_letter",
+    "page_ids": [
+      "page_000040",
+      "page_000041"
+    ],
+    "files": [
+      "source_C_scanned_mail/intake_batch_001.pdf",
+      "source_D_legacy_export/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "embedding",
+    "notes": "Near duplicate requiring semantic similarity."
+  },
+  {
+    "truth_group_id": "grp_embedding_medical_summary_0003",
+    "scenario_kind": "embedding",
+    "document_family": "medical_summary",
+    "page_ids": [
+      "page_000042",
+      "page_000043"
+    ],
+    "files": [
+      "source_B_email_attachment/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "embedding",
+    "notes": "Near duplicate requiring semantic similarity."
+  },
+  {
+    "truth_group_id": "grp_embedding_medical_summary_0004",
+    "scenario_kind": "embedding",
+    "document_family": "medical_summary",
+    "page_ids": [
+      "page_000044",
+      "page_000045"
+    ],
+    "files": [
+      "source_E_manual_rescan/intake_batch_001.pdf",
+      "source_F_fax_batch/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "embedding",
+    "notes": "Near duplicate requiring semantic similarity."
+  },
+  {
+    "truth_group_id": "grp_llm_medical_appointment_note_0001",
+    "scenario_kind": "llm",
+    "document_family": "medical_appointment_note",
+    "page_ids": [
+      "page_000046",
+      "page_000047"
+    ],
+    "files": [
+      "source_A_client_upload/intake_batch_001.pdf",
+      "source_C_scanned_mail/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "llm_adjudication",
+    "notes": "Ambiguous/same-template case requiring LLM adjudication or human review."
+  },
+  {
+    "truth_group_id": "grp_llm_tribunal_order_0002",
+    "scenario_kind": "llm",
+    "document_family": "tribunal_order",
+    "page_ids": [
+      "page_000048",
+      "page_000049"
+    ],
+    "files": [
+      "source_A_client_upload/intake_batch_001.pdf",
+      "source_B_email_attachment/intake_batch_002.pdf"
+    ],
+    "expected_min_layer": "llm_adjudication",
+    "notes": "Ambiguous/same-template case requiring LLM adjudication or human review."
+  },
+  {
+    "truth_group_id": "grp_llm_medical_summary_0003",
+    "scenario_kind": "llm",
+    "document_family": "medical_summary",
+    "page_ids": [
+      "page_000050",
+      "page_000051"
+    ],
+    "files": [
+      "source_A_client_upload/intake_batch_001.pdf",
+      "source_E_manual_rescan/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "llm_adjudication",
+    "notes": "Ambiguous/same-template case requiring LLM adjudication or human review."
+  },
+  {
+    "truth_group_id": "grp_llm_checkbox_form_0004",
+    "scenario_kind": "llm",
+    "document_family": "checkbox_form",
+    "page_ids": [
+      "page_000052",
+      "page_000053"
+    ],
+    "files": [
+      "source_B_email_attachment/intake_batch_002.pdf",
+      "source_F_fax_batch/intake_batch_001.pdf"
+    ],
+    "expected_min_layer": "llm_adjudication",
+    "notes": "Ambiguous/same-template case requiring LLM adjudication or human review."
+  },
+  {
+    "truth_group_id": "grp_partial_evidence_bundle_0001",
+    "scenario_kind": "partial",
+    "document_family": "evidence_bundle",
+    "page_ids": [
+      "page_000054",
+      "page_000055",
+      "page_000056",
+      "page_000057",
+      "page_000058",
+      "page_000059",
+      "page_000060",
+      "page_000061"
+    ],
+    "files": [
+      "source_D_legacy_export/evidence_bundle_partial_0001_full.pdf",
+      "source_F_fax_batch/evidence_bundle_partial_0001_excerpt.pdf"
+    ],
+    "expected_min_layer": "ocr",
+    "notes": "Document-level partial overlap with page-level matches."
+  },
+  {
+    "truth_group_id": "grp_partial_evidence_bundle_0002",
+    "scenario_kind": "partial",
+    "document_family": "evidence_bundle",
+    "page_ids": [
+      "page_000062",
+      "page_000063",
+      "page_000064",
+      "page_000065",
+      "page_000066",
+      "page_000067"
+    ],
+    "files": [
+      "source_A_client_upload/evidence_bundle_partial_0002_excerpt.pdf",
+      "source_B_email_attachment/evidence_bundle_partial_0002_full.pdf"
+    ],
+    "expected_min_layer": "ocr",
+    "notes": "Document-level partial overlap with page-level matches."
+  },
+  {
+    "truth_group_id": "grp_partial_evidence_bundle_0003",
+    "scenario_kind": "partial",
+    "document_family": "evidence_bundle",
+    "page_ids": [
+      "page_000068",
+      "page_000069",
+      "page_000070",
+      "page_000071",
+      "page_000072",
+      "page_000073",
+      "page_000074"
+    ],
+    "files": [
+      "source_B_email_attachment/evidence_bundle_partial_0003_full.pdf",
+      "source_E_manual_rescan/evidence_bundle_partial_0003_excerpt.pdf"
+    ],
+    "expected_min_layer": "ocr",
+    "notes": "Document-level partial overlap with page-level matches."
+  }
+]

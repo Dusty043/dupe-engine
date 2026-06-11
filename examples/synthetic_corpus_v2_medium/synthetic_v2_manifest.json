@@ -1,0 +1,245 @@
+{
+  "schema_version": "synthetic_corpus_v2_manifest_v1",
+  "corpus_name": "Synthetic Corpus v2 - medium calibration",
+  "profile_generated": "medium_calibration",
+  "seed": 24042026,
+  "generated_date": "2026-05-22",
+  "main_goal": "Test whether deterministic high-recall duplicate candidate generation catches real duplicate candidates without exploding into useless false positives.",
+  "size_profiles": {
+    "small_dev": {
+      "target_pages": "50-100",
+      "purpose": "fast repeated runs during code changes",
+      "status": "generator profile planned"
+    },
+    "medium_calibration": {
+      "target_pages": "250-500",
+      "purpose": "threshold tuning and false positive calibration",
+      "status": "generated"
+    },
+    "large_stress": {
+      "target_pages": "1000-2000",
+      "purpose": "runtime, candidate explosion, report usability",
+      "status": "generator profile planned"
+    }
+  },
+  "labels": [
+    "duplicate",
+    "likely_duplicate",
+    "possible_duplicate",
+    "partial_overlap",
+    "not_duplicate",
+    "needs_review",
+    "low_information_ignore"
+  ],
+  "source_groups": {
+    "received_records": {
+      "folder": "group_a_received_records",
+      "formatting_patterns": [
+        "clean born-digital PDFs",
+        "provider headers",
+        "normal page numbers"
+      ]
+    },
+    "ere_records": {
+      "folder": "group_b_ere_records",
+      "formatting_patterns": [
+        "batch cover sheets",
+        "ERE stamps",
+        "barcodes and page stamps",
+        "some page order changes"
+      ]
+    },
+    "claimant_uploads": {
+      "folder": "group_c_claimant_uploads",
+      "formatting_patterns": [
+        "image-only phone camera scans",
+        "rotation/crop/shadows",
+        "mixed page sizes"
+      ]
+    },
+    "fax_records": {
+      "folder": "group_d_fax_records",
+      "formatting_patterns": [
+        "image-only low resolution scans",
+        "fax headers",
+        "black borders/noise/skew"
+      ]
+    },
+    "email_records": {
+      "folder": "group_e_email_records",
+      "formatting_patterns": [
+        "clean born-digital PDFs",
+        "duplicate attachments",
+        "repeated cover pages"
+      ]
+    }
+  },
+  "case_list": {
+    "case_001": "exact duplicates",
+    "case_002": "same text different formatting",
+    "case_003": "fax degraded duplicate",
+    "case_004": "OCR-only duplicate",
+    "case_005": "rotated/cropped camera scan duplicate",
+    "case_006": "same template different visit",
+    "case_007": "same diagnosis different visit",
+    "case_008": "repeated medication list trap",
+    "case_009": "repeated fax cover sheet trap",
+    "case_010": "lab panel same layout different values",
+    "case_011": "imaging report same template different findings",
+    "case_012": "partial overlap medication list",
+    "case_013": "partial overlap visit summary",
+    "case_014": "multi-page duplicate packet",
+    "case_015": "mixed source A/B workflow",
+    "case_016": "blank/separator/signature-only pages",
+    "case_017": "page-number/header/footer noise",
+    "case_018": "same visit different pages, related not duplicate",
+    "case_019": "paraphrased same content",
+    "case_020": "OCR corruption trap"
+  },
+  "ab_scenarios": {
+    "received_vs_ere": {
+      "group_a": "received_records",
+      "group_b": "ere_records",
+      "features": [
+        "exact duplicates",
+        "ERE stamps",
+        "missing pages",
+        "page order changes",
+        "extra cover pages"
+      ]
+    },
+    "fax_vs_email": {
+      "group_a": "fax_records",
+      "group_b": "email_records",
+      "features": [
+        "fax degradation",
+        "fax headers",
+        "black borders",
+        "clean email PDFs"
+      ]
+    },
+    "claimant_vs_provider": {
+      "group_a": "claimant_uploads",
+      "group_b": "received_records",
+      "features": [
+        "phone camera scans",
+        "cropped pages",
+        "rotation",
+        "shadow",
+        "clean provider pages"
+      ]
+    }
+  },
+  "candidate_explosion_sets": {
+    "same_provider_template": "page_family=candidate_explosion_visit_template",
+    "same_medication_list": "page_family=standalone_med_list_trap or visit_note_shared_med_list",
+    "same_boilerplate": "hard_negative_trap_type=same_boilerplate_different_content",
+    "same_fax_cover_template": "page_family=fax_cover_template_a",
+    "same_lab_layout": "page_family=lab_panel_template_a or candidate_explosion_lab_template",
+    "same_imaging_template": "page_family=imaging_report_template_a or candidate_explosion_imaging_template"
+  },
+  "outputs": {
+    "manifest": "synthetic_v2_manifest.json",
+    "page_metadata": "synthetic_v2_page_metadata.json",
+    "truth_pairs": "synthetic_v2_truth_pairs.json",
+    "truth_clusters": "synthetic_v2_truth_clusters.json",
+    "generation_log": "synthetic_v2_generation_log.json",
+    "engine_result_templates": [
+      "templates/synthetic_v2_all_pairs_results.schema.json",
+      "templates/synthetic_v2_eval.schema.json",
+      "templates/synthetic_v2_report.schema.html",
+      "templates/synthetic_v2_candidate_summary.schema.csv",
+      "templates/synthetic_v2_false_positive_review.schema.csv",
+      "templates/synthetic_v2_false_negative_review.schema.csv"
+    ]
+  },
+  "counts": {
+    "pages_total": 375,
+    "documents_total": 12,
+    "pages_by_source_group": {
+      "received_records": 108,
+      "email_records": 75,
+      "ere_records": 102,
+      "fax_records": 55,
+      "claimant_uploads": 35
+    },
+    "pages_by_record_type": {
+      "visit_note": 164,
+      "imaging_report": 44,
+      "patient_instruction_page": 6,
+      "insurance_authorization": 11,
+      "cover_sheet": 21,
+      "lab_result": 55,
+      "medication_list": 25,
+      "diagnosis_summary": 1,
+      "discharge_summary": 10,
+      "visit_summary": 1,
+      "visit_note_extract": 1,
+      "blank_page": 8,
+      "separator_page": 7,
+      "signature_page": 7,
+      "procedure_note": 13,
+      "visit_note_continuation": 1
+    },
+    "pages_by_text_availability": {
+      "native_text": 285,
+      "image_only": 90
+    },
+    "pages_by_ocr_difficulty": {
+      "none": 285,
+      "medium": 54,
+      "easy": 6,
+      "hard": 24,
+      "trap": 6
+    },
+    "pages_by_visual_quality": {
+      "clean": 279,
+      "fax_degraded": 13,
+      "clean_scan": 6,
+      "camera_shadow_crop": 6,
+      "fax_cover": 16,
+      "fax_lab": 13,
+      "fax_imaging": 4,
+      "cropped_half_camera_scan": 1,
+      "low_information_scan": 8,
+      "ocr_trap_scan": 6,
+      "camera_med_list": 6,
+      "camera_imaging": 6,
+      "clean_with_stamp": 6,
+      "hard_camera_scan": 5
+    },
+    "pages_by_case_id": {
+      "case_001": 3,
+      "case_002": 3,
+      "case_003": 2,
+      "case_004": 2,
+      "case_005": 2,
+      "case_006": 12,
+      "case_007": 15,
+      "case_008": 18,
+      "case_009": 16,
+      "case_010": 20,
+      "case_011": 16,
+      "case_012": 2,
+      "case_013": 8,
+      "case_014": 25,
+      "case_016": 22,
+      "case_017": 3,
+      "case_018": 2,
+      "case_019": 4,
+      "case_020": 2,
+      "case_015": 198
+    },
+    "low_information_pages": 38,
+    "image_only_pages": 90,
+    "duplicate_clusters": 14,
+    "low_information_clusters": 2,
+    "truth_pair_counts": {
+      "must_match": 20,
+      "should_not_match": 95,
+      "partial_overlap": 5,
+      "related_but_not_duplicate": 1,
+      "low_information_ignore": 50
+    }
+  }
+}

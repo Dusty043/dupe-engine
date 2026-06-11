@@ -1,0 +1,17 @@
+{
+  "must_match": [
+    {
+      "a": {"document": "a_records.pdf", "page": 1},
+      "b": {"document": "b_records.pdf", "page": 3},
+      "type": "exact_image"
+    }
+  ],
+  "should_not_match": [
+    {
+      "a": {"document": "a_records.pdf", "page": 2},
+      "b": {"document": "b_records.pdf", "page": 4},
+      "type": "shared_boilerplate_only"
+    }
+  ],
+  "partial_overlap": []
+}

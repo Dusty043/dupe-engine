@@ -1,0 +1,6 @@
+pymupdf>=1.23
+pillow>=10
+scikit-learn>=1.3
+numpy>=1.24
+# Optional OCR Python wrapper. Requires the system tesseract binary too.
+# pytesseract>=0.3

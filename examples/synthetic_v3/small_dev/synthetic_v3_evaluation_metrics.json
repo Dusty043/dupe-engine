@@ -1,0 +1,29 @@
+{
+  "primary_breakdown": "recall_by_expected_min_layer",
+  "metrics": {
+    "overall_must_match_recall": "matched truth pairs where is_must_match=true divided by all truth pairs where is_must_match=true",
+    "must_match_recall_by_expected_layer": "same as overall recall, grouped by expected_min_layer",
+    "ocr_dependent_recall": "recall for expected_min_layer=ocr plus difficulty in [ocr_required, ocr_corrupted]",
+    "vision_fallback_dependent_recall": "recall for expected_min_layer=vision_fallback or vision_fallback_expected=true",
+    "embedding_dependent_recall": "recall for expected_min_layer=embedding",
+    "llm_adjudication_accuracy": "correct final labels for expected_min_layer=llm_adjudication or difficulty=adjudication_required",
+    "hard_negative_false_positive_rate": "hard-negative pairs incorrectly retained as duplicate/likely_duplicate/possible_duplicate",
+    "partial_overlap_detection_rate": "partial_overlap truth pairs or document_truth records detected as partial rather than full duplicate",
+    "review_queue_size": "number of candidate pairs/pages requiring human review",
+    "candidate_explosion_rate": "candidate pair count divided by truth_pair_count, grouped by mode",
+    "pages_with_weak_native_text": "count of pages with text_layer_type!=native_text_clean",
+    "pages_ocr_attempted": "implementation metric: pages routed to OCR",
+    "pages_ocr_usable": "implementation metric: OCR text passes usable-text threshold",
+    "pages_still_weak_after_ocr": "implementation metric: OCR attempted but quality remains weak",
+    "fallback_pages_selected": "pages selected for vision fallback or fallback dry-run flag",
+    "human_review_decisions_saved": "implementation metric: labels saved in UI review workflow"
+  },
+  "required_comparisons": [
+    "deterministic_only",
+    "deterministic_plus_ocr",
+    "deterministic_plus_ocr_plus_vision_dry_run",
+    "deterministic_plus_ocr_plus_vision_live",
+    "deterministic_plus_ocr_plus_embeddings",
+    "deterministic_plus_ocr_plus_embeddings_plus_llm"
+  ]
+}

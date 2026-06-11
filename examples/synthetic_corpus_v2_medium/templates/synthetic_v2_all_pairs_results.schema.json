@@ -1,0 +1,31 @@
+{
+  "schema_version": "synthetic_v2_all_pairs_results_schema_v1",
+  "description": "Expected shape for engine all-pairs output after running duplicate detection.",
+  "required_pair_fields": [
+    "page_1_id",
+    "page_2_id",
+    "candidate_label",
+    "score",
+    "pass_band",
+    "passes_triggered"
+  ],
+  "allowed_candidate_labels": [
+    "duplicate",
+    "likely_duplicate",
+    "possible_duplicate",
+    "partial_overlap",
+    "not_duplicate",
+    "needs_review",
+    "low_information_ignore"
+  ],
+  "example": {
+    "page_1_id": "v2_case_001_doc_received_p001",
+    "page_2_id": "v2_case_001_doc_email_p001",
+    "candidate_label": "duplicate",
+    "score": 0.99,
+    "pass_band": "strict",
+    "passes_triggered": [
+      "exact_image_hash"
+    ]
+  }
+}

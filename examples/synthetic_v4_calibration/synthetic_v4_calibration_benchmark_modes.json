@@ -1,0 +1,75 @@
+{
+  "modes": [
+    {
+      "description": "Frozen v0.9.8b-style baseline: deterministic matching plus OCR and conservative review routing.",
+      "enabled_layers": [
+        "deterministic",
+        "openai_ocr"
+      ],
+      "mode_id": "v098b_baseline_deterministic_ocr"
+    },
+    {
+      "description": "v0.9.9-style focused rescue/hybrid pass. Experimental; compare against frozen baseline.",
+      "enabled_layers": [
+        "deterministic",
+        "openai_ocr",
+        "hybrid_rescue"
+      ],
+      "mode_id": "v099_rescue_hybrid_experimental"
+    },
+    {
+      "description": "Native text/hash/layout deterministic matching only.",
+      "enabled_layers": [
+        "deterministic"
+      ],
+      "mode_id": "deterministic_only"
+    },
+    {
+      "description": "Deterministic matching after OCR/OpenAI extraction for image-only or weak-text pages.",
+      "enabled_layers": [
+        "deterministic",
+        "openai_ocr"
+      ],
+      "mode_id": "deterministic_plus_openai_ocr"
+    },
+    {
+      "description": "Vision fallback selection is evaluated but not used to recover matches.",
+      "enabled_layers": [
+        "deterministic",
+        "openai_ocr",
+        "vision_fallback_dry_run"
+      ],
+      "mode_id": "deterministic_plus_openai_ocr_plus_vision_dry_run"
+    },
+    {
+      "description": "Vision fallback can recover OCR-hostile visual duplicates.",
+      "enabled_layers": [
+        "deterministic",
+        "openai_ocr",
+        "vision_fallback"
+      ],
+      "mode_id": "deterministic_plus_openai_ocr_plus_vision_live"
+    },
+    {
+      "description": "Vector retrieval retrieves semantic near-duplicates and likely same-template traps.",
+      "enabled_layers": [
+        "deterministic",
+        "openai_ocr",
+        "embedding"
+      ],
+      "mode_id": "deterministic_plus_openai_ocr_plus_embeddings"
+    },
+    {
+      "description": "Vector expansion plus LLM/human adjudication for hard negatives, partial overlaps, and ambiguous same-template pairs.",
+      "enabled_layers": [
+        "deterministic",
+        "openai_ocr",
+        "vision_fallback",
+        "embedding",
+        "llm_adjudication",
+        "human_review"
+      ],
+      "mode_id": "full_v2_candidate_plus_adjudication"
+    }
+  ]
+}

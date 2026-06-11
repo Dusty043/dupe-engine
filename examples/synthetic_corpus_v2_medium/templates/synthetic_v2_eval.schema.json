@@ -1,0 +1,20 @@
+{
+  "schema_version": "synthetic_v2_eval_schema_v1",
+  "required_metrics": [
+    "must_match_recall",
+    "must_match_recall_by_category",
+    "known_false_positives",
+    "false_positives_by_trap_type",
+    "partial_overlap_detection_rate",
+    "candidate_count_per_100_pages",
+    "average_candidates_per_page",
+    "low_information_false_positives",
+    "strict_standard_loose_pass_contribution",
+    "ocr_needed_match_recall",
+    "visual_degradation_match_recall",
+    "same_template_hard_negative_rejection_rate",
+    "true_duplicates_only_found_in_loose_pass",
+    "false_positives_introduced_by_loose_pass",
+    "loose_pass_pairs_to_escalate_to_embeddings"
+  ]
+}

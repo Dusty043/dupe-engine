@@ -1,0 +1,241 @@
+{
+  "corpus_name": "Synthetic Medical PDF Duplicate Test Corpus",
+  "created_by": "OpenAI ChatGPT synthetic generation script",
+  "disclaimer": "All records are fictional/synthetic. No real patient data. Not for clinical use.",
+  "pdf_files": [
+    "case01_exact_duplicate_pages.pdf",
+    "case02_near_duplicate_visual_pages.pdf",
+    "case03_same_text_different_formatting.pdf",
+    "case04_same_page_different_scan_quality.pdf",
+    "case05_similar_medical_not_duplicate.pdf",
+    "case06_ocr_scanned_image_only_pages.pdf",
+    "case07_header_footer_page_number_noise.pdf",
+    "case08_partial_overlaps.pdf",
+    "case09_multidocument_batch_A.pdf",
+    "case09_multidocument_batch_B.pdf",
+    "case10_negative_controls.pdf"
+  ],
+  "page_count": 34,
+  "groups": {
+    "exact_ed_note_001": [
+      {
+        "pdf_file": "case01_exact_duplicate_pages.pdf",
+        "page_number": "1",
+        "relation": "exact duplicate of page 2"
+      },
+      {
+        "pdf_file": "case01_exact_duplicate_pages.pdf",
+        "page_number": "2",
+        "relation": "exact duplicate of page 1"
+      }
+    ],
+    "negative_unique_triage_001": [
+      {
+        "pdf_file": "case01_exact_duplicate_pages.pdf",
+        "page_number": "3",
+        "relation": "not duplicate"
+      }
+    ],
+    "near_visual_radiology_001": [
+      {
+        "pdf_file": "case02_near_duplicate_visual_pages.pdf",
+        "page_number": "1",
+        "relation": "near duplicate of page 2"
+      },
+      {
+        "pdf_file": "case02_near_duplicate_visual_pages.pdf",
+        "page_number": "2",
+        "relation": "near duplicate of page 1"
+      }
+    ],
+    "same_text_discharge_001": [
+      {
+        "pdf_file": "case03_same_text_different_formatting.pdf",
+        "page_number": "1",
+        "relation": "same text as page 2 with different formatting"
+      },
+      {
+        "pdf_file": "case03_same_text_different_formatting.pdf",
+        "page_number": "2",
+        "relation": "same text as page 1 with different formatting"
+      }
+    ],
+    "scan_quality_lab_001": [
+      {
+        "pdf_file": "case04_same_page_different_scan_quality.pdf",
+        "page_number": "1",
+        "relation": "same source page as page 2, high scan quality"
+      },
+      {
+        "pdf_file": "case04_same_page_different_scan_quality.pdf",
+        "page_number": "2",
+        "relation": "same source page as page 1, degraded scan quality"
+      }
+    ],
+    "negative_similar_template_001": [
+      {
+        "pdf_file": "case05_similar_medical_not_duplicate.pdf",
+        "page_number": "1",
+        "relation": "not duplicate"
+      }
+    ],
+    "negative_similar_template_002": [
+      {
+        "pdf_file": "case05_similar_medical_not_duplicate.pdf",
+        "page_number": "2",
+        "relation": "not duplicate"
+      }
+    ],
+    "negative_similar_template_003": [
+      {
+        "pdf_file": "case05_similar_medical_not_duplicate.pdf",
+        "page_number": "3",
+        "relation": "not duplicate"
+      }
+    ],
+    "ocr_image_only_001": [
+      {
+        "pdf_file": "case06_ocr_scanned_image_only_pages.pdf",
+        "page_number": "1",
+        "relation": "image-only OCR target"
+      }
+    ],
+    "ocr_image_only_002": [
+      {
+        "pdf_file": "case06_ocr_scanned_image_only_pages.pdf",
+        "page_number": "2",
+        "relation": "image-only OCR target"
+      }
+    ],
+    "body_duplicate_lab_noise_001": [
+      {
+        "pdf_file": "case07_header_footer_page_number_noise.pdf",
+        "page_number": "1",
+        "relation": "same body text/table; noisy header-footer differs"
+      },
+      {
+        "pdf_file": "case07_header_footer_page_number_noise.pdf",
+        "page_number": "2",
+        "relation": "same body text/table; noisy header-footer differs"
+      },
+      {
+        "pdf_file": "case07_header_footer_page_number_noise.pdf",
+        "page_number": "3",
+        "relation": "same body text/table; noisy header-footer differs"
+      }
+    ],
+    "partial_overlap_med_vitals_care_001": [
+      {
+        "pdf_file": "case08_partial_overlaps.pdf",
+        "page_number": "1",
+        "relation": "partial overlap with pages 2 and 3"
+      },
+      {
+        "pdf_file": "case08_partial_overlaps.pdf",
+        "page_number": "2",
+        "relation": "partial overlap with pages 1 and 3"
+      },
+      {
+        "pdf_file": "case08_partial_overlaps.pdf",
+        "page_number": "3",
+        "relation": "partial overlap with pages 1 and 2"
+      }
+    ],
+    "batch_A_cover_001": [
+      {
+        "pdf_file": "case09_multidocument_batch_A.pdf",
+        "page_number": "1",
+        "relation": "batch cover; not duplicate"
+      }
+    ],
+    "batch_A_consult_family_001": [
+      {
+        "pdf_file": "case09_multidocument_batch_A.pdf",
+        "page_number": "2",
+        "relation": "same document family as page 3; not exact duplicate"
+      },
+      {
+        "pdf_file": "case09_multidocument_batch_A.pdf",
+        "page_number": "3",
+        "relation": "same document family as page 2; not exact duplicate"
+      }
+    ],
+    "batch_A_medlist_partial_001": [
+      {
+        "pdf_file": "case09_multidocument_batch_A.pdf",
+        "page_number": "4",
+        "relation": "partial overlap with case08 medications"
+      }
+    ],
+    "batch_A_scanned_attachment_001": [
+      {
+        "pdf_file": "case09_multidocument_batch_A.pdf",
+        "page_number": "5",
+        "relation": "image-only attachment"
+      }
+    ],
+    "batch_A_unique_triage_001": [
+      {
+        "pdf_file": "case09_multidocument_batch_A.pdf",
+        "page_number": "6",
+        "relation": "not duplicate"
+      }
+    ],
+    "batch_B_cover_001": [
+      {
+        "pdf_file": "case09_multidocument_batch_B.pdf",
+        "page_number": "1",
+        "relation": "batch cover; not duplicate"
+      }
+    ],
+    "batch_AB_consult_similar_001": [
+      {
+        "pdf_file": "case09_multidocument_batch_B.pdf",
+        "page_number": "2",
+        "relation": "similar family to batch A consult pages; not exact duplicate"
+      }
+    ],
+    "batch_AB_medlist_partial_001": [
+      {
+        "pdf_file": "case09_multidocument_batch_B.pdf",
+        "page_number": "3",
+        "relation": "partial overlap with batch A med list and case08 medication section"
+      }
+    ],
+    "batch_B_ed_note_near_001": [
+      {
+        "pdf_file": "case09_multidocument_batch_B.pdf",
+        "page_number": "4",
+        "relation": "near duplicate of case01 ED note body with page-number/header changes"
+      }
+    ],
+    "negative_control_unique_001": [
+      {
+        "pdf_file": "case10_negative_controls.pdf",
+        "page_number": "1",
+        "relation": "not duplicate"
+      }
+    ],
+    "negative_control_unique_002": [
+      {
+        "pdf_file": "case10_negative_controls.pdf",
+        "page_number": "2",
+        "relation": "not duplicate"
+      }
+    ],
+    "negative_control_unique_003": [
+      {
+        "pdf_file": "case10_negative_controls.pdf",
+        "page_number": "3",
+        "relation": "not duplicate"
+      }
+    ],
+    "negative_control_unique_004": [
+      {
+        "pdf_file": "case10_negative_controls.pdf",
+        "page_number": "4",
+        "relation": "not duplicate"
+      }
+    ]
+  }
+}

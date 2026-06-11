@@ -1,0 +1,5153 @@
+{
+  "schema_version": "synthetic_corpus_v2_truth_pairs_v1",
+  "labels": [
+    "duplicate",
+    "likely_duplicate",
+    "possible_duplicate",
+    "partial_overlap",
+    "not_duplicate",
+    "needs_review",
+    "low_information_ignore"
+  ],
+  "description": "Pair-level truth buckets for Synthetic Corpus v2. Page IDs are canonical; document/page fields are conveniences.",
+  "must_match": [
+    {
+      "page_1_id": "v2_case_001_doc_received_p001",
+      "page_2_id": "v2_case_001_doc_received_p002",
+      "expected_label": "duplicate",
+      "category": "exact_rendered_duplicate",
+      "reason": "Same native page rendered identically in received and email records, with an intra-group received duplicate.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_001_doc_received_p001",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 1,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_001_doc_received_p002",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 2,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "received_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_001_doc_received_p001",
+      "page_2_id": "v2_case_001_doc_email_p001",
+      "expected_label": "duplicate",
+      "category": "exact_rendered_duplicate",
+      "reason": "Same native page rendered identically in received and email records, with an intra-group received duplicate.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_001_doc_received_p001",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 1,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_001_doc_email_p001",
+        "document": "email_attachments_001.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_attachments_001.pdf",
+        "page": 1,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_001_doc_received_p002",
+      "page_2_id": "v2_case_001_doc_email_p001",
+      "expected_label": "duplicate",
+      "category": "exact_rendered_duplicate",
+      "reason": "Same native page rendered identically in received and email records, with an intra-group received duplicate.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_001_doc_received_p002",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 2,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_001_doc_email_p001",
+        "document": "email_attachments_001.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_attachments_001.pdf",
+        "page": 1,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_002_received_format_a",
+      "page_2_id": "v2_case_002_ere_format_b",
+      "expected_label": "duplicate",
+      "category": "same_text_different_formatting",
+      "reason": "Same visit note text in different margins, fonts, headers, line breaks, and source footers.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_002_received_format_a",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 3,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_002_ere_format_b",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 1,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_002_received_format_a",
+      "page_2_id": "v2_case_002_email_format_c",
+      "expected_label": "duplicate",
+      "category": "same_text_different_formatting",
+      "reason": "Same visit note text in different margins, fonts, headers, line breaks, and source footers.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_002_received_format_a",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 3,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_002_email_format_c",
+        "document": "email_attachments_001.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_attachments_001.pdf",
+        "page": 2,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_002_ere_format_b",
+      "page_2_id": "v2_case_002_email_format_c",
+      "expected_label": "duplicate",
+      "category": "same_text_different_formatting",
+      "reason": "Same visit note text in different margins, fonts, headers, line breaks, and source footers.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_002_ere_format_b",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 1,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_002_email_format_c",
+        "document": "email_attachments_001.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_attachments_001.pdf",
+        "page": 2,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_003_email_clean",
+      "page_2_id": "v2_case_003_fax_degraded",
+      "expected_label": "likely_duplicate",
+      "category": "same_page_different_scan_quality",
+      "reason": "Clean imaging report duplicated as a degraded fax scan with header, noise, skew, border, compression, and low resolution.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_003_email_clean",
+        "document": "email_attachments_001.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_attachments_001.pdf",
+        "page": 3,
+        "source_group": "email_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_003_fax_degraded",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 1,
+        "source_group": "fax_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "email_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_004_received_native",
+      "page_2_id": "v2_case_004_claimant_scan_easy",
+      "expected_label": "likely_duplicate",
+      "category": "ocr_only_duplicate",
+      "reason": "Born-digital instruction page paired with a clean image-only scan; OCR is needed for text on scan side.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_004_received_native",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 4,
+        "source_group": "received_records",
+        "record_type": "patient_instruction_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_004_claimant_scan_easy",
+        "document": "claimant_upload_camera_001.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_camera_001.pdf",
+        "page": 1,
+        "source_group": "claimant_uploads",
+        "record_type": "patient_instruction_page"
+      },
+      "source_groups": [
+        "received_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_005_provider_clean",
+      "page_2_id": "v2_case_005_claimant_camera",
+      "expected_label": "likely_duplicate",
+      "category": "same_page_different_scan_quality",
+      "reason": "Clean authorization page paired with a rotated, cropped, shadowed claimant camera upload.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_005_provider_clean",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 5,
+        "source_group": "received_records",
+        "record_type": "insurance_authorization"
+      },
+      "page_2": {
+        "page_id": "v2_case_005_claimant_camera",
+        "document": "claimant_upload_camera_001.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_camera_001.pdf",
+        "page": 2,
+        "source_group": "claimant_uploads",
+        "record_type": "insurance_authorization"
+      },
+      "source_groups": [
+        "received_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_014_received_packet_p001",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p001",
+      "expected_label": "likely_duplicate",
+      "category": "multi_page_duplicate_packet",
+      "reason": "Page 1 of a five-page packet duplicated across received records and an ERE batch.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_014_received_packet_p001",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 20,
+        "source_group": "received_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p001",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 1,
+        "source_group": "ere_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_014_received_packet_p002",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p002",
+      "expected_label": "likely_duplicate",
+      "category": "multi_page_duplicate_packet",
+      "reason": "Page 2 of a five-page packet duplicated across received records and an ERE batch.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_014_received_packet_p002",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 21,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p002",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 2,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_014_received_packet_p003",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p003",
+      "expected_label": "likely_duplicate",
+      "category": "multi_page_duplicate_packet",
+      "reason": "Page 3 of a five-page packet duplicated across received records and an ERE batch.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_014_received_packet_p003",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 22,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p003",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 3,
+        "source_group": "ere_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_014_received_packet_p004",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p004",
+      "expected_label": "likely_duplicate",
+      "category": "multi_page_duplicate_packet",
+      "reason": "Page 4 of a five-page packet duplicated across received records and an ERE batch.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_014_received_packet_p004",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 23,
+        "source_group": "received_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p004",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_014_received_packet_p005",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p005",
+      "expected_label": "likely_duplicate",
+      "category": "multi_page_duplicate_packet",
+      "reason": "Page 5 of a five-page packet duplicated across received records and an ERE batch.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_014_received_packet_p005",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 24,
+        "source_group": "received_records",
+        "record_type": "patient_instruction_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p005",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 5,
+        "source_group": "ere_records",
+        "record_type": "patient_instruction_page"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_017_clean_procedure",
+      "page_2_id": "v2_case_017_ere_stamped_procedure",
+      "expected_label": "likely_duplicate",
+      "category": "source_added_noise",
+      "reason": "Same procedure note with source-added page stamps, footer overlays, watermark, and barcode.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_017_clean_procedure",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 21,
+        "source_group": "received_records",
+        "record_type": "procedure_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_017_ere_stamped_procedure",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 8,
+        "source_group": "ere_records",
+        "record_type": "procedure_note"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_017_clean_procedure",
+      "page_2_id": "v2_case_017_fax_border_procedure",
+      "expected_label": "likely_duplicate",
+      "category": "source_added_noise",
+      "reason": "Same procedure note with source-added page stamps, footer overlays, watermark, and barcode.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_017_clean_procedure",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 21,
+        "source_group": "received_records",
+        "record_type": "procedure_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_017_fax_border_procedure",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 15,
+        "source_group": "fax_records",
+        "record_type": "procedure_note"
+      },
+      "source_groups": [
+        "received_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_017_ere_stamped_procedure",
+      "page_2_id": "v2_case_017_fax_border_procedure",
+      "expected_label": "likely_duplicate",
+      "category": "source_added_noise",
+      "reason": "Same procedure note with source-added page stamps, footer overlays, watermark, and barcode.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_017_ere_stamped_procedure",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 8,
+        "source_group": "ere_records",
+        "record_type": "procedure_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_017_fax_border_procedure",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 15,
+        "source_group": "fax_records",
+        "record_type": "procedure_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_019_original_text",
+      "page_2_id": "v2_case_019_paraphrased_text",
+      "expected_label": "likely_duplicate",
+      "category": "semantic_paraphrase",
+      "reason": "Same underlying visit content expressed with semantic paraphrases; embedding/LLM-relevant later.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_019_original_text",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 23,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_019_paraphrased_text",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 22,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_019_expanded_medical_terms",
+      "page_2_id": "v2_case_019_abbreviated_medical_terms",
+      "expected_label": "likely_duplicate",
+      "category": "medical_abbreviation_variation",
+      "reason": "Same visit content expressed with medical abbreviation variants: hypertension/HTN, shortness of breath/SOB, diabetes mellitus/DM, follow up/f/u.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_019_expanded_medical_terms",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 9,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_019_abbreviated_medical_terms",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 24,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_020_native_clean",
+      "page_2_id": "v2_case_020_image_ocr_trap",
+      "expected_label": "needs_review",
+      "category": "ocr_corruption_trap",
+      "reason": "Born-digital note paired with scan containing OCR-trap substitutions such as pain->pa1n and lisinopril->IisinopriI.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_020_native_clean",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 23,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_020_image_ocr_trap",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 5,
+        "source_group": "claimant_uploads",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    }
+  ],
+  "should_not_match": [
+    {
+      "page_1_id": "v2_case_006_same_template_visit_01",
+      "page_2_id": "v2_case_006_same_template_visit_02",
+      "expected_label": "not_duplicate",
+      "category": "same_template_different_visit",
+      "reason": "Same visit note template and diagnosis but different visit date and clinical details.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_006_same_template_visit_01",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 1,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_006_same_template_visit_02",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 2,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "received_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_006_same_template_visit_02",
+      "page_2_id": "v2_case_006_same_template_visit_03",
+      "expected_label": "not_duplicate",
+      "category": "same_template_different_visit",
+      "reason": "Same visit note template and diagnosis but different visit date and clinical details.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_006_same_template_visit_02",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 2,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_006_same_template_visit_03",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 3,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "received_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_006_same_template_visit_03",
+      "page_2_id": "v2_case_006_same_template_visit_04",
+      "expected_label": "not_duplicate",
+      "category": "same_template_different_visit",
+      "reason": "Same visit note template and diagnosis but different visit date and clinical details.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_006_same_template_visit_03",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 3,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_006_same_template_visit_04",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 4,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "received_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_006_same_template_visit_04",
+      "page_2_id": "v2_case_006_same_template_visit_05",
+      "expected_label": "not_duplicate",
+      "category": "same_template_different_visit",
+      "reason": "Same visit note template and diagnosis but different visit date and clinical details.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_006_same_template_visit_04",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 4,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_006_same_template_visit_05",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 5,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "received_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_006_same_template_visit_05",
+      "page_2_id": "v2_case_006_same_template_visit_06",
+      "expected_label": "not_duplicate",
+      "category": "same_template_different_visit",
+      "reason": "Same visit note template and diagnosis but different visit date and clinical details.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_006_same_template_visit_05",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 5,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_006_same_template_visit_06",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 6,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "received_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_006_same_template_visit_06",
+      "page_2_id": "v2_case_006_same_template_visit_07",
+      "expected_label": "not_duplicate",
+      "category": "same_template_different_visit",
+      "reason": "Same visit note template and diagnosis but different visit date and clinical details.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_006_same_template_visit_06",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 6,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_006_same_template_visit_07",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 7,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "received_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_006_same_template_visit_07",
+      "page_2_id": "v2_case_006_same_template_visit_08",
+      "expected_label": "not_duplicate",
+      "category": "same_template_different_visit",
+      "reason": "Same visit note template and diagnosis but different visit date and clinical details.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_006_same_template_visit_07",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 7,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_006_same_template_visit_08",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 1,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_006_same_template_visit_08",
+      "page_2_id": "v2_case_006_same_template_visit_09",
+      "expected_label": "not_duplicate",
+      "category": "same_template_different_visit",
+      "reason": "Same visit note template and diagnosis but different visit date and clinical details.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_006_same_template_visit_08",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 1,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_006_same_template_visit_09",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 2,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_006_same_template_visit_09",
+      "page_2_id": "v2_case_006_same_template_visit_10",
+      "expected_label": "not_duplicate",
+      "category": "same_template_different_visit",
+      "reason": "Same visit note template and diagnosis but different visit date and clinical details.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_006_same_template_visit_09",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 2,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_006_same_template_visit_10",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 3,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_006_same_template_visit_10",
+      "page_2_id": "v2_case_006_same_template_visit_11",
+      "expected_label": "not_duplicate",
+      "category": "same_template_different_visit",
+      "reason": "Same visit note template and diagnosis but different visit date and clinical details.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_006_same_template_visit_10",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 3,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_006_same_template_visit_11",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_006_same_template_visit_11",
+      "page_2_id": "v2_case_006_same_template_visit_12",
+      "expected_label": "not_duplicate",
+      "category": "same_template_different_visit",
+      "reason": "Same visit note template and diagnosis but different visit date and clinical details.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_006_same_template_visit_11",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_006_same_template_visit_12",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 5,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_007_same_dx_diff_record_01",
+      "page_2_id": "v2_case_007_same_dx_diff_record_02",
+      "expected_label": "not_duplicate",
+      "category": "same_diagnosis_different_record",
+      "reason": "Both discuss a common diagnosis but the page contents are different visits.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_007_same_dx_diff_record_01",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 8,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_007_same_dx_diff_record_02",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 6,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_007_same_dx_diff_record_03",
+      "page_2_id": "v2_case_007_same_dx_diff_record_04",
+      "expected_label": "not_duplicate",
+      "category": "same_diagnosis_different_record",
+      "reason": "Both discuss a common diagnosis but the page contents are different visits.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_007_same_dx_diff_record_03",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 1,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_007_same_dx_diff_record_04",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 9,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_007_same_dx_diff_record_05",
+      "page_2_id": "v2_case_007_same_dx_diff_record_06",
+      "expected_label": "not_duplicate",
+      "category": "same_diagnosis_different_record",
+      "reason": "Both discuss a common diagnosis but the page contents are different visits.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_007_same_dx_diff_record_05",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 7,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_007_same_dx_diff_record_06",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 2,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_007_same_dx_diff_record_07",
+      "page_2_id": "v2_case_007_same_dx_diff_record_08",
+      "expected_label": "not_duplicate",
+      "category": "same_diagnosis_different_record",
+      "reason": "Both discuss a common diagnosis but the page contents are different visits.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_007_same_dx_diff_record_07",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 10,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_007_same_dx_diff_record_08",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 8,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_007_same_dx_diff_record_09",
+      "page_2_id": "v2_case_007_same_dx_diff_record_10",
+      "expected_label": "not_duplicate",
+      "category": "same_diagnosis_different_record",
+      "reason": "Both discuss a common diagnosis but the page contents are different visits.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_007_same_dx_diff_record_09",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 3,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_007_same_dx_diff_record_10",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 11,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_007_same_dx_diff_record_11",
+      "page_2_id": "v2_case_007_same_dx_diff_record_12",
+      "expected_label": "not_duplicate",
+      "category": "same_diagnosis_different_record",
+      "reason": "Both discuss a common diagnosis but the page contents are different visits.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_007_same_dx_diff_record_11",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 9,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_007_same_dx_diff_record_12",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 4,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_007_same_dx_diff_record_13",
+      "page_2_id": "v2_case_007_same_dx_diff_record_14",
+      "expected_label": "not_duplicate",
+      "category": "same_diagnosis_different_record",
+      "reason": "Both discuss a common diagnosis but the page contents are different visits.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_007_same_dx_diff_record_13",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 12,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_007_same_dx_diff_record_14",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 10,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_008_med_trap_visit_01",
+      "page_2_id": "v2_case_008_med_trap_visit_04",
+      "expected_label": "not_duplicate",
+      "category": "same_medication_list_different_context",
+      "reason": "Medication table repeats but chief complaint, assessment, and plan differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_008_med_trap_visit_01",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 13,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_008_med_trap_visit_04",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 6,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_008_med_trap_visit_04",
+      "page_2_id": "v2_case_008_med_trap_visit_07",
+      "expected_label": "not_duplicate",
+      "category": "same_medication_list_different_context",
+      "reason": "Medication table repeats but chief complaint, assessment, and plan differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_008_med_trap_visit_04",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 6,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_008_med_trap_visit_07",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 12,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "email_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_008_med_trap_visit_07",
+      "page_2_id": "v2_case_008_med_trap_visit_10",
+      "expected_label": "not_duplicate",
+      "category": "same_medication_list_different_context",
+      "reason": "Medication table repeats but chief complaint, assessment, and plan differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_008_med_trap_visit_07",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 12,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_008_med_trap_visit_10",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 3,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_008_med_trap_visit_10",
+      "page_2_id": "v2_case_008_med_trap_visit_13",
+      "expected_label": "not_duplicate",
+      "category": "same_medication_list_different_context",
+      "reason": "Medication table repeats but chief complaint, assessment, and plan differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_008_med_trap_visit_10",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 3,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_008_med_trap_visit_13",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 16,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_008_med_trap_visit_13",
+      "page_2_id": "v2_case_008_med_trap_visit_16",
+      "expected_label": "not_duplicate",
+      "category": "same_medication_list_different_context",
+      "reason": "Medication table repeats but chief complaint, assessment, and plan differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_008_med_trap_visit_13",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 16,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_008_med_trap_visit_16",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 9,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_01",
+      "page_2_id": "v2_case_009_fax_cover_02",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_01",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 2,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_02",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 3,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_02",
+      "page_2_id": "v2_case_009_fax_cover_03",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_02",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 3,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_03",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 4,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_03",
+      "page_2_id": "v2_case_009_fax_cover_04",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_03",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 4,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_04",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 5,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_04",
+      "page_2_id": "v2_case_009_fax_cover_05",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_04",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 5,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_05",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 6,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_05",
+      "page_2_id": "v2_case_009_fax_cover_06",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_05",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 6,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_06",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 7,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_06",
+      "page_2_id": "v2_case_009_fax_cover_07",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_06",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 7,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_07",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 8,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_07",
+      "page_2_id": "v2_case_009_fax_cover_08",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_07",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 8,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_08",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 9,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_08",
+      "page_2_id": "v2_case_009_fax_cover_09",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_08",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 9,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_09",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 1,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_09",
+      "page_2_id": "v2_case_009_fax_cover_10",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_09",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 1,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_10",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 2,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_10",
+      "page_2_id": "v2_case_009_fax_cover_11",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_10",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 2,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_11",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 3,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_11",
+      "page_2_id": "v2_case_009_fax_cover_12",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_11",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 3,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_12",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 4,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_12",
+      "page_2_id": "v2_case_009_fax_cover_13",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_12",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 4,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_13",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 5,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_009_fax_cover_13",
+      "page_2_id": "v2_case_009_fax_cover_14",
+      "expected_label": "not_duplicate",
+      "category": "same_cover_template_different_fax",
+      "reason": "Same fax cover template but different transmission metadata.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_fax_cover_13",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 5,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_fax_cover_14",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 6,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_010_lab_layout_diff_values_01",
+      "page_2_id": "v2_case_010_lab_layout_diff_values_03",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same lab layout/components but values and collection dates differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_010_lab_layout_diff_values_01",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 6,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_010_lab_layout_diff_values_03",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 10,
+        "source_group": "email_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_010_lab_layout_diff_values_03",
+      "page_2_id": "v2_case_010_lab_layout_diff_values_05",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same lab layout/components but values and collection dates differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_010_lab_layout_diff_values_03",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 10,
+        "source_group": "email_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_010_lab_layout_diff_values_05",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 7,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_010_lab_layout_diff_values_05",
+      "page_2_id": "v2_case_010_lab_layout_diff_values_07",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same lab layout/components but values and collection dates differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_010_lab_layout_diff_values_05",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 7,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_010_lab_layout_diff_values_07",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 11,
+        "source_group": "email_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_010_lab_layout_diff_values_07",
+      "page_2_id": "v2_case_010_lab_layout_diff_values_09",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same lab layout/components but values and collection dates differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_010_lab_layout_diff_values_07",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 11,
+        "source_group": "email_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_010_lab_layout_diff_values_09",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 8,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_010_lab_layout_diff_values_09",
+      "page_2_id": "v2_case_010_lab_layout_diff_values_11",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same lab layout/components but values and collection dates differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_010_lab_layout_diff_values_09",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 8,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_010_lab_layout_diff_values_11",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 12,
+        "source_group": "email_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_010_lab_layout_diff_values_11",
+      "page_2_id": "v2_case_010_lab_layout_diff_values_13",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same lab layout/components but values and collection dates differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_010_lab_layout_diff_values_11",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 12,
+        "source_group": "email_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_010_lab_layout_diff_values_13",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 9,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_010_lab_layout_diff_values_13",
+      "page_2_id": "v2_case_010_lab_layout_diff_values_15",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same lab layout/components but values and collection dates differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_010_lab_layout_diff_values_13",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 9,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_010_lab_layout_diff_values_15",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 13,
+        "source_group": "email_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_010_lab_layout_diff_values_15",
+      "page_2_id": "v2_case_010_lab_layout_diff_values_17",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same lab layout/components but values and collection dates differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_010_lab_layout_diff_values_15",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 13,
+        "source_group": "email_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_010_lab_layout_diff_values_17",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 10,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_010_lab_layout_diff_values_17",
+      "page_2_id": "v2_case_010_lab_layout_diff_values_19",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same lab layout/components but values and collection dates differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_010_lab_layout_diff_values_17",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 10,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_010_lab_layout_diff_values_19",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 14,
+        "source_group": "email_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_011_imaging_template_diff_01",
+      "page_2_id": "v2_case_011_imaging_template_diff_02",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Same MRI report template but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_011_imaging_template_diff_01",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 11,
+        "source_group": "received_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_011_imaging_template_diff_02",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 20,
+        "source_group": "ere_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_011_imaging_template_diff_03",
+      "page_2_id": "v2_case_011_imaging_template_diff_04",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Same MRI report template but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_011_imaging_template_diff_03",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 15,
+        "source_group": "email_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_011_imaging_template_diff_04",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 9,
+        "source_group": "fax_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "email_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_011_imaging_template_diff_05",
+      "page_2_id": "v2_case_011_imaging_template_diff_06",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Same MRI report template but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_011_imaging_template_diff_05",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 12,
+        "source_group": "received_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_011_imaging_template_diff_06",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 21,
+        "source_group": "ere_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_011_imaging_template_diff_07",
+      "page_2_id": "v2_case_011_imaging_template_diff_08",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Same MRI report template but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_011_imaging_template_diff_07",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 16,
+        "source_group": "email_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_011_imaging_template_diff_08",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 10,
+        "source_group": "fax_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "email_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_011_imaging_template_diff_09",
+      "page_2_id": "v2_case_011_imaging_template_diff_10",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Same MRI report template but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_011_imaging_template_diff_09",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 13,
+        "source_group": "received_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_011_imaging_template_diff_10",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 22,
+        "source_group": "ere_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_011_imaging_template_diff_11",
+      "page_2_id": "v2_case_011_imaging_template_diff_12",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Same MRI report template but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_011_imaging_template_diff_11",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 17,
+        "source_group": "email_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_011_imaging_template_diff_12",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 11,
+        "source_group": "fax_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "email_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_011_imaging_template_diff_13",
+      "page_2_id": "v2_case_011_imaging_template_diff_14",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Same MRI report template but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_011_imaging_template_diff_13",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 14,
+        "source_group": "received_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_011_imaging_template_diff_14",
+        "document": "ere_batch_002.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_002.pdf",
+        "page": 23,
+        "source_group": "ere_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_011_imaging_template_diff_15",
+      "page_2_id": "v2_case_011_imaging_template_diff_16",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Same MRI report template but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_011_imaging_template_diff_15",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 18,
+        "source_group": "email_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_011_imaging_template_diff_16",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 12,
+        "source_group": "fax_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "email_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_02",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p002",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_02",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 7,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p002",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 2,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_03",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p003",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_03",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 8,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p003",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 3,
+        "source_group": "ere_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_04",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p004",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_04",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 9,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p004",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_05",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p005",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_05",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 10,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p005",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 5,
+        "source_group": "ere_records",
+        "record_type": "patient_instruction_page"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_06",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p001",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_06",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 11,
+        "source_group": "ere_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p001",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 1,
+        "source_group": "ere_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_07",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p002",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_07",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 12,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p002",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 2,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_08",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p003",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_08",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 13,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p003",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 3,
+        "source_group": "ere_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_09",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p004",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_09",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 14,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p004",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_10",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p005",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_10",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 15,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p005",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 5,
+        "source_group": "ere_records",
+        "record_type": "patient_instruction_page"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_11",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p001",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_11",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 16,
+        "source_group": "ere_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p001",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 1,
+        "source_group": "ere_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_12",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p002",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_12",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 17,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p002",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 2,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_13",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p003",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_13",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 18,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p003",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 3,
+        "source_group": "ere_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_14",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p004",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_14",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 19,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p004",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_014_ere_noise_15",
+      "page_2_id": "v2_case_014_ere_embedded_packet_p005",
+      "expected_label": "not_duplicate",
+      "category": "batch_noise_near_packet",
+      "reason": "ERE batch filler page is near the duplicate packet but is not a duplicate.",
+      "scenario": "received_vs_ere",
+      "page_1": {
+        "page_id": "v2_case_014_ere_noise_15",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 20,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_014_ere_embedded_packet_p005",
+        "document": "ere_reordered_batch_003.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_reordered_batch_003.pdf",
+        "page": 5,
+        "source_group": "ere_records",
+        "record_type": "patient_instruction_page"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_visit_001",
+      "page_2_id": "v2_case_015_explosion_visit_011",
+      "expected_label": "not_duplicate",
+      "category": "same_template_boilerplate_medlist",
+      "reason": "Many shared template/boilerplate/medication-list features but unique visit content.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_visit_001",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 27,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_visit_011",
+        "document": "email_attachments_001.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_attachments_001.pdf",
+        "page": 7,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_visit_011",
+      "page_2_id": "v2_case_015_explosion_visit_021",
+      "expected_label": "not_duplicate",
+      "category": "same_template_boilerplate_medlist",
+      "reason": "Many shared template/boilerplate/medication-list features but unique visit content.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_visit_011",
+        "document": "email_attachments_001.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_attachments_001.pdf",
+        "page": 7,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_visit_021",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 12,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "email_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_visit_021",
+      "page_2_id": "v2_case_015_explosion_visit_031",
+      "expected_label": "not_duplicate",
+      "category": "same_template_boilerplate_medlist",
+      "reason": "Many shared template/boilerplate/medication-list features but unique visit content.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_visit_021",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 12,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_visit_031",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 32,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_visit_031",
+      "page_2_id": "v2_case_015_explosion_visit_041",
+      "expected_label": "not_duplicate",
+      "category": "same_template_boilerplate_medlist",
+      "reason": "Many shared template/boilerplate/medication-list features but unique visit content.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_visit_031",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 32,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_visit_041",
+        "document": "email_attachments_001.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_attachments_001.pdf",
+        "page": 12,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_visit_041",
+      "page_2_id": "v2_case_015_explosion_visit_051",
+      "expected_label": "not_duplicate",
+      "category": "same_template_boilerplate_medlist",
+      "reason": "Many shared template/boilerplate/medication-list features but unique visit content.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_visit_041",
+        "document": "email_attachments_001.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_attachments_001.pdf",
+        "page": 12,
+        "source_group": "email_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_visit_051",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 17,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "email_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_visit_051",
+      "page_2_id": "v2_case_015_explosion_visit_061",
+      "expected_label": "not_duplicate",
+      "category": "same_template_boilerplate_medlist",
+      "reason": "Many shared template/boilerplate/medication-list features but unique visit content.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_visit_051",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 17,
+        "source_group": "ere_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_visit_061",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 37,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "ere_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_standalone_med_trap_01",
+      "page_2_id": "v2_case_015_standalone_med_trap_02",
+      "expected_label": "not_duplicate",
+      "category": "standalone_med_list_repeated",
+      "reason": "Medication list format and drugs repeat, but context/date/status differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_standalone_med_trap_01",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 10,
+        "source_group": "received_records",
+        "record_type": "medication_list"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_standalone_med_trap_02",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 21,
+        "source_group": "ere_records",
+        "record_type": "medication_list"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_standalone_med_trap_05",
+      "page_2_id": "v2_case_015_standalone_med_trap_06",
+      "expected_label": "not_duplicate",
+      "category": "standalone_med_list_repeated",
+      "reason": "Medication list format and drugs repeat, but context/date/status differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_standalone_med_trap_05",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 11,
+        "source_group": "received_records",
+        "record_type": "medication_list"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_standalone_med_trap_06",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 22,
+        "source_group": "ere_records",
+        "record_type": "medication_list"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_standalone_med_trap_09",
+      "page_2_id": "v2_case_015_standalone_med_trap_10",
+      "expected_label": "not_duplicate",
+      "category": "standalone_med_list_repeated",
+      "reason": "Medication list format and drugs repeat, but context/date/status differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_standalone_med_trap_09",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 12,
+        "source_group": "received_records",
+        "record_type": "medication_list"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_standalone_med_trap_10",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 23,
+        "source_group": "ere_records",
+        "record_type": "medication_list"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_standalone_med_trap_13",
+      "page_2_id": "v2_case_015_standalone_med_trap_14",
+      "expected_label": "not_duplicate",
+      "category": "standalone_med_list_repeated",
+      "reason": "Medication list format and drugs repeat, but context/date/status differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_standalone_med_trap_13",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 13,
+        "source_group": "received_records",
+        "record_type": "medication_list"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_standalone_med_trap_14",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 24,
+        "source_group": "ere_records",
+        "record_type": "medication_list"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_standalone_med_trap_17",
+      "page_2_id": "v2_case_015_standalone_med_trap_18",
+      "expected_label": "not_duplicate",
+      "category": "standalone_med_list_repeated",
+      "reason": "Medication list format and drugs repeat, but context/date/status differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_standalone_med_trap_17",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 14,
+        "source_group": "received_records",
+        "record_type": "medication_list"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_standalone_med_trap_18",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 25,
+        "source_group": "ere_records",
+        "record_type": "medication_list"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_standalone_med_trap_21",
+      "page_2_id": "v2_case_015_standalone_med_trap_22",
+      "expected_label": "not_duplicate",
+      "category": "standalone_med_list_repeated",
+      "reason": "Medication list format and drugs repeat, but context/date/status differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_standalone_med_trap_21",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 15,
+        "source_group": "received_records",
+        "record_type": "medication_list"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_standalone_med_trap_22",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 26,
+        "source_group": "ere_records",
+        "record_type": "medication_list"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_lab_01",
+      "page_2_id": "v2_case_015_explosion_lab_04",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same components and table layout, different results/accession/date.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_lab_01",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 39,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_lab_04",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 16,
+        "source_group": "fax_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_lab_05",
+      "page_2_id": "v2_case_015_explosion_lab_08",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same components and table layout, different results/accession/date.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_lab_05",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 40,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_lab_08",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 17,
+        "source_group": "fax_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_lab_09",
+      "page_2_id": "v2_case_015_explosion_lab_12",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same components and table layout, different results/accession/date.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_lab_09",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 41,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_lab_12",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 18,
+        "source_group": "fax_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_lab_13",
+      "page_2_id": "v2_case_015_explosion_lab_16",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same components and table layout, different results/accession/date.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_lab_13",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 42,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_lab_16",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 19,
+        "source_group": "fax_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_lab_17",
+      "page_2_id": "v2_case_015_explosion_lab_20",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same components and table layout, different results/accession/date.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_lab_17",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 43,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_lab_20",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 20,
+        "source_group": "fax_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_lab_21",
+      "page_2_id": "v2_case_015_explosion_lab_24",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same components and table layout, different results/accession/date.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_lab_21",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 44,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_lab_24",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 21,
+        "source_group": "fax_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_lab_25",
+      "page_2_id": "v2_case_015_explosion_lab_28",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same components and table layout, different results/accession/date.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_lab_25",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 45,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_lab_28",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 22,
+        "source_group": "fax_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_lab_29",
+      "page_2_id": "v2_case_015_explosion_lab_32",
+      "expected_label": "not_duplicate",
+      "category": "same_lab_layout_different_values",
+      "reason": "Same components and table layout, different results/accession/date.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_lab_29",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 46,
+        "source_group": "received_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_lab_32",
+        "document": "fax_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_001.pdf",
+        "page": 23,
+        "source_group": "fax_records",
+        "record_type": "lab_result"
+      },
+      "source_groups": [
+        "received_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_imaging_01",
+      "page_2_id": "v2_case_015_explosion_imaging_03",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Imaging template repeats but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_imaging_01",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 36,
+        "source_group": "received_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_imaging_03",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 41,
+        "source_group": "email_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_imaging_04",
+      "page_2_id": "v2_case_015_explosion_imaging_06",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Imaging template repeats but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_imaging_04",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 6,
+        "source_group": "claimant_uploads",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_imaging_06",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 28,
+        "source_group": "ere_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_imaging_07",
+      "page_2_id": "v2_case_015_explosion_imaging_09",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Imaging template repeats but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_imaging_07",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 42,
+        "source_group": "email_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_imaging_09",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 38,
+        "source_group": "received_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_imaging_10",
+      "page_2_id": "v2_case_015_explosion_imaging_12",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Imaging template repeats but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_imaging_10",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 29,
+        "source_group": "ere_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_imaging_12",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 8,
+        "source_group": "claimant_uploads",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "ere_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_imaging_13",
+      "page_2_id": "v2_case_015_explosion_imaging_15",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Imaging template repeats but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_imaging_13",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 39,
+        "source_group": "received_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_imaging_15",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 44,
+        "source_group": "email_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_imaging_16",
+      "page_2_id": "v2_case_015_explosion_imaging_18",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Imaging template repeats but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_imaging_16",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 9,
+        "source_group": "claimant_uploads",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_imaging_18",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 31,
+        "source_group": "ere_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_imaging_19",
+      "page_2_id": "v2_case_015_explosion_imaging_21",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Imaging template repeats but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_imaging_19",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 45,
+        "source_group": "email_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_imaging_21",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 41,
+        "source_group": "received_records",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_015_explosion_imaging_22",
+      "page_2_id": "v2_case_015_explosion_imaging_24",
+      "expected_label": "not_duplicate",
+      "category": "same_imaging_template_different_findings",
+      "reason": "Imaging template repeats but findings/impression differ.",
+      "scenario": "candidate_explosion",
+      "page_1": {
+        "page_id": "v2_case_015_explosion_imaging_22",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 32,
+        "source_group": "ere_records",
+        "record_type": "imaging_report"
+      },
+      "page_2": {
+        "page_id": "v2_case_015_explosion_imaging_24",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 11,
+        "source_group": "claimant_uploads",
+        "record_type": "imaging_report"
+      },
+      "source_groups": [
+        "ere_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    }
+  ],
+  "partial_overlap": [
+    {
+      "page_1_id": "v2_case_012_med_list_only",
+      "page_2_id": "v2_case_012_visit_summary_with_med_list",
+      "expected_label": "partial_overlap",
+      "category": "medication_list_contained_in_visit_note",
+      "reason": "Medication table is contained in visit summary, but page has additional meaningful clinical content.",
+      "scenario": "partial_overlap",
+      "page_1": {
+        "page_id": "v2_case_012_med_list_only",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 6,
+        "source_group": "received_records",
+        "record_type": "medication_list"
+      },
+      "page_2": {
+        "page_id": "v2_case_012_visit_summary_with_med_list",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 7,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "source_groups": [
+        "received_records",
+        "received_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_013_prior_dx_summary",
+      "page_2_id": "v2_case_013_discharge_repeats_dx",
+      "expected_label": "partial_overlap",
+      "category": "diagnosis_section_contained_in_discharge_summary",
+      "reason": "Discharge summary repeats prior diagnosis section but adds admission/course/follow-up.",
+      "scenario": "partial_overlap",
+      "page_1": {
+        "page_id": "v2_case_013_prior_dx_summary",
+        "document": "email_attachments_001.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_attachments_001.pdf",
+        "page": 4,
+        "source_group": "email_records",
+        "record_type": "diagnosis_summary"
+      },
+      "page_2": {
+        "page_id": "v2_case_013_discharge_repeats_dx",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 18,
+        "source_group": "received_records",
+        "record_type": "discharge_summary"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_013_lab_table_only",
+      "page_2_id": "v2_case_013_visit_summary_with_lab_table",
+      "expected_label": "partial_overlap",
+      "category": "lab_table_contained_in_visit_summary",
+      "reason": "Lab table appears inside a larger visit summary that has additional assessment and plan text.",
+      "scenario": "partial_overlap",
+      "page_1": {
+        "page_id": "v2_case_013_lab_table_only",
+        "document": "email_attachments_001.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_attachments_001.pdf",
+        "page": 5,
+        "source_group": "email_records",
+        "record_type": "lab_result"
+      },
+      "page_2": {
+        "page_id": "v2_case_013_visit_summary_with_lab_table",
+        "document": "received_records_001.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_001.pdf",
+        "page": 8,
+        "source_group": "received_records",
+        "record_type": "visit_summary"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_013_full_visit_note",
+      "page_2_id": "v2_case_013_split_note_extract",
+      "expected_label": "partial_overlap",
+      "category": "two_page_note_split_differently",
+      "reason": "One source contains the full note while another source contains only assessment and plan sections.",
+      "scenario": "partial_overlap",
+      "page_1": {
+        "page_id": "v2_case_013_full_visit_note",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 19,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_013_split_note_extract",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 2,
+        "source_group": "ere_records",
+        "record_type": "visit_note_extract"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_013_full_instruction_page",
+      "page_2_id": "v2_case_013_cropped_half_instruction",
+      "expected_label": "partial_overlap",
+      "category": "cropped_page_contains_half_of_full_page",
+      "reason": "Claimant upload contains only the upper half of a full instruction page.",
+      "scenario": "partial_overlap",
+      "page_1": {
+        "page_id": "v2_case_013_full_instruction_page",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 15,
+        "source_group": "received_records",
+        "record_type": "patient_instruction_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_013_cropped_half_instruction",
+        "document": "claimant_upload_camera_001.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_camera_001.pdf",
+        "page": 3,
+        "source_group": "claimant_uploads",
+        "record_type": "patient_instruction_page"
+      },
+      "source_groups": [
+        "received_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    }
+  ],
+  "related_but_not_duplicate": [
+    {
+      "page_1_id": "v2_case_018_same_visit_page_1",
+      "page_2_id": "v2_case_018_same_visit_page_2",
+      "expected_label": "not_duplicate",
+      "category": "same_visit_different_page",
+      "reason": "Same provider, patient, date, and visit ID, but page 1 and page 2 contain different content.",
+      "scenario": "related_not_duplicate",
+      "page_1": {
+        "page_id": "v2_case_018_same_visit_page_1",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 25,
+        "source_group": "received_records",
+        "record_type": "visit_note"
+      },
+      "page_2": {
+        "page_id": "v2_case_018_same_visit_page_2",
+        "document": "received_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_002.pdf",
+        "page": 26,
+        "source_group": "received_records",
+        "record_type": "visit_note_continuation"
+      },
+      "source_groups": [
+        "received_records",
+        "received_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    }
+  ],
+  "low_information_ignore": [
+    {
+      "page_1_id": "v2_case_009_identical_cover_a",
+      "page_2_id": "v2_case_009_identical_cover_b",
+      "expected_label": "low_information_ignore",
+      "category": "identical_generic_cover_sheet",
+      "reason": "Identical generic cover pages are not useful reviewer matches.",
+      "scenario": "fax_vs_email",
+      "page_1": {
+        "page_id": "v2_case_009_identical_cover_a",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 7,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "page_2": {
+        "page_id": "v2_case_009_identical_cover_b",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 8,
+        "source_group": "fax_records",
+        "record_type": "cover_sheet"
+      },
+      "source_groups": [
+        "fax_records",
+        "fax_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_01",
+      "page_2_id": "v2_case_016_low_info_02",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_01",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 16,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_02",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 3,
+        "source_group": "ere_records",
+        "record_type": "separator_page"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_02",
+      "page_2_id": "v2_case_016_low_info_03",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_02",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 3,
+        "source_group": "ere_records",
+        "record_type": "separator_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_03",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 13,
+        "source_group": "fax_records",
+        "record_type": "signature_page"
+      },
+      "source_groups": [
+        "ere_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_03",
+      "page_2_id": "v2_case_016_low_info_04",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_03",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 13,
+        "source_group": "fax_records",
+        "record_type": "signature_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_04",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 1,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "fax_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_04",
+      "page_2_id": "v2_case_016_low_info_05",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_04",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 1,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_05",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 19,
+        "source_group": "email_records",
+        "record_type": "separator_page"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_05",
+      "page_2_id": "v2_case_016_low_info_06",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_05",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 19,
+        "source_group": "email_records",
+        "record_type": "separator_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_06",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 17,
+        "source_group": "received_records",
+        "record_type": "signature_page"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_06",
+      "page_2_id": "v2_case_016_low_info_07",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_06",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 17,
+        "source_group": "received_records",
+        "record_type": "signature_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_07",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_07",
+      "page_2_id": "v2_case_016_low_info_08",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_07",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_08",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 14,
+        "source_group": "fax_records",
+        "record_type": "separator_page"
+      },
+      "source_groups": [
+        "ere_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_08",
+      "page_2_id": "v2_case_016_low_info_09",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_08",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 14,
+        "source_group": "fax_records",
+        "record_type": "separator_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_09",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 2,
+        "source_group": "claimant_uploads",
+        "record_type": "signature_page"
+      },
+      "source_groups": [
+        "fax_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_09",
+      "page_2_id": "v2_case_016_low_info_10",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_09",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 2,
+        "source_group": "claimant_uploads",
+        "record_type": "signature_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_10",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 20,
+        "source_group": "email_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_10",
+      "page_2_id": "v2_case_016_low_info_11",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_10",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 20,
+        "source_group": "email_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_11",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 18,
+        "source_group": "received_records",
+        "record_type": "separator_page"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_11",
+      "page_2_id": "v2_case_016_low_info_12",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_11",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 18,
+        "source_group": "received_records",
+        "record_type": "separator_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_12",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 5,
+        "source_group": "ere_records",
+        "record_type": "signature_page"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_12",
+      "page_2_id": "v2_case_016_low_info_13",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_12",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 5,
+        "source_group": "ere_records",
+        "record_type": "signature_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_13",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 15,
+        "source_group": "fax_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "ere_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_13",
+      "page_2_id": "v2_case_016_low_info_14",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_13",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 15,
+        "source_group": "fax_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_14",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 3,
+        "source_group": "claimant_uploads",
+        "record_type": "separator_page"
+      },
+      "source_groups": [
+        "fax_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_14",
+      "page_2_id": "v2_case_016_low_info_15",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_14",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 3,
+        "source_group": "claimant_uploads",
+        "record_type": "separator_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_15",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 21,
+        "source_group": "email_records",
+        "record_type": "signature_page"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_15",
+      "page_2_id": "v2_case_016_low_info_16",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_15",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 21,
+        "source_group": "email_records",
+        "record_type": "signature_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_16",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 19,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_16",
+      "page_2_id": "v2_case_016_low_info_17",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_16",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 19,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_17",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 6,
+        "source_group": "ere_records",
+        "record_type": "separator_page"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_17",
+      "page_2_id": "v2_case_016_low_info_18",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_17",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 6,
+        "source_group": "ere_records",
+        "record_type": "separator_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_18",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 16,
+        "source_group": "fax_records",
+        "record_type": "signature_page"
+      },
+      "source_groups": [
+        "ere_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_18",
+      "page_2_id": "v2_case_016_low_info_19",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_18",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 16,
+        "source_group": "fax_records",
+        "record_type": "signature_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_19",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 4,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "fax_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_19",
+      "page_2_id": "v2_case_016_low_info_20",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_19",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 4,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_20",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 22,
+        "source_group": "email_records",
+        "record_type": "separator_page"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_20",
+      "page_2_id": "v2_case_016_low_info_21",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_20",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 22,
+        "source_group": "email_records",
+        "record_type": "separator_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_21",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 20,
+        "source_group": "received_records",
+        "record_type": "signature_page"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_21",
+      "page_2_id": "v2_case_016_low_info_22",
+      "expected_label": "low_information_ignore",
+      "category": "low_information_page",
+      "reason": "Blank/separator/signature-style pages should be grouped or ignored carefully.",
+      "scenario": "low_information",
+      "page_1": {
+        "page_id": "v2_case_016_low_info_21",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 20,
+        "source_group": "received_records",
+        "record_type": "signature_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_22",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 7,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_01",
+      "page_2_id": "v2_case_016_low_info_04",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_01",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 16,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_04",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 1,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "received_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_01",
+      "page_2_id": "v2_case_016_low_info_07",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_01",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 16,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_07",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_01",
+      "page_2_id": "v2_case_016_low_info_10",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_01",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 16,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_10",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 20,
+        "source_group": "email_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "received_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_01",
+      "page_2_id": "v2_case_016_low_info_13",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_01",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 16,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_13",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 15,
+        "source_group": "fax_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "received_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_01",
+      "page_2_id": "v2_case_016_low_info_16",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_01",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 16,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_16",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 19,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "received_records",
+        "received_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_01",
+      "page_2_id": "v2_case_016_low_info_19",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_01",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 16,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_19",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 4,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "received_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_01",
+      "page_2_id": "v2_case_016_low_info_22",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_01",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 16,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_22",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 7,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_04",
+      "page_2_id": "v2_case_016_low_info_07",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_04",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 1,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_07",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_04",
+      "page_2_id": "v2_case_016_low_info_10",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_04",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 1,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_10",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 20,
+        "source_group": "email_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_04",
+      "page_2_id": "v2_case_016_low_info_13",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_04",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 1,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_13",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 15,
+        "source_group": "fax_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_04",
+      "page_2_id": "v2_case_016_low_info_16",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_04",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 1,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_16",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 19,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_04",
+      "page_2_id": "v2_case_016_low_info_19",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_04",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 1,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_19",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 4,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "claimant_uploads"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_04",
+      "page_2_id": "v2_case_016_low_info_22",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_04",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 1,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_22",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 7,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_07",
+      "page_2_id": "v2_case_016_low_info_10",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_07",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_10",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 20,
+        "source_group": "email_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "ere_records",
+        "email_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_07",
+      "page_2_id": "v2_case_016_low_info_13",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_07",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_13",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 15,
+        "source_group": "fax_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "ere_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_07",
+      "page_2_id": "v2_case_016_low_info_16",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_07",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_16",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 19,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "ere_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_07",
+      "page_2_id": "v2_case_016_low_info_19",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_07",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_19",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 4,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "ere_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_07",
+      "page_2_id": "v2_case_016_low_info_22",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_07",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 4,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_22",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 7,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "ere_records",
+        "ere_records"
+      ],
+      "same_document": true,
+      "cross_group": false
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_10",
+      "page_2_id": "v2_case_016_low_info_13",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_10",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 20,
+        "source_group": "email_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_13",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 15,
+        "source_group": "fax_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "email_records",
+        "fax_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_10",
+      "page_2_id": "v2_case_016_low_info_16",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_10",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 20,
+        "source_group": "email_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_16",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 19,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "email_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_10",
+      "page_2_id": "v2_case_016_low_info_19",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_10",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 20,
+        "source_group": "email_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_19",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 4,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "email_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_10",
+      "page_2_id": "v2_case_016_low_info_22",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_10",
+        "document": "email_duplicate_attachments_002.pdf",
+        "relative_pdf_path": "pdfs/group_e_email_records/email_duplicate_attachments_002.pdf",
+        "page": 20,
+        "source_group": "email_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_22",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 7,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "email_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_13",
+      "page_2_id": "v2_case_016_low_info_16",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_13",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 15,
+        "source_group": "fax_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_16",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 19,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "fax_records",
+        "received_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_13",
+      "page_2_id": "v2_case_016_low_info_19",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_13",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 15,
+        "source_group": "fax_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_19",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 4,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "fax_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_13",
+      "page_2_id": "v2_case_016_low_info_22",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_13",
+        "document": "fax_records_002.pdf",
+        "relative_pdf_path": "pdfs/group_d_fax_records/fax_records_002.pdf",
+        "page": 15,
+        "source_group": "fax_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_22",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 7,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "fax_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_16",
+      "page_2_id": "v2_case_016_low_info_19",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_16",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 19,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_19",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 4,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "received_records",
+        "claimant_uploads"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_16",
+      "page_2_id": "v2_case_016_low_info_22",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_16",
+        "document": "received_records_followups_003.pdf",
+        "relative_pdf_path": "pdfs/group_a_received_records/received_records_followups_003.pdf",
+        "page": 19,
+        "source_group": "received_records",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_22",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 7,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "received_records",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    },
+    {
+      "page_1_id": "v2_case_016_low_info_19",
+      "page_2_id": "v2_case_016_low_info_22",
+      "expected_label": "low_information_ignore",
+      "category": "blank_or_near_blank",
+      "reason": "Low-information duplicate/near-duplicate should be grouped or suppressed in reviewer reports.",
+      "scenario": null,
+      "page_1": {
+        "page_id": "v2_case_016_low_info_19",
+        "document": "claimant_upload_mixed_002.pdf",
+        "relative_pdf_path": "pdfs/group_c_claimant_uploads/claimant_upload_mixed_002.pdf",
+        "page": 4,
+        "source_group": "claimant_uploads",
+        "record_type": "blank_page"
+      },
+      "page_2": {
+        "page_id": "v2_case_016_low_info_22",
+        "document": "ere_batch_001.pdf",
+        "relative_pdf_path": "pdfs/group_b_ere_records/ere_batch_001.pdf",
+        "page": 7,
+        "source_group": "ere_records",
+        "record_type": "blank_page"
+      },
+      "source_groups": [
+        "claimant_uploads",
+        "ere_records"
+      ],
+      "same_document": false,
+      "cross_group": true
+    }
+  ]
+}

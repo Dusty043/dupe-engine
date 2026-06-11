@@ -1,0 +1,903 @@
+{
+  "threshold": 0.0,
+  "summary": {
+    "predicted_match_count": 10,
+    "truth_duplicate_count": 9,
+    "truth_should_not_match_count": 6,
+    "truth_partial_overlap_count": 4,
+    "truth_low_information_ignore_count": 0,
+    "true_positive_count": 4,
+    "false_negative_count": 5,
+    "expected_negative_hit_count": 3,
+    "partial_overlap_hit_count": 1,
+    "low_information_ignore_hit_count": 0,
+    "unknown_prediction_count": 2,
+    "recall_on_must_match": 0.4444,
+    "known_negative_hit_rate": 0.5,
+    "low_information_hit_rate": null,
+    "recall_by_expected_min_layer": {
+      "unspecified": {
+        "truth_count": 9,
+        "true_positive_count": 4,
+        "false_negative_count": 5,
+        "recall": 0.4444
+      }
+    }
+  },
+  "true_positives": [
+    {
+      "match_type": "exact_image_duplicate",
+      "confidence": 1.0,
+      "candidate_stage": "deterministic_exact",
+      "recommendation": "safe_to_review_as_duplicate",
+      "engine_candidate_label": "duplicate",
+      "adjudicator_suggested_label": null,
+      "human_final_label": null,
+      "visibility": "main_review_list",
+      "visibility_reason": "candidate has enough non-low-information evidence for the main review list",
+      "candidate_category": "standard",
+      "a": {
+        "document": "case01_exact_duplicate_pages.pdf",
+        "page": 1
+      },
+      "b": {
+        "document": "case01_exact_duplicate_pages.pdf",
+        "page": 2
+      },
+      "page_a_low_information": false,
+      "page_b_low_information": false,
+      "signals": [
+        {
+          "name": "exact_image_hash",
+          "score": 1.0,
+          "details": {}
+        },
+        {
+          "name": "exact_normalized_text_hash",
+          "score": 1.0,
+          "details": {}
+        },
+        {
+          "name": "tfidf_cosine_similarity",
+          "score": 1.0000000000000033,
+          "details": {
+            "candidate_stage": "deterministic_strict"
+          }
+        }
+      ],
+      "truth": {
+        "a": {
+          "document": "case01_exact_duplicate_pages.pdf",
+          "page": 1
+        },
+        "b": {
+          "document": "case01_exact_duplicate_pages.pdf",
+          "page": 2
+        },
+        "label": "duplicate",
+        "type": "exact_image",
+        "notes": "",
+        "pair_id": null,
+        "v3_truth_label": null,
+        "expected_min_layer": null,
+        "required_layers": [],
+        "difficulty": null,
+        "is_must_match": null,
+        "is_hard_negative": null,
+        "vision_fallback_expected": null,
+        "reason_tags": []
+      }
+    },
+    {
+      "match_type": "weighted_text_candidate",
+      "confidence": 0.9416,
+      "candidate_stage": "deterministic_strict",
+      "recommendation": "high_confidence_review",
+      "engine_candidate_label": "likely_duplicate",
+      "adjudicator_suggested_label": null,
+      "human_final_label": null,
+      "visibility": "main_review_list",
+      "visibility_reason": "candidate has enough non-low-information evidence for the main review list",
+      "candidate_category": "standard",
+      "a": {
+        "document": "case03_same_text_different_formatting.pdf",
+        "page": 1
+      },
+      "b": {
+        "document": "case03_same_text_different_formatting.pdf",
+        "page": 2
+      },
+      "page_a_low_information": false,
+      "page_b_low_information": false,
+      "signals": [
+        {
+          "name": "tfidf_cosine_similarity",
+          "score": 0.9416432619865204,
+          "details": {
+            "candidate_stage": "deterministic_strict"
+          }
+        }
+      ],
+      "truth": {
+        "a": {
+          "document": "case03_same_text_different_formatting.pdf",
+          "page": 1
+        },
+        "b": {
+          "document": "case03_same_text_different_formatting.pdf",
+          "page": 2
+        },
+        "label": "duplicate",
+        "type": "same_text_different_formatting",
+        "notes": "",
+        "pair_id": null,
+        "v3_truth_label": null,
+        "expected_min_layer": null,
+        "required_layers": [],
+        "difficulty": null,
+        "is_must_match": null,
+        "is_hard_negative": null,
+        "vision_fallback_expected": null,
+        "reason_tags": []
+      }
+    },
+    {
+      "match_type": "weighted_text_candidate",
+      "confidence": 0.94,
+      "candidate_stage": "deterministic_strict",
+      "recommendation": "high_confidence_review",
+      "engine_candidate_label": "likely_duplicate",
+      "adjudicator_suggested_label": null,
+      "human_final_label": null,
+      "visibility": "main_review_list",
+      "visibility_reason": "candidate has enough non-low-information evidence for the main review list",
+      "candidate_category": "standard",
+      "a": {
+        "document": "case01_exact_duplicate_pages.pdf",
+        "page": 1
+      },
+      "b": {
+        "document": "case09_multidocument_batch_B.pdf",
+        "page": 4
+      },
+      "page_a_low_information": false,
+      "page_b_low_information": false,
+      "signals": [
+        {
+          "name": "tfidf_cosine_similarity",
+          "score": 0.9399623676449188,
+          "details": {
+            "candidate_stage": "deterministic_strict"
+          }
+        }
+      ],
+      "truth": {
+        "a": {
+          "document": "case01_exact_duplicate_pages.pdf",
+          "page": 1
+        },
+        "b": {
+          "document": "case09_multidocument_batch_B.pdf",
+          "page": 4
+        },
+        "label": "duplicate",
+        "type": "near_duplicate_reprint",
+        "notes": "",
+        "pair_id": null,
+        "v3_truth_label": null,
+        "expected_min_layer": null,
+        "required_layers": [],
+        "difficulty": null,
+        "is_must_match": null,
+        "is_hard_negative": null,
+        "vision_fallback_expected": null,
+        "reason_tags": []
+      }
+    },
+    {
+      "match_type": "weighted_text_candidate",
+      "confidence": 0.94,
+      "candidate_stage": "deterministic_strict",
+      "recommendation": "high_confidence_review",
+      "engine_candidate_label": "likely_duplicate",
+      "adjudicator_suggested_label": null,
+      "human_final_label": null,
+      "visibility": "main_review_list",
+      "visibility_reason": "candidate has enough non-low-information evidence for the main review list",
+      "candidate_category": "standard",
+      "a": {
+        "document": "case01_exact_duplicate_pages.pdf",
+        "page": 2
+      },
+      "b": {
+        "document": "case09_multidocument_batch_B.pdf",
+        "page": 4
+      },
+      "page_a_low_information": false,
+      "page_b_low_information": false,
+      "signals": [
+        {
+          "name": "tfidf_cosine_similarity",
+          "score": 0.9399623676449188,
+          "details": {
+            "candidate_stage": "deterministic_strict"
+          }
+        }
+      ],
+      "truth": {
+        "a": {
+          "document": "case01_exact_duplicate_pages.pdf",
+          "page": 2
+        },
+        "b": {
+          "document": "case09_multidocument_batch_B.pdf",
+          "page": 4
+        },
+        "label": "duplicate",
+        "type": "near_duplicate_reprint",
+        "notes": "",
+        "pair_id": null,
+        "v3_truth_label": null,
+        "expected_min_layer": null,
+        "required_layers": [],
+        "difficulty": null,
+        "is_must_match": null,
+        "is_hard_negative": null,
+        "vision_fallback_expected": null,
+        "reason_tags": []
+      }
+    }
+  ],
+  "false_negatives": [
+    {
+      "a": {
+        "document": "case02_near_duplicate_visual_pages.pdf",
+        "page": 1
+      },
+      "b": {
+        "document": "case02_near_duplicate_visual_pages.pdf",
+        "page": 2
+      },
+      "label": "duplicate",
+      "type": "near_visual",
+      "notes": "",
+      "pair_id": null,
+      "v3_truth_label": null,
+      "expected_min_layer": null,
+      "required_layers": [],
+      "difficulty": null,
+      "is_must_match": null,
+      "is_hard_negative": null,
+      "vision_fallback_expected": null,
+      "reason_tags": []
+    },
+    {
+      "a": {
+        "document": "case04_same_page_different_scan_quality.pdf",
+        "page": 1
+      },
+      "b": {
+        "document": "case04_same_page_different_scan_quality.pdf",
+        "page": 2
+      },
+      "label": "duplicate",
+      "type": "same_page_different_scan_quality",
+      "notes": "",
+      "pair_id": null,
+      "v3_truth_label": null,
+      "expected_min_layer": null,
+      "required_layers": [],
+      "difficulty": null,
+      "is_must_match": null,
+      "is_hard_negative": null,
+      "vision_fallback_expected": null,
+      "reason_tags": []
+    },
+    {
+      "a": {
+        "document": "case07_header_footer_page_number_noise.pdf",
+        "page": 1
+      },
+      "b": {
+        "document": "case07_header_footer_page_number_noise.pdf",
+        "page": 2
+      },
+      "label": "duplicate",
+      "type": "same_body_header_footer_noise",
+      "notes": "",
+      "pair_id": null,
+      "v3_truth_label": null,
+      "expected_min_layer": null,
+      "required_layers": [],
+      "difficulty": null,
+      "is_must_match": null,
+      "is_hard_negative": null,
+      "vision_fallback_expected": null,
+      "reason_tags": []
+    },
+    {
+      "a": {
+        "document": "case07_header_footer_page_number_noise.pdf",
+        "page": 1
+      },
+      "b": {
+        "document": "case07_header_footer_page_number_noise.pdf",
+        "page": 3
+      },
+      "label": "duplicate",
+      "type": "same_body_header_footer_noise",
+      "notes": "",
+      "pair_id": null,
+      "v3_truth_label": null,
+      "expected_min_layer": null,
+      "required_layers": [],
+      "difficulty": null,
+      "is_must_match": null,
+      "is_hard_negative": null,
+      "vision_fallback_expected": null,
+      "reason_tags": []
+    },
+    {
+      "a": {
+        "document": "case07_header_footer_page_number_noise.pdf",
+        "page": 2
+      },
+      "b": {
+        "document": "case07_header_footer_page_number_noise.pdf",
+        "page": 3
+      },
+      "label": "duplicate",
+      "type": "same_body_header_footer_noise",
+      "notes": "",
+      "pair_id": null,
+      "v3_truth_label": null,
+      "expected_min_layer": null,
+      "required_layers": [],
+      "difficulty": null,
+      "is_must_match": null,
+      "is_hard_negative": null,
+      "vision_fallback_expected": null,
+      "reason_tags": []
+    }
+  ],
+  "expected_negative_hits": [
+    {
+      "match_type": "weighted_text_candidate",
+      "confidence": 0.97,
+      "candidate_stage": "deterministic_strict",
+      "recommendation": "high_confidence_review",
+      "engine_candidate_label": "likely_duplicate",
+      "adjudicator_suggested_label": null,
+      "human_final_label": null,
+      "visibility": "main_review_list",
+      "visibility_reason": "candidate has enough non-low-information evidence for the main review list",
+      "candidate_category": "standard",
+      "a": {
+        "document": "case09_multidocument_batch_A.pdf",
+        "page": 1
+      },
+      "b": {
+        "document": "case09_multidocument_batch_B.pdf",
+        "page": 1
+      },
+      "page_a_low_information": false,
+      "page_b_low_information": false,
+      "signals": [
+        {
+          "name": "tfidf_cosine_similarity",
+          "score": 1.0000000000000004,
+          "details": {
+            "candidate_stage": "deterministic_strict"
+          }
+        }
+      ],
+      "truth": {
+        "a": {
+          "document": "case09_multidocument_batch_A.pdf",
+          "page": 1
+        },
+        "b": {
+          "document": "case09_multidocument_batch_B.pdf",
+          "page": 1
+        },
+        "label": "not_duplicate",
+        "type": "cover_page_template_trap",
+        "notes": "",
+        "pair_id": null,
+        "v3_truth_label": null,
+        "expected_min_layer": null,
+        "required_layers": [],
+        "difficulty": null,
+        "is_must_match": null,
+        "is_hard_negative": null,
+        "vision_fallback_expected": null,
+        "reason_tags": []
+      }
+    },
+    {
+      "match_type": "weighted_text_candidate",
+      "confidence": 0.97,
+      "candidate_stage": "deterministic_strict",
+      "recommendation": "high_confidence_review",
+      "engine_candidate_label": "likely_duplicate",
+      "adjudicator_suggested_label": null,
+      "human_final_label": null,
+      "visibility": "main_review_list",
+      "visibility_reason": "candidate has enough non-low-information evidence for the main review list",
+      "candidate_category": "standard",
+      "a": {
+        "document": "case09_multidocument_batch_A.pdf",
+        "page": 2
+      },
+      "b": {
+        "document": "case09_multidocument_batch_A.pdf",
+        "page": 3
+      },
+      "page_a_low_information": false,
+      "page_b_low_information": false,
+      "signals": [
+        {
+          "name": "tfidf_cosine_similarity",
+          "score": 1.0000000000000002,
+          "details": {
+            "candidate_stage": "deterministic_strict"
+          }
+        }
+      ],
+      "truth": {
+        "a": {
+          "document": "case09_multidocument_batch_A.pdf",
+          "page": 2
+        },
+        "b": {
+          "document": "case09_multidocument_batch_A.pdf",
+          "page": 3
+        },
+        "label": "not_duplicate",
+        "type": "same_document_family_not_duplicate",
+        "notes": "",
+        "pair_id": null,
+        "v3_truth_label": null,
+        "expected_min_layer": null,
+        "required_layers": [],
+        "difficulty": null,
+        "is_must_match": null,
+        "is_hard_negative": null,
+        "vision_fallback_expected": null,
+        "reason_tags": []
+      }
+    },
+    {
+      "match_type": "weighted_text_candidate",
+      "confidence": 0.8884,
+      "candidate_stage": "deterministic_strict",
+      "recommendation": "review_with_ai_escalation_available",
+      "engine_candidate_label": "possible_duplicate",
+      "adjudicator_suggested_label": null,
+      "human_final_label": null,
+      "visibility": "main_review_list",
+      "visibility_reason": "candidate has enough non-low-information evidence for the main review list",
+      "candidate_category": "standard",
+      "a": {
+        "document": "case09_multidocument_batch_A.pdf",
+        "page": 2
+      },
+      "b": {
+        "document": "case09_multidocument_batch_B.pdf",
+        "page": 2
+      },
+      "page_a_low_information": false,
+      "page_b_low_information": false,
+      "signals": [
+        {
+          "name": "tfidf_cosine_similarity",
+          "score": 0.8883633091354907,
+          "details": {
+            "candidate_stage": "deterministic_strict"
+          }
+        }
+      ],
+      "truth": {
+        "a": {
+          "document": "case09_multidocument_batch_A.pdf",
+          "page": 2
+        },
+        "b": {
+          "document": "case09_multidocument_batch_B.pdf",
+          "page": 2
+        },
+        "label": "not_duplicate",
+        "type": "similar_template_different_patient",
+        "notes": "",
+        "pair_id": null,
+        "v3_truth_label": null,
+        "expected_min_layer": null,
+        "required_layers": [],
+        "difficulty": null,
+        "is_must_match": null,
+        "is_hard_negative": null,
+        "vision_fallback_expected": null,
+        "reason_tags": []
+      }
+    }
+  ],
+  "partial_overlap_hits": [
+    {
+      "match_type": "weighted_text_candidate",
+      "confidence": 0.9275,
+      "candidate_stage": "deterministic_strict",
+      "recommendation": "high_confidence_review",
+      "engine_candidate_label": "likely_duplicate",
+      "adjudicator_suggested_label": null,
+      "human_final_label": null,
+      "visibility": "main_review_list",
+      "visibility_reason": "candidate has enough non-low-information evidence for the main review list",
+      "candidate_category": "standard",
+      "a": {
+        "document": "case09_multidocument_batch_A.pdf",
+        "page": 4
+      },
+      "b": {
+        "document": "case09_multidocument_batch_B.pdf",
+        "page": 3
+      },
+      "page_a_low_information": false,
+      "page_b_low_information": false,
+      "signals": [
+        {
+          "name": "tfidf_cosine_similarity",
+          "score": 0.9275462714769964,
+          "details": {
+            "candidate_stage": "deterministic_strict"
+          }
+        }
+      ],
+      "truth": {
+        "a": {
+          "document": "case09_multidocument_batch_A.pdf",
+          "page": 4
+        },
+        "b": {
+          "document": "case09_multidocument_batch_B.pdf",
+          "page": 3
+        },
+        "label": "partial_overlap",
+        "type": "partial_overlap_med_list",
+        "notes": "",
+        "pair_id": null,
+        "v3_truth_label": null,
+        "expected_min_layer": null,
+        "required_layers": [],
+        "difficulty": null,
+        "is_must_match": null,
+        "is_hard_negative": null,
+        "vision_fallback_expected": null,
+        "reason_tags": []
+      }
+    }
+  ],
+  "low_information_ignore_hits": [],
+  "unknown_predictions": [
+    {
+      "match_type": "exact_image_duplicate",
+      "confidence": 1.0,
+      "candidate_stage": "deterministic_exact",
+      "recommendation": "safe_to_review_as_duplicate",
+      "engine_candidate_label": "duplicate",
+      "adjudicator_suggested_label": null,
+      "human_final_label": null,
+      "visibility": "main_review_list",
+      "visibility_reason": "candidate has enough non-low-information evidence for the main review list",
+      "candidate_category": "standard",
+      "a": {
+        "document": "case01_exact_duplicate_pages.pdf",
+        "page": 3
+      },
+      "b": {
+        "document": "case09_multidocument_batch_A.pdf",
+        "page": 6
+      },
+      "page_a_low_information": false,
+      "page_b_low_information": false,
+      "signals": [
+        {
+          "name": "exact_image_hash",
+          "score": 1.0,
+          "details": {}
+        },
+        {
+          "name": "exact_normalized_text_hash",
+          "score": 1.0,
+          "details": {}
+        },
+        {
+          "name": "tfidf_cosine_similarity",
+          "score": 0.9999999999999996,
+          "details": {
+            "candidate_stage": "deterministic_strict"
+          }
+        }
+      ]
+    },
+    {
+      "match_type": "weighted_text_candidate",
+      "confidence": 0.8884,
+      "candidate_stage": "deterministic_strict",
+      "recommendation": "review_with_ai_escalation_available",
+      "engine_candidate_label": "possible_duplicate",
+      "adjudicator_suggested_label": null,
+      "human_final_label": null,
+      "visibility": "main_review_list",
+      "visibility_reason": "candidate has enough non-low-information evidence for the main review list",
+      "candidate_category": "standard",
+      "a": {
+        "document": "case09_multidocument_batch_A.pdf",
+        "page": 3
+      },
+      "b": {
+        "document": "case09_multidocument_batch_B.pdf",
+        "page": 2
+      },
+      "page_a_low_information": false,
+      "page_b_low_information": false,
+      "signals": [
+        {
+          "name": "tfidf_cosine_similarity",
+          "score": 0.8883633091354907,
+          "details": {
+            "candidate_stage": "deterministic_strict"
+          }
+        }
+      ]
+    }
+  ],
+  "evaluation_available": true,
+  "truth_status": {
+    "available": true,
+    "status": "available",
+    "source": "explicit",
+    "path": "examples/truth/synthetic_all_pairs_truth.json",
+    "pair_count": 19,
+    "message": "Using explicit truth file: examples/truth/synthetic_all_pairs_truth.json",
+    "warnings": []
+  },
+  "capabilities": {
+    "exact_image_hash": {
+      "layer": "exact_image_hash",
+      "enabled": true,
+      "available": true,
+      "used": true,
+      "provider": "builtin",
+      "status": "available",
+      "reason": null,
+      "model": null,
+      "endpoint_configured": false,
+      "required": false,
+      "role": "detector",
+      "details": {}
+    },
+    "exact_text_hash": {
+      "layer": "exact_text_hash",
+      "enabled": true,
+      "available": true,
+      "used": true,
+      "provider": "builtin",
+      "status": "available",
+      "reason": null,
+      "model": null,
+      "endpoint_configured": false,
+      "required": false,
+      "role": "detector",
+      "details": {}
+    },
+    "perceptual_hash": {
+      "layer": "perceptual_hash",
+      "enabled": true,
+      "available": true,
+      "used": true,
+      "provider": "builtin",
+      "status": "available",
+      "reason": null,
+      "model": null,
+      "endpoint_configured": false,
+      "required": false,
+      "role": "detector",
+      "details": {
+        "threshold": 8
+      }
+    },
+    "weighted_text_similarity": {
+      "layer": "weighted_text_similarity",
+      "enabled": true,
+      "available": true,
+      "used": true,
+      "provider": "builtin",
+      "status": "available",
+      "reason": null,
+      "model": null,
+      "endpoint_configured": false,
+      "required": false,
+      "role": "detector",
+      "details": {
+        "tfidf_threshold": 0.86,
+        "tfidf_top_k": 3
+      }
+    },
+    "deterministic_multipass": {
+      "layer": "deterministic_multipass",
+      "enabled": true,
+      "available": true,
+      "used": true,
+      "provider": "builtin",
+      "status": "available",
+      "reason": null,
+      "model": null,
+      "endpoint_configured": false,
+      "required": false,
+      "role": "detector",
+      "details": {
+        "strict_phash_threshold": 8,
+        "standard_phash_threshold": 16,
+        "loose_phash_threshold": 28,
+        "strict_tfidf_threshold": 0.94,
+        "standard_tfidf_threshold": 0.86,
+        "loose_tfidf_threshold": 0.74,
+        "visual_all_pages": false,
+        "text_top_k": 5
+      }
+    },
+    "low_information_filter": {
+      "layer": "low_information_filter",
+      "enabled": true,
+      "available": true,
+      "used": true,
+      "provider": "builtin",
+      "status": "available",
+      "reason": null,
+      "model": null,
+      "endpoint_configured": false,
+      "required": false,
+      "role": "candidate_hygiene",
+      "details": {
+        "word_count_threshold": 12,
+        "suppress_candidates": true,
+        "include_exact_matches": false
+      }
+    },
+    "candidate_budget_controls": {
+      "layer": "candidate_budget_controls",
+      "enabled": true,
+      "available": true,
+      "used": true,
+      "provider": "builtin",
+      "status": "available",
+      "reason": null,
+      "model": null,
+      "endpoint_configured": false,
+      "required": false,
+      "role": "candidate_hygiene",
+      "details": {
+        "max_candidates_per_job": 2000,
+        "max_candidates_per_page": 40
+      }
+    },
+    "ocr": {
+      "layer": "ocr",
+      "enabled": false,
+      "available": false,
+      "used": false,
+      "provider": "tiered",
+      "status": "disabled",
+      "reason": "DUPE_OCR_ENABLED=false or --ocr not provided",
+      "model": null,
+      "endpoint_configured": false,
+      "required": false,
+      "role": "enrichment",
+      "details": {
+        "tiered": true
+      }
+    },
+    "tesseract_ocr": {
+      "layer": "tesseract_ocr",
+      "enabled": false,
+      "available": false,
+      "used": false,
+      "provider": "tesseract",
+      "status": "disabled",
+      "reason": "DUPE_OCR_ENABLED=false or DUPE_TESSERACT_ENABLED=false",
+      "model": null,
+      "endpoint_configured": false,
+      "required": false,
+      "role": "enrichment",
+      "details": {
+        "tesseract_cmd": "tesseract"
+      }
+    },
+    "openai_ocr_fallback": {
+      "layer": "openai_ocr_fallback",
+      "enabled": false,
+      "available": false,
+      "used": false,
+      "provider": "openai",
+      "status": "disabled",
+      "reason": "DUPE_OPENAI_OCR_ENABLED=false",
+      "model": "gpt-5.4-mini",
+      "endpoint_configured": false,
+      "required": false,
+      "role": "enrichment",
+      "details": {}
+    },
+    "embeddings": {
+      "layer": "embeddings",
+      "enabled": false,
+      "available": false,
+      "used": false,
+      "provider": "openai",
+      "status": "disabled",
+      "reason": "DUPE_EMBEDDINGS_ENABLED=false or --embeddings not provided",
+      "model": "text-embedding-3-small",
+      "endpoint_configured": false,
+      "required": false,
+      "role": "detector",
+      "details": {}
+    },
+    "llm_candidate_detector": {
+      "layer": "llm_candidate_detector",
+      "enabled": false,
+      "available": false,
+      "used": false,
+      "provider": "openai",
+      "status": "disabled",
+      "reason": "DUPE_LLM_CANDIDATE_ENABLED=false or --llm-detector not provided",
+      "model": null,
+      "endpoint_configured": false,
+      "required": false,
+      "role": "detector",
+      "details": {}
+    },
+    "adjudicator_agent": {
+      "layer": "adjudicator_agent",
+      "enabled": false,
+      "available": false,
+      "used": false,
+      "provider": "openai",
+      "status": "disabled",
+      "reason": "DUPE_ADJUDICATOR_ENABLED=false or --adjudicator not provided",
+      "model": null,
+      "endpoint_configured": false,
+      "required": false,
+      "role": "adjudicator",
+      "details": {}
+    }
+  },
+  "ai_call_summary": {
+    "record_count": 0,
+    "selected_count": 0,
+    "attempted_count": 0,
+    "succeeded_count": 0,
+    "changed_evidence_count": 0,
+    "changed_matching_count": 0,
+    "dry_run_count": 0,
+    "error_count": 0,
+    "by_route": {},
+    "by_status": {},
+    "by_provider": {},
+    "route_status_counts": {}
+  },
+  "schema_notes": {
+    "matches": "legacy-compatible detector candidate records",
+    "candidate_matches": "v0.6 forward schema: aggregated detector outputs with deterministic pass history and escalation recommendations",
+    "adjudicated_matches_preview": "placeholder final schema; real adjudication remains disabled until calibrated",
+    "deterministic_passes": "strict/standard/loose bands are confidence levels, not independent votes",
+    "low_information_filter": "Candidate hygiene suppresses/downranks low-information blank/cover/signature/separator pages before AI escalation; v0.8 treats low-information as visibility/category, not a duplicate label.",
+    "embedding_similarity": "v0.6 embedding detector is a post-deterministic support signal for selected candidates",
+    "tiered_ocr": "v0.8 OCR validation route: native text -> Tesseract TSV/confidence -> selected OpenAI OCR fallback with selection/skip reasons",
+    "ai_route_governance": "v0.8.1 separates OpenAI use into logical routes: vision_ocr_extraction, text_embedding, text_adjudication, and optional vision_pair_adjudication. Reports can emit an AI call ledger without PHI text.",
+    "ocr_validation": "v0.8 adds OCR-specific route rows, OCR-dependent truth recall, selected OpenAI fallback rows, and OCR candidate diagnostics.",
+    "review_buckets": "v0.8 keeps reviewer-facing labels aligned to duplicate, likely_duplicate, possible_duplicate, partial_overlap, and needs_review. not_duplicate is reserved for adjudicator/human decisions.",
+    "candidate_visibility": "v0.8 separates label from visibility: main_review_list, low_information, and calibration_only.",
+    "low_information_truth": "low_information_ignore remains a truth/evaluation category only.",
+    "v1_output_contract": "Detector output now includes engine_candidate_label, adjudicator_suggested_label, human_final_label, visibility, visibility_reason, and candidate_category.",
+    "calibration_artifacts": "v0.8 eval commands emit threshold sweeps, candidate summaries, false-positive review CSVs, false-negative review CSVs, and visibility counts."
+  }
+}

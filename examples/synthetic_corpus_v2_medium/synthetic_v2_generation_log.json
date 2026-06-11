@@ -1,0 +1,54 @@
+{
+  "schema_version": "synthetic_corpus_v2_generation_log_v1",
+  "seed": 24042026,
+  "generator_script": "generate_synthetic_v2.py",
+  "events": [
+    {
+      "event": "initialized",
+      "detail": "Created grouped synthetic medical-looking PDFs with no real PHI."
+    },
+    {
+      "event": "built_cases",
+      "detail": "Implemented cases case_001 through case_020."
+    },
+    {
+      "event": "added_candidate_explosion_filler",
+      "detail": "Added repeated templates, medication lists, boilerplate, lab layouts, imaging layouts, and OCR stress pages."
+    },
+    {
+      "event": "rendered_pdfs",
+      "detail": "Rendered native and image-only PDF pages with controlled transformations."
+    }
+  ],
+  "transformation_catalog": [
+    "rotation",
+    "skew",
+    "crop",
+    "border",
+    "compression",
+    "blur",
+    "noise",
+    "contrast",
+    "brightness",
+    "resolution change",
+    "page stamp",
+    "watermark",
+    "fax header",
+    "barcode",
+    "page number overlay",
+    "shadow",
+    "OCR trap substitutions"
+  ],
+  "text_variation_catalog": [
+    "formatting-only differences",
+    "line break changes",
+    "font/margin changes",
+    "minor OCR-like substitutions",
+    "medical abbreviation differences",
+    "semantic paraphrase"
+  ],
+  "notes": [
+    "Engine-run outputs are schema templates only until a detector is run against the corpus.",
+    "All patient/provider identifiers are synthetic and generated for duplicate-testing only."
+  ]
+}

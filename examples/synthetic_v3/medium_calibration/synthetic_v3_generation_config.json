@@ -1,0 +1,71 @@
+{
+  "profile_name": "medium_calibration",
+  "profile": {
+    "label": "Medium calibration corpus",
+    "target_pages": 650,
+    "truth_groups": {
+      "deterministic": 30,
+      "ocr": 38,
+      "vision": 22,
+      "embedding": 22,
+      "llm": 23,
+      "partial": 15
+    },
+    "hard_negatives": 150,
+    "seed": 23001,
+    "description": "Priority corpus for threshold tuning and v1/v2 decision-making."
+  },
+  "seed": 23001,
+  "source_groups": [
+    "source_A_client_upload",
+    "source_B_email_attachment",
+    "source_C_scanned_mail",
+    "source_D_legacy_export",
+    "source_E_manual_rescan",
+    "source_F_fax_batch"
+  ],
+  "document_families": [
+    "hearing_notice",
+    "case_cover_sheet",
+    "medical_summary",
+    "medical_appointment_note",
+    "benefit_determination_letter",
+    "appeal_letter",
+    "employer_letter",
+    "tribunal_order",
+    "evidence_packet_cover",
+    "id_information_page",
+    "receipt_proof_of_payment",
+    "checkbox_form",
+    "signature_form",
+    "fax_correspondence",
+    "email_printout",
+    "evidence_bundle"
+  ],
+  "text_layer_types": [
+    "native_text_clean",
+    "native_text_poor_extraction",
+    "image_only_clean_scan",
+    "image_only_low_quality_scan",
+    "image_only_fax_quality",
+    "image_only_skewed",
+    "image_only_blurry",
+    "image_only_low_contrast",
+    "image_only_partial_crop",
+    "image_only_stamp_or_watermark",
+    "mixed_native_and_scanned"
+  ],
+  "quality_mix_target": {
+    "native_text_clean": 0.1,
+    "native_text_poor_extraction": 0.05,
+    "image_only_clean_scan": 0.22,
+    "image_only_low_quality_scan": 0.24,
+    "image_only_fax_quality": 0.12,
+    "image_only_skewed": 0.06,
+    "image_only_blurry": 0.05,
+    "image_only_low_contrast": 0.05,
+    "image_only_partial_crop": 0.04,
+    "image_only_stamp_or_watermark": 0.05,
+    "mixed_native_and_scanned": 0.02
+  }
+}

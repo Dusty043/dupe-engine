@@ -1,0 +1,209 @@
+{
+  "exact_image_hash": {
+    "layer": "exact_image_hash",
+    "enabled": true,
+    "available": true,
+    "used": true,
+    "provider": "builtin",
+    "status": "available",
+    "reason": null,
+    "model": null,
+    "endpoint_configured": false,
+    "required": false,
+    "role": "detector",
+    "details": {}
+  },
+  "exact_text_hash": {
+    "layer": "exact_text_hash",
+    "enabled": true,
+    "available": true,
+    "used": true,
+    "provider": "builtin",
+    "status": "available",
+    "reason": null,
+    "model": null,
+    "endpoint_configured": false,
+    "required": false,
+    "role": "detector",
+    "details": {}
+  },
+  "perceptual_hash": {
+    "layer": "perceptual_hash",
+    "enabled": true,
+    "available": true,
+    "used": true,
+    "provider": "builtin",
+    "status": "available",
+    "reason": null,
+    "model": null,
+    "endpoint_configured": false,
+    "required": false,
+    "role": "detector",
+    "details": {
+      "threshold": 8
+    }
+  },
+  "weighted_text_similarity": {
+    "layer": "weighted_text_similarity",
+    "enabled": true,
+    "available": true,
+    "used": true,
+    "provider": "builtin",
+    "status": "available",
+    "reason": null,
+    "model": null,
+    "endpoint_configured": false,
+    "required": false,
+    "role": "detector",
+    "details": {
+      "tfidf_threshold": 0.86,
+      "tfidf_top_k": 3
+    }
+  },
+  "deterministic_multipass": {
+    "layer": "deterministic_multipass",
+    "enabled": true,
+    "available": true,
+    "used": true,
+    "provider": "builtin",
+    "status": "available",
+    "reason": null,
+    "model": null,
+    "endpoint_configured": false,
+    "required": false,
+    "role": "detector",
+    "details": {
+      "strict_phash_threshold": 8,
+      "standard_phash_threshold": 16,
+      "loose_phash_threshold": 28,
+      "strict_tfidf_threshold": 0.94,
+      "standard_tfidf_threshold": 0.86,
+      "loose_tfidf_threshold": 0.74,
+      "visual_all_pages": false,
+      "text_top_k": 5
+    }
+  },
+  "low_information_filter": {
+    "layer": "low_information_filter",
+    "enabled": true,
+    "available": true,
+    "used": true,
+    "provider": "builtin",
+    "status": "available",
+    "reason": null,
+    "model": null,
+    "endpoint_configured": false,
+    "required": false,
+    "role": "candidate_hygiene",
+    "details": {
+      "word_count_threshold": 12,
+      "suppress_candidates": true,
+      "include_exact_matches": false
+    }
+  },
+  "candidate_budget_controls": {
+    "layer": "candidate_budget_controls",
+    "enabled": true,
+    "available": true,
+    "used": true,
+    "provider": "builtin",
+    "status": "available",
+    "reason": null,
+    "model": null,
+    "endpoint_configured": false,
+    "required": false,
+    "role": "candidate_hygiene",
+    "details": {
+      "max_candidates_per_job": 2000,
+      "max_candidates_per_page": 40
+    }
+  },
+  "ocr": {
+    "layer": "ocr",
+    "enabled": false,
+    "available": false,
+    "used": false,
+    "provider": "tiered",
+    "status": "disabled",
+    "reason": "DUPE_OCR_ENABLED=false or --ocr not provided",
+    "model": null,
+    "endpoint_configured": false,
+    "required": false,
+    "role": "enrichment",
+    "details": {
+      "tiered": true
+    }
+  },
+  "tesseract_ocr": {
+    "layer": "tesseract_ocr",
+    "enabled": false,
+    "available": false,
+    "used": false,
+    "provider": "tesseract",
+    "status": "disabled",
+    "reason": "DUPE_OCR_ENABLED=false or DUPE_TESSERACT_ENABLED=false",
+    "model": null,
+    "endpoint_configured": false,
+    "required": false,
+    "role": "enrichment",
+    "details": {
+      "tesseract_cmd": "tesseract"
+    }
+  },
+  "openai_ocr_fallback": {
+    "layer": "openai_ocr_fallback",
+    "enabled": false,
+    "available": false,
+    "used": false,
+    "provider": "openai",
+    "status": "disabled",
+    "reason": "DUPE_OPENAI_OCR_ENABLED=false",
+    "model": "gpt-5.4-mini",
+    "endpoint_configured": false,
+    "required": false,
+    "role": "enrichment",
+    "details": {}
+  },
+  "embeddings": {
+    "layer": "embeddings",
+    "enabled": false,
+    "available": false,
+    "used": false,
+    "provider": "openai",
+    "status": "disabled",
+    "reason": "DUPE_EMBEDDINGS_ENABLED=false or --embeddings not provided",
+    "model": "text-embedding-3-small",
+    "endpoint_configured": false,
+    "required": false,
+    "role": "detector",
+    "details": {}
+  },
+  "llm_candidate_detector": {
+    "layer": "llm_candidate_detector",
+    "enabled": false,
+    "available": false,
+    "used": false,
+    "provider": "openai",
+    "status": "disabled",
+    "reason": "DUPE_LLM_CANDIDATE_ENABLED=false or --llm-detector not provided",
+    "model": null,
+    "endpoint_configured": false,
+    "required": false,
+    "role": "detector",
+    "details": {}
+  },
+  "adjudicator_agent": {
+    "layer": "adjudicator_agent",
+    "enabled": false,
+    "available": false,
+    "used": false,
+    "provider": "openai",
+    "status": "disabled",
+    "reason": "DUPE_ADJUDICATOR_ENABLED=false or --adjudicator not provided",
+    "model": null,
+    "endpoint_configured": false,
+    "required": false,
+    "role": "adjudicator",
+    "details": {}
+  }
+}

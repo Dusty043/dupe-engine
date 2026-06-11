@@ -1,0 +1,383 @@
+{
+  "corpus_id": "synthetic_v4_calibration",
+  "generated_at_unix": 1780501438,
+  "page_count": 420,
+  "pdf_count": 60,
+  "pdfs": [
+    {
+      "file": "received_records/received_batch_001.pdf",
+      "page_count": 6,
+      "sha256": "40011b4d1fa961a24c34b7496a4d6b538e3b4c1ed2a1d406f0f8259db267ee46",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_002.pdf",
+      "page_count": 7,
+      "sha256": "5e50532c22733ba5d1b727118819ae16743bcea4a99d321da405ba065a6c56d0",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_003.pdf",
+      "page_count": 6,
+      "sha256": "04734baacf2943e2c475c227866aecce83c8c3db8025e6909757d459284dd3f4",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_004.pdf",
+      "page_count": 7,
+      "sha256": "80cefe55e282e2ca6baa9a0de70826b98b3a93df2f26361c3eced068ffc3feb9",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_005.pdf",
+      "page_count": 8,
+      "sha256": "fcd35569ff4a628f23485b937af28cf1595e40eda67881dcb8ca7f237ba6e246",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_006.pdf",
+      "page_count": 7,
+      "sha256": "a762466a860d8ba8631fcf1fc5303bea3d7254e2d2d916ce2611f61c4aa52854",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_007.pdf",
+      "page_count": 5,
+      "sha256": "2d96cfb7984f6bef03cf8a1bc2cf9346a14d4ad61a0c9c303226483d8ec82425",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_008.pdf",
+      "page_count": 7,
+      "sha256": "88ddeb0dcd5d3e6a69a0b696e5afa1e22a13fc33e880ab00fcdfd12363265ee0",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_009.pdf",
+      "page_count": 7,
+      "sha256": "2c257bb07bfd9dca575fde6aae50572647d11fabf5cd26f73e952737a9285a5d",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_010.pdf",
+      "page_count": 7,
+      "sha256": "914253841f2f8ddf8068469778ef9b985ef312a1bdc509fd0050e194e77fc115",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_011.pdf",
+      "page_count": 7,
+      "sha256": "f89e981fbf99d884d6defe6c30938566f78475125c2293a2ca8aee78c967909b",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_012.pdf",
+      "page_count": 7,
+      "sha256": "fde8159bc5d237f258b28a00ea55ec6c71139a05acb29d084d6ca2089c6d1932",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_013.pdf",
+      "page_count": 5,
+      "sha256": "d98e92b513f99e05979b4e4138fe11c37000d3e01623c64d19101570af6ec1b2",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_014.pdf",
+      "page_count": 6,
+      "sha256": "6fdcc8ae62d4bb7c50540005f62b30f3e70c15141ce9074563da202472c84178",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_015.pdf",
+      "page_count": 7,
+      "sha256": "3ccf5fc92ec556b29365308bb59df67b951bf9a94a9446df80a16807503056bd",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_016.pdf",
+      "page_count": 6,
+      "sha256": "6db8cf29b4401a6b54ab8b2fadc9e65e0ad5248532bba7dc479a88cd8f46d49d",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_017.pdf",
+      "page_count": 7,
+      "sha256": "cb545c76cce23c6db3e214b499c7786cd2adc55389d8b1e8661cd1bc908b629a",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_018.pdf",
+      "page_count": 6,
+      "sha256": "7b91bb3918708ab07c08252fd019b8b7fdd4c3a5bf546b6c86e69f7483a18e19",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_019.pdf",
+      "page_count": 9,
+      "sha256": "f9a24ae8faf5f01e31a815bf0404f5c7d01d71297c2c5fb9ef98e022fc00850a",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_020.pdf",
+      "page_count": 7,
+      "sha256": "90d0c536b3631d259b84e3c8078f4237194db1c6f7a4804d15b4ba1df204d1c4",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_021.pdf",
+      "page_count": 7,
+      "sha256": "5c92b09ab469d154f3b962601f35af9a0cebb315759b27d1576cbd517430a31d",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_022.pdf",
+      "page_count": 7,
+      "sha256": "31dd1051090841a165ddb71ecfd831b8b180b55f4008d2ea1520e99cfead27d1",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_023.pdf",
+      "page_count": 8,
+      "sha256": "0dad48a51b04ba4fb59a17185b43bac459976e5ee668bd54f0af8f4027b35bcc",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_024.pdf",
+      "page_count": 7,
+      "sha256": "3725244965822dec774b2ee22c2edb8c44af3041ce2cec7a66c88ac97e65f4f6",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_025.pdf",
+      "page_count": 7,
+      "sha256": "9b004780d868175b2f219ccedb642a9f9dcb939e3f1902cb4a828aeedf7188db",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_026.pdf",
+      "page_count": 7,
+      "sha256": "7ad50391637a084ea8c1c4525d32422fb44f148798f2a0ecd41062179c3a1776",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_027.pdf",
+      "page_count": 4,
+      "sha256": "bf286cf5a16edb1176aa25bd0d42ea7772ef7c2dea63b44b36209924f2c99b43",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_028.pdf",
+      "page_count": 7,
+      "sha256": "3c02be3b4ddc447302dc1c69d77ef4054aaa1b62ee84955570d6358f5e755163",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_029.pdf",
+      "page_count": 8,
+      "sha256": "ac968568c27082783aaba1bf2fa1a70ee4cb698c5420cfccb3c604654004a1f2",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_030.pdf",
+      "page_count": 7,
+      "sha256": "4baf35b0f74e03bd4ba6292565bfd156f3a5ec8d28e6cc68f34176bcc1880346",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_031.pdf",
+      "page_count": 6,
+      "sha256": "79a46d786d0c1dfa35cb3cb572531eac1a85c4d006b37599a09ff00316183da1",
+      "source_root": "received_records"
+    },
+    {
+      "file": "received_records/received_batch_032.pdf",
+      "page_count": 8,
+      "sha256": "e18b2b941bb3e6458a4a8303ec42fbc8c1a8102a46ac866c3345e927b2bb8d30",
+      "source_root": "received_records"
+    },
+    {
+      "file": "ere_records/ere_record_001.pdf",
+      "page_count": 5,
+      "sha256": "178082f0a949426451483a5889ebbf4ea16acb941036298b03c23c670ec81029",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_002.pdf",
+      "page_count": 7,
+      "sha256": "39da3bac417f32c87d45430e747266bc2faf01b56973e0f2a71a5d20190e311d",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_003.pdf",
+      "page_count": 8,
+      "sha256": "2c2098900ad9df3ad036796a75e38fd9b951ca255967e1e719473e1ae4771371",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_004.pdf",
+      "page_count": 6,
+      "sha256": "6aa9761fdfd24cf4cc50be3e1f7b39a5a2f74439c99229e3a7ec966a92594d81",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_005.pdf",
+      "page_count": 5,
+      "sha256": "009f6cad953e5904f31ded9a417436b41f783b13082d8ec55ce405a38f29e8d4",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_006.pdf",
+      "page_count": 8,
+      "sha256": "6dc38e53c10a00c3c9e8daf6a27f5f1b1dae63d649fb631c12d0f3caacb02965",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_007.pdf",
+      "page_count": 7,
+      "sha256": "e7edaa797641a73300bc40fc5a676a85a03f3cb9359370e1c4d693a7ff30f3a2",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_008.pdf",
+      "page_count": 8,
+      "sha256": "3196fe07848c5d055069b3bfd951674b34335f46baf6482cc072337d252dba88",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_009.pdf",
+      "page_count": 8,
+      "sha256": "adafacb560d2b0503a25637f7839e4f98eb71e14f578a5d2b2e5089c2aa2b5b7",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_010.pdf",
+      "page_count": 7,
+      "sha256": "fed2a85a5470c0f0f2c16ba50d1946894aa76de2a55f907b93dd5957b50404b0",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_011.pdf",
+      "page_count": 8,
+      "sha256": "49c0cafe87f912b578975d69d53bb7caa81eb4c8213290f7509fd29f8f9e5d05",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_012.pdf",
+      "page_count": 8,
+      "sha256": "73ba9f5fd378b17f8fbd2f83ef0e1c2ed7a652688d9af813b54bd6e4be58cb3a",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_013.pdf",
+      "page_count": 8,
+      "sha256": "382f10fc3941a3fd8070d45eede7721dfdf9214098a529219b7bcee68068cce7",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_014.pdf",
+      "page_count": 8,
+      "sha256": "de20649114b0b24e979e277cfdf5656a24c9c650b2062da33847cc0cac4b1ed4",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_015.pdf",
+      "page_count": 7,
+      "sha256": "57958b453c41d8273116f3376b0c08ecc523dc4e4373723eb0a2dca543b9ac62",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_016.pdf",
+      "page_count": 6,
+      "sha256": "0d169f5202b59f12d63504e7939ac1869c305a3aacc97ce0d5771995a5b4b258",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_017.pdf",
+      "page_count": 8,
+      "sha256": "352a88b4d611dae354fb38dcf4b5de5c13a9fa1ffcc19c78b35c432d0f6b649f",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_018.pdf",
+      "page_count": 8,
+      "sha256": "3da84ef4fc6f65bac4ef528658968c1fa6d99586a8c295f7cf9a3290cbe1fa11",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_019.pdf",
+      "page_count": 7,
+      "sha256": "d0553666fa4682f15593f67cfc887e920f7be0ad318d76e248d7991d777f253e",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_020.pdf",
+      "page_count": 6,
+      "sha256": "073d415f7e7c978276fcf5f56fca428ce0e43470f032d3496577322510367102",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_021.pdf",
+      "page_count": 8,
+      "sha256": "276892cf25ffd1f9dba0ad98a059a0312499223f7f498246993b1bc5dda2c35c",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_022.pdf",
+      "page_count": 5,
+      "sha256": "85fc0d6f2860419cd5e0b0759ecc9448715537e4bf7a0e47869f60af6986aee3",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_023.pdf",
+      "page_count": 8,
+      "sha256": "3ea26f6aa7c6e968d86c933970936d07e8fe024fbbf0f8e6b606f951b2bcb8c9",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_024.pdf",
+      "page_count": 7,
+      "sha256": "9a3ef118c2dbc082eba770dab17c5329bcdb2f499566795f1e2cac82e4a96f2e",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_025.pdf",
+      "page_count": 8,
+      "sha256": "5946c0bfd952e6bdb58ef1f67ea093e580238042d9547edb38d2646cbaf5f573",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_026.pdf",
+      "page_count": 8,
+      "sha256": "6d69650609b531f5278f7c44c9703e244a4b44d5a2de095417460b25363f5eb0",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_027.pdf",
+      "page_count": 8,
+      "sha256": "3dac553d478caa038753372b8e17cfaecca9c23915fc3aa9b74a54e2ebe45d99",
+      "source_root": "ere_records"
+    },
+    {
+      "file": "ere_records/ere_record_028.pdf",
+      "page_count": 8,
+      "sha256": "c699cee5fdc2d316a460b82145ac7c292580bf17f2e886969c070c64eada7a19",
+      "source_root": "ere_records"
+    }
+  ],
+  "profile": "calibration",
+  "root_layout": [
+    "received_records/",
+    "ere_records/",
+    "truth/"
+  ],
+  "seed": 44040,
+  "truth_files": {
+    "all_relationships": "truth/synthetic_v4_calibration_all_relationships.json",
+    "negative_pairs": "truth/synthetic_v4_calibration_negative_pairs.json",
+    "pages": "truth/synthetic_v4_calibration_pages.json",
+    "truth_documents": "truth/synthetic_v4_calibration_truth_documents.json",
+    "truth_groups": "truth/synthetic_v4_calibration_truth_groups.json",
+    "truth_pairs": "truth/synthetic_v4_calibration_truth_pairs.json"
+  }
+}

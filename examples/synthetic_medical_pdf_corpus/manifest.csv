@@ -1,0 +1,35 @@
+pdf_file,page_number,case_type,expected_relation,group_id,text_layer_expected,notes
+case01_exact_duplicate_pages.pdf,1,Exact duplicate pages,exact duplicate of page 2,exact_ed_note_001,yes,Same PDF page content repeated without page-number changes.
+case01_exact_duplicate_pages.pdf,2,Exact duplicate pages,exact duplicate of page 1,exact_ed_note_001,yes,Same PDF page content repeated without page-number changes.
+case01_exact_duplicate_pages.pdf,3,Negative within-document control,not duplicate,negative_unique_triage_001,yes,Unique triage addendum page in same file.
+case02_near_duplicate_visual_pages.pdf,1,Near-duplicate visual pages,near duplicate of page 2,near_visual_radiology_001,no,Base image-only scan.
+case02_near_duplicate_visual_pages.pdf,2,Near-duplicate visual pages,near duplicate of page 1,near_visual_radiology_001,no,"Same source page with skew, shift, noise, edge darkening, and received stamp."
+case03_same_text_different_formatting.pdf,1,"Same text, different formatting",same text as page 2 with different formatting,same_text_discharge_001,yes,Single-column rendering of identical source text.
+case03_same_text_different_formatting.pdf,2,"Same text, different formatting",same text as page 1 with different formatting,same_text_discharge_001,yes,Two-column/card rendering of identical source text.
+case04_same_page_different_scan_quality.pdf,1,Same page with different scan quality,"same source page as page 2, high scan quality",scan_quality_lab_001,no,High-quality image-only scan from the same source page.
+case04_same_page_different_scan_quality.pdf,2,Same page with different scan quality,"same source page as page 1, degraded scan quality",scan_quality_lab_001,no,"Low-resolution, noisy, blurred, JPEG-compressed scan of the same page."
+case05_similar_medical_not_duplicate.pdf,1,Similar medical-looking content but not duplicate,not duplicate,negative_similar_template_001,yes,Same progress-note template with different substantive content and patient fields.
+case05_similar_medical_not_duplicate.pdf,2,Similar medical-looking content but not duplicate,not duplicate,negative_similar_template_002,yes,Same progress-note template with different substantive content and patient fields.
+case05_similar_medical_not_duplicate.pdf,3,Similar medical-looking content but not duplicate,not duplicate,negative_similar_template_003,yes,Same progress-note template with different substantive content and patient fields.
+case06_ocr_scanned_image_only_pages.pdf,1,OCR/scanned image-only pages,image-only OCR target,ocr_image_only_001,no,Rasterized nursing intake page with no selectable text layer.
+case06_ocr_scanned_image_only_pages.pdf,2,OCR/scanned image-only pages,image-only OCR target,ocr_image_only_002,no,Rasterized referral page with no selectable text layer.
+case07_header_footer_page_number_noise.pdf,1,Header/footer/page-number noise,same body text/table; noisy header-footer differs,body_duplicate_lab_noise_001,yes,"Body is the same; header, footer, page labels, and side noise differ."
+case07_header_footer_page_number_noise.pdf,2,Header/footer/page-number noise,same body text/table; noisy header-footer differs,body_duplicate_lab_noise_001,yes,"Body is the same; header, footer, page labels, and side noise differ."
+case07_header_footer_page_number_noise.pdf,3,Header/footer/page-number noise,same body text/table; noisy header-footer differs,body_duplicate_lab_noise_001,yes,"Body is the same; header, footer, page labels, and side noise differ."
+case08_partial_overlaps.pdf,1,Partial overlaps,partial overlap with pages 2 and 3,partial_overlap_med_vitals_care_001,yes,Shares medication section with page 2 and vitals section with page 3.
+case08_partial_overlaps.pdf,2,Partial overlaps,partial overlap with pages 1 and 3,partial_overlap_med_vitals_care_001,yes,Shares medication section with page 1 and care-coordination section with page 3.
+case08_partial_overlaps.pdf,3,Partial overlaps,partial overlap with pages 1 and 2,partial_overlap_med_vitals_care_001,yes,Shares vitals section with page 1 and care-coordination section with page 2.
+case09_multidocument_batch_A.pdf,1,Multi-document / multi-page batch,batch cover; not duplicate,batch_A_cover_001,yes,Cover page for multi-document packet.
+case09_multidocument_batch_A.pdf,2,Multi-document / multi-page batch,same document family as page 3; not exact duplicate,batch_A_consult_family_001,yes,Consult note page 1 of 2.
+case09_multidocument_batch_A.pdf,3,Multi-document / multi-page batch,same document family as page 2; not exact duplicate,batch_A_consult_family_001,yes,Consult note page 2 of 2; similar style and repeated boilerplate.
+case09_multidocument_batch_A.pdf,4,Multi-document / multi-page batch,partial overlap with case08 medications,batch_A_medlist_partial_001,yes,Medication-list page in batch.
+case09_multidocument_batch_A.pdf,5,Multi-document / multi-page batch,image-only attachment,batch_A_scanned_attachment_001,no,Image-only lab attachment inside batch.
+case09_multidocument_batch_A.pdf,6,Multi-document / multi-page batch,not duplicate,batch_A_unique_triage_001,yes,Unique triage document appended to batch.
+case09_multidocument_batch_B.pdf,1,Multi-document / multi-page batch,batch cover; not duplicate,batch_B_cover_001,yes,Cover page for second multi-document packet.
+case09_multidocument_batch_B.pdf,2,Multi-document / multi-page batch,similar family to batch A consult pages; not exact duplicate,batch_AB_consult_similar_001,yes,Consult page uses same template with different patient/header fields.
+case09_multidocument_batch_B.pdf,3,Multi-document / multi-page batch,partial overlap with batch A med list and case08 medication section,batch_AB_medlist_partial_001,yes,Medication list with overlapping medication names and different document context.
+case09_multidocument_batch_B.pdf,4,Multi-document / multi-page batch,near duplicate of case01 ED note body with page-number/header changes,batch_B_ed_note_near_001,yes,ED note reprint; same body as case01 but header/page number differs.
+case10_negative_controls.pdf,1,Negative controls,not duplicate,negative_control_unique_001,yes,Unique synthetic page intended not to match other documents.
+case10_negative_controls.pdf,2,Negative controls,not duplicate,negative_control_unique_002,yes,Unique synthetic page intended not to match other documents.
+case10_negative_controls.pdf,3,Negative controls,not duplicate,negative_control_unique_003,yes,Unique synthetic page intended not to match other documents.
+case10_negative_controls.pdf,4,Negative controls,not duplicate,negative_control_unique_004,yes,Unique synthetic page intended not to match other documents.

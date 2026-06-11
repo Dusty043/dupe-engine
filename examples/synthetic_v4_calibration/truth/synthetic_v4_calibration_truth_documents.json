@@ -1,0 +1,303 @@
+[
+  {
+    "acceptable_page_offset_tolerance": 1,
+    "document_truth_id": "v4_doc_truth_0001",
+    "expected_min_layer": "group_level_sequence",
+    "group_id": "dupe_group_061",
+    "left_file": "received_records/received_batch_015.pdf",
+    "left_pages": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "notes": "Full adjacent sequence duplicates across received and ERE sources. Strict page-pair eval should be supplemented by group-level eval.",
+    "right_file": "ere_records/ere_record_017.pdf",
+    "right_pages": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "truth_label": "duplicate_sequence"
+  },
+  {
+    "acceptable_page_offset_tolerance": 1,
+    "document_truth_id": "v4_doc_truth_0002",
+    "expected_min_layer": "group_level_sequence",
+    "group_id": "dupe_group_062",
+    "left_file": "received_records/received_batch_014.pdf",
+    "left_pages": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "notes": "Full adjacent sequence duplicates across received and ERE sources. Strict page-pair eval should be supplemented by group-level eval.",
+    "right_file": "ere_records/ere_record_009.pdf",
+    "right_pages": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "truth_label": "duplicate_sequence"
+  },
+  {
+    "acceptable_page_offset_tolerance": 1,
+    "document_truth_id": "v4_doc_truth_0003",
+    "expected_min_layer": "group_level_sequence",
+    "group_id": "dupe_group_063",
+    "left_file": "received_records/received_batch_016.pdf",
+    "left_pages": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "notes": "Full adjacent sequence duplicates across received and ERE sources. Strict page-pair eval should be supplemented by group-level eval.",
+    "right_file": "ere_records/ere_record_021.pdf",
+    "right_pages": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "truth_label": "duplicate_sequence"
+  },
+  {
+    "document_truth_id": "v4_doc_truth_0004",
+    "expected_min_layer": "llm_adjudication",
+    "group_id": "dupe_group_064",
+    "left_file": "received_records/received_batch_021.pdf",
+    "non_overlap_left_pages": [
+      3,
+      7
+    ],
+    "notes": "Document A is a fuller bundle. Document B is an excerpt plus possible extra page. Use group-level truth for retrieval credit.",
+    "overlap_left_pages": [
+      4,
+      5,
+      6
+    ],
+    "overlap_right_pages": [
+      4,
+      5,
+      6
+    ],
+    "right_file": "ere_records/ere_record_018.pdf",
+    "truth_label": "partial_overlap"
+  },
+  {
+    "document_truth_id": "v4_doc_truth_0005",
+    "expected_min_layer": "llm_adjudication",
+    "group_id": "dupe_group_065",
+    "left_file": "received_records/received_batch_024.pdf",
+    "non_overlap_left_pages": [
+      2,
+      6,
+      7
+    ],
+    "notes": "Document A is a fuller bundle. Document B is an excerpt plus possible extra page. Use group-level truth for retrieval credit.",
+    "overlap_left_pages": [
+      3,
+      4,
+      5
+    ],
+    "overlap_right_pages": [
+      4,
+      5,
+      6
+    ],
+    "right_file": "ere_records/ere_record_027.pdf",
+    "truth_label": "partial_overlap"
+  },
+  {
+    "document_truth_id": "v4_doc_truth_0006",
+    "expected_min_layer": "llm_adjudication",
+    "group_id": "dupe_group_066",
+    "left_file": "received_records/received_batch_017.pdf",
+    "non_overlap_left_pages": [
+      3,
+      7
+    ],
+    "notes": "Document A is a fuller bundle. Document B is an excerpt plus possible extra page. Use group-level truth for retrieval credit.",
+    "overlap_left_pages": [
+      4,
+      5,
+      6
+    ],
+    "overlap_right_pages": [
+      3,
+      4,
+      5
+    ],
+    "right_file": "ere_records/ere_record_003.pdf",
+    "truth_label": "partial_overlap"
+  },
+  {
+    "document_truth_id": "v4_doc_truth_0007",
+    "expected_min_layer": "llm_adjudication",
+    "group_id": "dupe_group_067",
+    "left_file": "received_records/received_batch_029.pdf",
+    "non_overlap_left_pages": [
+      3,
+      7,
+      8
+    ],
+    "notes": "Document A is a fuller bundle. Document B is an excerpt plus possible extra page. Use group-level truth for retrieval credit.",
+    "overlap_left_pages": [
+      4,
+      5,
+      6
+    ],
+    "overlap_right_pages": [
+      2,
+      3,
+      4
+    ],
+    "right_file": "ere_records/ere_record_010.pdf",
+    "truth_label": "partial_overlap"
+  },
+  {
+    "document_truth_id": "v4_doc_truth_0008",
+    "expected_min_layer": "llm_adjudication",
+    "group_id": "dupe_group_068",
+    "left_file": "received_records/received_batch_019.pdf",
+    "non_overlap_left_pages": [
+      4,
+      8,
+      9
+    ],
+    "notes": "Document A is a fuller bundle. Document B is an excerpt plus possible extra page. Use group-level truth for retrieval credit.",
+    "overlap_left_pages": [
+      5,
+      6,
+      7
+    ],
+    "overlap_right_pages": [
+      4,
+      5,
+      6
+    ],
+    "right_file": "ere_records/ere_record_012.pdf",
+    "truth_label": "partial_overlap"
+  },
+  {
+    "document_truth_id": "v4_doc_truth_0009",
+    "expected_min_layer": "llm_adjudication",
+    "group_id": "dupe_group_069",
+    "left_file": "received_records/received_batch_032.pdf",
+    "non_overlap_left_pages": [
+      4,
+      8
+    ],
+    "notes": "Document A is a fuller bundle. Document B is an excerpt plus possible extra page. Use group-level truth for retrieval credit.",
+    "overlap_left_pages": [
+      5,
+      6,
+      7
+    ],
+    "overlap_right_pages": [
+      4,
+      5,
+      6
+    ],
+    "right_file": "ere_records/ere_record_026.pdf",
+    "truth_label": "partial_overlap"
+  },
+  {
+    "document_truth_id": "v4_doc_truth_0010",
+    "expected_min_layer": "llm_adjudication",
+    "group_id": "dupe_group_070",
+    "left_file": "received_records/received_batch_023.pdf",
+    "non_overlap_left_pages": [
+      4,
+      8
+    ],
+    "notes": "Document A is a fuller bundle. Document B is an excerpt plus possible extra page. Use group-level truth for retrieval credit.",
+    "overlap_left_pages": [
+      5,
+      6,
+      7
+    ],
+    "overlap_right_pages": [
+      3,
+      4,
+      5
+    ],
+    "right_file": "ere_records/ere_record_023.pdf",
+    "truth_label": "partial_overlap"
+  },
+  {
+    "document_truth_id": "v4_doc_truth_0011",
+    "expected_min_layer": "llm_adjudication",
+    "group_id": "dupe_group_071",
+    "left_file": "received_records/received_batch_002.pdf",
+    "non_overlap_left_pages": [
+      2,
+      6,
+      7
+    ],
+    "notes": "Document A is a fuller bundle. Document B is an excerpt plus possible extra page. Use group-level truth for retrieval credit.",
+    "overlap_left_pages": [
+      3,
+      4,
+      5
+    ],
+    "overlap_right_pages": [
+      4,
+      5,
+      6
+    ],
+    "right_file": "ere_records/ere_record_025.pdf",
+    "truth_label": "partial_overlap"
+  },
+  {
+    "document_truth_id": "v4_doc_truth_0012",
+    "expected_min_layer": "llm_adjudication",
+    "group_id": "dupe_group_072",
+    "left_file": "received_records/received_batch_028.pdf",
+    "non_overlap_left_pages": [
+      2,
+      6,
+      7
+    ],
+    "notes": "Document A is a fuller bundle. Document B is an excerpt plus possible extra page. Use group-level truth for retrieval credit.",
+    "overlap_left_pages": [
+      3,
+      4,
+      5
+    ],
+    "overlap_right_pages": [
+      4,
+      5,
+      6
+    ],
+    "right_file": "ere_records/ere_record_008.pdf",
+    "truth_label": "partial_overlap"
+  },
+  {
+    "document_truth_id": "v4_doc_truth_0013",
+    "expected_min_layer": "llm_adjudication",
+    "group_id": "dupe_group_073",
+    "left_file": "received_records/received_batch_005.pdf",
+    "non_overlap_left_pages": [
+      4,
+      8
+    ],
+    "notes": "Document A is a fuller bundle. Document B is an excerpt plus possible extra page. Use group-level truth for retrieval credit.",
+    "overlap_left_pages": [
+      5,
+      6,
+      7
+    ],
+    "overlap_right_pages": [
+      4,
+      5,
+      6
+    ],
+    "right_file": "ere_records/ere_record_007.pdf",
+    "truth_label": "partial_overlap"
+  }
+]

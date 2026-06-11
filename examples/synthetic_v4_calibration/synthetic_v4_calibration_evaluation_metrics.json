@@ -1,0 +1,45 @@
+{
+  "failure_category_keys": [
+    "fallback_not_selected",
+    "fallback_selected_but_still_weak",
+    "ocr_or_vision_layer_miss",
+    "semantic_or_adjudication_layer_miss",
+    "low_information_suppressed",
+    "same_template_hard_negative",
+    "partial_overlap_needs_review"
+  ],
+  "group_level_eval_note": "Credit a group if the engine surfaces any acceptable member edge or adjacent page listed in truth_groups.acceptable_matches.",
+  "primary_metrics": [
+    "overall_must_match_recall",
+    "group_level_recall",
+    "strict_pair_recall",
+    "recall_by_expected_min_layer",
+    "recall_by_failure_category",
+    "partial_overlap_detection_rate",
+    "hard_negative_false_positive_rate",
+    "low_information_suppression_accuracy",
+    "review_queue_size",
+    "candidate_explosion_rate"
+  ],
+  "recall_by_expected_min_layer_keys": [
+    "deterministic",
+    "openai_ocr",
+    "vision_fallback",
+    "embedding",
+    "llm_adjudication",
+    "group_level_sequence",
+    "human_review"
+  ],
+  "recommended_report_columns": [
+    "mode_id",
+    "strict_pair_recall",
+    "group_level_recall",
+    "review_queue_size",
+    "false_positives",
+    "hard_negative_fpr",
+    "low_information_fp_count",
+    "fallback_not_selected_misses",
+    "semantic_or_adjudication_misses"
+  ],
+  "strict_pair_eval_note": "Credit only exact page-pair relationships in truth_pairs. Use alongside group-level recall to diagnose eval-shape misses."
+}
