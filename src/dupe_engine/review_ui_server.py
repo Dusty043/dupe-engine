@@ -456,27 +456,27 @@ def dedupe_filename(filename: str, used_names: set[str]) -> str:
 
 
 def run_engine_job(store: ReviewJobStore, job_id: str) -> None:
-    job = store.get_job(job_id)
-    job_dir = Path(job["job_dir"])
-    received_dir = job_dir / "input" / "received_records"
-    ere_dir = job_dir / "input" / "ere_records"
-    work_dir = Path(job["work_dir"])
-    run_dir = Path(job["run_dir"])
-    results_path = Path(job["results_path"])
-    settings = dict(job.get("settings") or {})
-    command = build_engine_job_command(
-        received_dir=received_dir,
-        ere_dir=ere_dir,
-        work_dir=work_dir,
-        run_dir=run_dir,
-        results_path=results_path,
-        settings=settings,
-    )
-    store.update_job(job_id, status="running", stage="running_engine", command=command)
-    env = os.environ.copy()
-    src_root = str(Path(__file__).resolve().parents[1])
-    env["PYTHONPATH"] = src_root + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
     try:
+        job = store.get_job(job_id)
+        job_dir = Path(job["job_dir"])
+        received_dir = job_dir / "input" / "received_records"
+        ere_dir = job_dir / "input" / "ere_records"
+        work_dir = Path(job["work_dir"])
+        run_dir = Path(job["run_dir"])
+        results_path = Path(job["results_path"])
+        settings = dict(job.get("settings") or {})
+        command = build_engine_job_command(
+            received_dir=received_dir,
+            ere_dir=ere_dir,
+            work_dir=work_dir,
+            run_dir=run_dir,
+            results_path=results_path,
+            settings=settings,
+        )
+        store.update_job(job_id, status="running", stage="running_engine", command=command)
+        env = os.environ.copy()
+        src_root = str(Path(__file__).resolve().parents[1])
+        env["PYTHONPATH"] = src_root + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
         completed = subprocess.run(
             command,
             cwd=str(job_dir),
@@ -510,8 +510,11 @@ def run_engine_job(store: ReviewJobStore, job_id: str) -> None:
             stderr_tail=stderr_tail,
             error=None,
         )
-    except Exception as exc:  # pragma: no cover - subprocess defensive boundary
-        store.update_job(job_id, status="failed", stage="failed", finished_at=utc_now(), error=str(exc))
+    except Exception as exc:
+        try:
+            store.update_job(job_id, status="failed", stage="failed", finished_at=utc_now(), error=str(exc))
+        except Exception:
+            pass
 
 
 def build_engine_job_command(
@@ -696,6 +699,7 @@ def normalize_decision(raw: dict[str, Any]) -> dict[str, Any]:
         "candidate_id": candidate_id,
         "human_label": human_label,
         "reviewer_note": str(raw.get("reviewer_note") or ""),
+        "reviewer_name": str(raw.get("reviewer_name") or ""),
         "reviewed_at": reviewed_at,
     }
 
