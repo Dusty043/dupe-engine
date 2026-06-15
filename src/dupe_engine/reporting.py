@@ -11,6 +11,7 @@ from .ai_ledger import build_ai_call_ledger
 from .candidates import summarize_candidates, to_candidate_matches
 from .capabilities import CapabilityReport
 from .config import EngineConfig
+from .embedding_reranker import summarize_reranker
 from .models import PageMatch, PageRecord
 from .page_quality import count_low_information_pages
 
@@ -61,6 +62,7 @@ def build_report(
             "embedding_candidate_count": count_by_type(matches).get("embedding_similarity_candidate", 0),
             "hybrid_vector_candidate_count": count_by_type(matches).get("hybrid_vector_candidate", 0),
             "embedding_supported_candidate_count": count_by_type(matches).get("embedding_supported_candidate", 0),
+            "embedding_reranker": summarize_reranker(matches),
             "ai_call_record_count": ai_ledger_summary.get("record_count", 0),
             "ai_call_attempted_count": ai_ledger_summary.get("attempted_count", 0),
             "ai_call_route_counts": ai_ledger_summary.get("by_route", {}),
@@ -129,6 +131,7 @@ def build_all_pairs_report(
             "embedding_candidate_count": count_by_type(matches).get("embedding_similarity_candidate", 0),
             "hybrid_vector_candidate_count": count_by_type(matches).get("hybrid_vector_candidate", 0),
             "embedding_supported_candidate_count": count_by_type(matches).get("embedding_supported_candidate", 0),
+            "embedding_reranker": summarize_reranker(matches),
             "ai_call_record_count": ai_ledger_summary.get("record_count", 0),
             "ai_call_attempted_count": ai_ledger_summary.get("attempted_count", 0),
             "ai_call_route_counts": ai_ledger_summary.get("by_route", {}),

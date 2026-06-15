@@ -183,6 +183,12 @@ def add_common_engine_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--embedding-dry-run", action="store_true", help="Enable embeddings status but prevent provider calls")
     parser.add_argument("--embedding-hybrid-scoring", action="store_true", help="Use the experimental v0.9.9 hybrid vector scoring gate for embedding-created candidates")
     parser.add_argument("--embedding-hybrid-min-score", type=float, default=None, help="Minimum hybrid vector score for the experimental hybrid gate")
+    parser.add_argument("--embedding-reranker", action="store_true", help="Enable v0.10.9 pure-embedding precision reranker (off by default)")
+    parser.add_argument("--embedding-reranker-min-confidence", type=float, default=None, help="Minimum precision score to keep an embedding candidate (default 0.80)")
+    parser.add_argument("--embedding-reranker-ocr-penalty", type=float, default=None, help="Confidence penalty per OpenAI-OCR-selected page (default 0.01)")
+    parser.add_argument("--embedding-reranker-same-doc-bonus", type=float, default=None, help="Confidence bonus when both pages share the same document (default 0.03)")
+    parser.add_argument("--embedding-reranker-tesseract-bonus", type=float, default=None, help="Confidence bonus per Tesseract-usable page (default 0.02)")
+    parser.add_argument("--embedding-reranker-action", choices=["demote", "drop"], default=None, help="Action for low-precision embedding candidates: demote (default) or drop")
     add_optional_ai_args(parser)
 
 
@@ -610,6 +616,12 @@ def build_config(args: argparse.Namespace) -> EngineConfig:
         embeddings_dry_run=base.embeddings_dry_run or bool(getattr(args, "embedding_dry_run", False)),
         embeddings_hybrid_scoring_enabled=base.embeddings_hybrid_scoring_enabled or bool(getattr(args, "embedding_hybrid_scoring", False)),
         embeddings_hybrid_min_score=getattr(args, "embedding_hybrid_min_score", None) if getattr(args, "embedding_hybrid_min_score", None) is not None else base.embeddings_hybrid_min_score,
+        embedding_reranker_enabled=base.embedding_reranker_enabled or bool(getattr(args, "embedding_reranker", False)),
+        embedding_reranker_min_confidence=getattr(args, "embedding_reranker_min_confidence", None) if getattr(args, "embedding_reranker_min_confidence", None) is not None else base.embedding_reranker_min_confidence,
+        embedding_reranker_ocr_penalty=getattr(args, "embedding_reranker_ocr_penalty", None) if getattr(args, "embedding_reranker_ocr_penalty", None) is not None else base.embedding_reranker_ocr_penalty,
+        embedding_reranker_same_doc_bonus=getattr(args, "embedding_reranker_same_doc_bonus", None) if getattr(args, "embedding_reranker_same_doc_bonus", None) is not None else base.embedding_reranker_same_doc_bonus,
+        embedding_reranker_tesseract_bonus=getattr(args, "embedding_reranker_tesseract_bonus", None) if getattr(args, "embedding_reranker_tesseract_bonus", None) is not None else base.embedding_reranker_tesseract_bonus,
+        embedding_reranker_action=getattr(args, "embedding_reranker_action", None) or base.embedding_reranker_action,
         review_queue_profile=getattr(args, "queue_profile", None) or base.review_queue_profile,
         include_text_preview=base.include_text_preview or bool(getattr(args, "include_text_preview", False)),
     )

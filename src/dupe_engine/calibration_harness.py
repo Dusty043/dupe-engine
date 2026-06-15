@@ -79,6 +79,12 @@ class CalibrationRunSpec:
     rare_token_min_overlap: int | None = None
     rare_token_min_jaccard: float | None = None
     rare_token_max_df: int | None = None
+    embedding_reranker_enabled: bool = False
+    embedding_reranker_min_confidence: float = 0.80
+    embedding_reranker_ocr_penalty: float = 0.01
+    embedding_reranker_same_doc_bonus: float = 0.03
+    embedding_reranker_tesseract_bonus: float = 0.02
+    embedding_reranker_action: str = "demote"
 
 
 VECTOR_PROFILES: dict[str, VectorProfile] = {
@@ -593,6 +599,15 @@ def build_eval_command(spec: CalibrationRunSpec, pdf_dir: Path, truth: Path, run
         cmd.extend(["--embedding-max-candidates-per-job", str(spec.embedding_max_candidates_per_job)])
         if spec.embedding_hybrid_scoring:
             cmd.extend(["--embedding-hybrid-scoring", "--embedding-hybrid-min-score", str(spec.embedding_hybrid_min_score)])
+    if spec.embedding_reranker_enabled:
+        cmd.extend([
+            "--embedding-reranker",
+            "--embedding-reranker-min-confidence", str(spec.embedding_reranker_min_confidence),
+            "--embedding-reranker-ocr-penalty", str(spec.embedding_reranker_ocr_penalty),
+            "--embedding-reranker-same-doc-bonus", str(spec.embedding_reranker_same_doc_bonus),
+            "--embedding-reranker-tesseract-bonus", str(spec.embedding_reranker_tesseract_bonus),
+            "--embedding-reranker-action", spec.embedding_reranker_action,
+        ])
     return cmd
 
 
@@ -1294,6 +1309,15 @@ def build_scorecard_row(spec: CalibrationRunSpec, run_dir: Path, runtime_seconds
         "post_candidate_rescue_min_confidence": spec.post_candidate_rescue_min_confidence,
         "embedding_hybrid_scoring": spec.embedding_hybrid_scoring,
         "embedding_hybrid_min_score": spec.embedding_hybrid_min_score,
+        "embedding_reranker_enabled": spec.embedding_reranker_enabled,
+        "embedding_reranker_min_confidence": spec.embedding_reranker_min_confidence,
+        "embedding_reranker_ocr_penalty": spec.embedding_reranker_ocr_penalty,
+        "embedding_reranker_same_doc_bonus": spec.embedding_reranker_same_doc_bonus,
+        "embedding_reranker_tesseract_bonus": spec.embedding_reranker_tesseract_bonus,
+        "embedding_reranker_action": spec.embedding_reranker_action,
+        "embedding_reranker_evaluated": (summary.get("embedding_reranker") or {}).get("evaluated"),
+        "embedding_reranker_demoted": (summary.get("embedding_reranker") or {}).get("demoted"),
+        "embedding_reranker_dropped": (summary.get("embedding_reranker") or {}).get("dropped"),
         "openai_ocr_selection_reason_counts": json.dumps(fallback_summary.get("selection_reason_counts", {}), sort_keys=True),
         "false_negative_reason_counts": read_false_negative_reason_counts(run_dir / "false_negatives.csv"),
         "strict_recall": eval_summary.get("recall_on_must_match"),

@@ -20,11 +20,13 @@ const state = {
   diagnosticsOpen: false,
   draftLabel: '',
   draftNote: '',
+  reviewerName: '',
   jobs: [],
   activeJob: null,
   jobPollTimer: null,
   uploadError: null,
   uploading: false,
+  pollError: null,
   reviewExpanded: false,
 };
 
@@ -301,6 +303,7 @@ function renderProcessingShell() {
           </div>
           ${events.length ? `<div class="progress-events">${events.map(renderProgressEvent).join('')}</div>` : ''}
           ${failed ? `<pre class="job-log">${escapeHtml(job.error || '')}\n\n${escapeHtml(job.stderr_tail || job.stdout_tail || '')}</pre>` : ''}
+          ${state.pollError ? `<div class="inline-error">Polling error: ${escapeHtml(state.pollError)}</div>` : ''}
         </section>
       </main>
     </div>
@@ -334,6 +337,10 @@ function renderTopbar() {
           </div>
         </div>
         <div class="topbar-actions">
+          <label class="reviewer-field">
+            <span>Reviewer</span>
+            <input type="text" data-action="reviewer-name" placeholder="Your name" value="${escapeAttr(state.reviewerName)}" />
+          </label>
           <button class="btn primary" data-action="new-batch">Start new batch</button>
           <button class="btn" data-action="export-csv">Export CSV</button>
           <button class="btn" data-action="export-json">Export decisions JSON</button>
@@ -531,6 +538,7 @@ function renderCandidateCard(c) {
             ${badge(matchFamilyLabel(c), matchFamily(c) === 'image' ? 'danger' : 'info')}
             ${badge(c.review_priority || 'priority', c.review_priority === 'high' ? 'warn' : 'outline')}
             ${c.expected_min_layer ? badge(c.expected_min_layer, 'slate') : ''}
+            ${isRerankerDemoted(c) ? badge('Reranker demoted', 'slate') : ''}
             ${reviewed ? badge(labelName(reviewed.human_label), 'good') : badge('Unreviewed', 'outline')}
           </div>
         </div>
@@ -557,6 +565,7 @@ function renderReview(c) {
           ${badge(decision ? `Reviewed: ${labelName(decision.human_label)}` : 'Unreviewed', decision ? 'good' : 'outline')}
           ${c.expected_min_layer ? badge(`Layer: ${c.expected_min_layer}`, 'slate') : ''}
           ${c.required_layers?.length ? badge(`Requires: ${c.required_layers.join(', ')}`, 'warn') : ''}
+          ${isRerankerDemoted(c) ? badge('Reranker demoted', 'slate') : ''}
           <button class="btn small" data-action="toggle-expanded-review">${state.reviewExpanded ? 'Exit large view' : 'Expand comparison'}</button>
         </div>
       </div>
@@ -675,6 +684,9 @@ function bindEvents() {
   document.querySelector('[data-action="note"]')?.addEventListener('input', (event) => {
     state.draftNote = event.target.value;
   });
+  document.querySelector('[data-action="reviewer-name"]')?.addEventListener('input', (event) => {
+    state.reviewerName = event.target.value;
+  });
   document.querySelector('[data-action="save-decision"]')?.addEventListener('click', saveDecision);
   document.querySelector('[data-action="export-csv"]')?.addEventListener('click', exportCsv);
   document.querySelector('[data-action="export-json"]')?.addEventListener('click', exportJson);
@@ -695,6 +707,7 @@ function bindUploadEvents() {
     clearJobPolling();
     state.activeJob = null;
     state.uploadError = null;
+    state.pollError = null;
     render();
   });
   updateUploadCta();
@@ -744,6 +757,7 @@ async function startUploadJob(event) {
 
   state.uploading = true;
   state.uploadError = null;
+  state.pollError = null;
   updateUploadCta();
   try {
     const response = await fetch('/api/jobs', { method: 'POST', body: formData });
@@ -778,6 +792,7 @@ async function refreshJob(jobId) {
     if (!response.ok) throw new Error(await responseText(response));
     const job = await response.json();
     state.activeJob = job;
+    state.pollError = null;
     if (job.status === 'succeeded') {
       clearJobPolling();
       const runResponse = await fetch('/api/run', { cache: 'no-store' });
@@ -791,8 +806,7 @@ async function refreshJob(jobId) {
     render();
   } catch (error) {
     clearJobPolling();
-    state.uploadError = error instanceof Error ? error.message : String(error);
-    state.activeJob = null;
+    state.pollError = error instanceof Error ? error.message : String(error);
     render();
   }
 }
@@ -820,6 +834,7 @@ async function saveDecision() {
     candidate_id: candidate.candidate_id,
     human_label: state.draftLabel,
     reviewer_note: state.draftNote || '',
+    reviewer_name: state.reviewerName || '',
     reviewed_at: new Date().toISOString(),
   };
   const response = await fetch('/api/review-decisions', {
@@ -969,6 +984,10 @@ function sideNeedsVision(side) {
   return Boolean(side?.openai_ocr_selected || side?.ocr_route === 'openai_candidate' || side?.ocr_route === 'tesseract_weak');
 }
 
+function isRerankerDemoted(candidate) {
+  return String(candidate.review_rationale || '').includes('embedding_reranker_demoted');
+}
+
 function explanation(candidate) {
   if (candidate.review_rationale) return candidate.review_rationale;
   const parts = [];
@@ -1007,13 +1026,14 @@ function assetUrl(path) {
 
 function exportCsv() {
   const rows = [
-    ['candidate_id', 'review_status', 'human_label', 'reviewer_note', 'engine_label', 'confidence', 'match_type', 'left_file', 'left_page', 'right_file', 'right_page', 'expected_min_layer', 'explanation'],
+    ['candidate_id', 'review_status', 'human_label', 'reviewer_name', 'reviewer_note', 'engine_label', 'confidence', 'match_type', 'left_file', 'left_page', 'right_file', 'right_page', 'expected_min_layer', 'reranker_demoted', 'explanation'],
     ...state.run.candidates.map((c) => {
       const decision = state.decisions.get(c.candidate_id);
       return [
         c.candidate_id,
         decision ? 'reviewed' : 'unreviewed',
         decision?.human_label || '',
+        decision?.reviewer_name || '',
         decision?.reviewer_note || '',
         c.engine_label || '',
         c.confidence ?? '',
@@ -1023,6 +1043,7 @@ function exportCsv() {
         c.right?.document || '',
         c.right?.page || '',
         c.expected_min_layer || '',
+        isRerankerDemoted(c) ? 'yes' : '',
         explanation(c),
       ];
     }),
