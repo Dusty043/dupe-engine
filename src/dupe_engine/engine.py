@@ -5,6 +5,7 @@ from pathlib import Path
 from .config import EngineConfig
 from .ingest import ingest_pdf_dir_as_corpus, ingest_pdf_group
 from .embedding_detector import apply_embedding_detector
+from .embedding_reranker import apply_embedding_reranker
 from .matchers import compare_all_pages, compare_groups
 from .ocr import apply_openai_ocr_fallback, apply_openai_ocr_post_candidate_rescue
 from .page_quality import annotate_page_quality
@@ -45,6 +46,7 @@ def run_ab_compare(
         matches = compare_groups(pages_a, pages_b, config)
         matches = apply_embedding_detector(matches, config, pages_a=pages_a, pages_b=pages_b, all_pairs=False)
         emit_progress(stage="candidates_regenerated_after_post_candidate_rescue", message=f"Generated {len(matches)} candidates after post-candidate rescue", details={"candidate_count": len(matches)})
+    matches = apply_embedding_reranker(matches, config)
     apply_main_review_visibility_budget(
         matches,
         total_pages=len(pages_a) + len(pages_b),
@@ -82,6 +84,7 @@ def run_all_pairs_compare(
         matches = compare_all_pages(pages, config)
         matches = apply_embedding_detector(matches, config, pages_a=pages, pages_b=pages, all_pairs=True)
         emit_progress(stage="candidates_regenerated_after_post_candidate_rescue", message=f"Generated {len(matches)} candidates after post-candidate rescue", details={"candidate_count": len(matches)})
+    matches = apply_embedding_reranker(matches, config)
     apply_main_review_visibility_budget(
         matches,
         total_pages=len(pages),

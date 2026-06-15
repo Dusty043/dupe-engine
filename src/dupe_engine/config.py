@@ -222,6 +222,15 @@ class EngineConfig:
     embeddings_hybrid_scoring_enabled: bool = False
     embeddings_hybrid_min_score: float = 0.78
 
+    # v0.10.9 pure embedding precision reranker. Off by default until offline
+    # simulation confirms a safe threshold/action via v0109_reranker_sim.py.
+    embedding_reranker_enabled: bool = False
+    embedding_reranker_min_confidence: float = 0.80
+    embedding_reranker_ocr_penalty: float = 0.01
+    embedding_reranker_same_doc_bonus: float = 0.03
+    embedding_reranker_tesseract_bonus: float = 0.02
+    embedding_reranker_action: str = "demote"  # "demote" | "drop"
+
     # Queue routing. v0.9.8 separates recall discovery from what appears in the default reviewer queue.
     # Supported: strict_main, balanced, recall_first.
     review_queue_profile: str = "balanced"
@@ -381,6 +390,12 @@ class EngineConfig:
             embeddings_dry_run=env_bool("DUPE_EMBEDDINGS_DRY_RUN", False),
             embeddings_hybrid_scoring_enabled=env_bool("DUPE_EMBEDDINGS_HYBRID_SCORING_ENABLED", False),
             embeddings_hybrid_min_score=env_float("DUPE_EMBEDDINGS_HYBRID_MIN_SCORE", 0.78),
+            embedding_reranker_enabled=env_bool("DUPE_EMBEDDING_RERANKER_ENABLED", False),
+            embedding_reranker_min_confidence=env_float("DUPE_EMBEDDING_RERANKER_MIN_CONFIDENCE", 0.80),
+            embedding_reranker_ocr_penalty=env_float("DUPE_EMBEDDING_RERANKER_OCR_PENALTY", 0.01),
+            embedding_reranker_same_doc_bonus=env_float("DUPE_EMBEDDING_RERANKER_SAME_DOC_BONUS", 0.03),
+            embedding_reranker_tesseract_bonus=env_float("DUPE_EMBEDDING_RERANKER_TESSERACT_BONUS", 0.02),
+            embedding_reranker_action=env_str("DUPE_EMBEDDING_RERANKER_ACTION", "demote") or "demote",
             review_queue_profile=env_str("DUPE_REVIEW_QUEUE_PROFILE", "balanced") or "balanced",
             enable_llm_candidate_detector=env_bool("DUPE_LLM_CANDIDATE_ENABLED", False),
             llm_candidate_provider=env_str("DUPE_LLM_CANDIDATE_PROVIDER", generic_llm_provider) or generic_llm_provider,
