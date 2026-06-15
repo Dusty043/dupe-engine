@@ -513,8 +513,8 @@ def run_engine_job(store: ReviewJobStore, job_id: str) -> None:
     except Exception as exc:
         try:
             store.update_job(job_id, status="failed", stage="failed", finished_at=utc_now(), error=str(exc))
-        except Exception:
-            pass
+        except Exception as store_exc:
+            print(f"[review-ui] ERROR: job {job_id} failed but store update also failed: {store_exc}", file=sys.stderr)
 
 
 def build_engine_job_command(

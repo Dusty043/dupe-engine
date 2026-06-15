@@ -5,8 +5,8 @@ Usage:
 
 Options:
     --out-dir PATH              Output directory (default: ./reranker_sim_out)
-    --min-confidence FLOAT      Scoring threshold (default: 0.88)
-    --ocr-penalty FLOAT         Per-OCR-page penalty (default: 0.05)
+    --min-confidence FLOAT      Scoring threshold (default: 0.80)
+    --ocr-penalty FLOAT         Per-OCR-page penalty (default: 0.01)
     --same-doc-bonus FLOAT      Same-document bonus (default: 0.03)
     --tesseract-bonus FLOAT     Per-Tesseract-usable-page bonus (default: 0.02)
     --action demote|drop        Action for low-scoring rows (default: demote)
@@ -44,8 +44,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("csv_path", type=Path, help="Path to candidate_summary.csv")
     parser.add_argument("--out-dir", type=Path, default=None, help="Output directory (default: ./reranker_sim_out)")
-    parser.add_argument("--min-confidence", type=float, default=0.88, metavar="FLOAT")
-    parser.add_argument("--ocr-penalty", type=float, default=0.05, metavar="FLOAT")
+    parser.add_argument("--min-confidence", type=float, default=0.80, metavar="FLOAT")
+    parser.add_argument("--ocr-penalty", type=float, default=0.01, metavar="FLOAT")
     parser.add_argument("--same-doc-bonus", type=float, default=0.03, metavar="FLOAT")
     parser.add_argument("--tesseract-bonus", type=float, default=0.02, metavar="FLOAT")
     parser.add_argument("--action", choices=["demote", "drop"], default="demote")

@@ -41,6 +41,8 @@ _DEMOTE_CONFIDENCE: float = 0.49
 
 _PURE_EMBEDDING_MATCH_TYPES: frozenset[str] = frozenset({
     "embedding_similarity_candidate",
+    # hybrid_vector_candidate is intentionally excluded: it has already passed a
+    # hybrid vector scoring gate and is treated as a higher-confidence match type.
 })
 
 _VALID_ACTIONS: frozenset[str] = frozenset({"demote", "drop"})
@@ -77,8 +79,8 @@ def params_from_config(config: "EngineConfig") -> RerankerParams:
     if action not in _VALID_ACTIONS:
         action = "demote"
     return RerankerParams(
-        min_confidence=float(getattr(config, "embedding_reranker_min_confidence", 0.88)),
-        ocr_penalty=float(getattr(config, "embedding_reranker_ocr_penalty", 0.05)),
+        min_confidence=float(getattr(config, "embedding_reranker_min_confidence", 0.80)),
+        ocr_penalty=float(getattr(config, "embedding_reranker_ocr_penalty", 0.01)),
         same_doc_bonus=float(getattr(config, "embedding_reranker_same_doc_bonus", 0.03)),
         tesseract_bonus=float(getattr(config, "embedding_reranker_tesseract_bonus", 0.02)),
         action=action,
@@ -235,8 +237,18 @@ def apply_embedding_reranker(
             result.append(match)
 
         else:  # drop
+            # Demote to 0.0 confidence and include in output so summarize_reranker
+            # can count the drop event. At confidence 0.0 the match will be routed
+            # to calibration_only and never surfaced to reviewers, so this is
+            # functionally equivalent to exclusion while keeping the audit trail.
+            match.confidence = 0.0
+            annotate_match_for_review(match, main_confidence, queue_profile)
+            match.review_rationale = (
+                f"embedding_reranker_dropped: precision_score={decision.precision_score:.4f} "
+                f"< threshold={decision.components['min_confidence']:.4f}"
+            )
             match.ai_route_events.append(event)
-            # Match is not appended — excluded from output.
+            result.append(match)
 
     return result
 
