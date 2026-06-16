@@ -139,7 +139,8 @@ def serve_review_ui(args: argparse.Namespace) -> None:
 
     print("Medical Records Sorter Assist review UI")
     if run_dir:
-        print(f"Serving run folder: {run_dir}")
+        print(f"[DEBUG MODE] --run-dir is set: {run_dir}")
+        print("[DEBUG MODE] This pre-loads a run on startup. Omit --run-dir in production.")
     print(f"Upload/job workspace: {workspace_dir}")
     print(f"Open: {url}")
     print("Press Ctrl+C to stop.")

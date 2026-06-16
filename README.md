@@ -1,6 +1,6 @@
-# Dupe Engine v0.10.4
+# Dupe Engine v0.10.9
 
-**Dupe Engine v0.10.4** is a local-first duplicate-page review system for comparing incoming medical records against existing ERE records.
+**Dupe Engine v0.10.9** is a local-first duplicate-page review system for comparing incoming medical records against existing ERE records.
 
 It is currently optimized for the v1 workflow:
 
@@ -12,7 +12,9 @@ ERE Medical Records
 
 The engine finds duplicate, likely duplicate, possible duplicate, and partial-overlap page candidates. The review UI lets staff inspect candidates side-by-side, save reviewer decisions, and export results.
 
-v0.10.4 is still v1-safe: OCR and OpenAI OCR fallback are required, while semantic/vector recall is optional, bounded, and evaluated separately from final duplicate decisions. The current accuracy path is:
+v0.10.9 is v1-safe: OCR and OpenAI OCR fallback are required. Semantic/vector recall is optional, bounded, and gated by the new **embedding precision reranker** that demotes or drops low-confidence embedding candidates before they reach the review queue.
+
+The current accuracy path:
 
 ```text
 PDFs
@@ -21,11 +23,96 @@ PDFs
 -> selected OpenAI vision OCR rescue
 -> deterministic duplicate/overlap candidates
 -> optional bounded embedding recall
+-> [NEW v0.10.9] embedding precision reranker
 -> review UI
 -> reviewer decisions / exports
 ```
 
-Embeddings can now create bounded top-k recall candidates when explicitly enabled. LLM candidate detection and adjudication remain **v2 layers**: provisioned in config/schema, disabled, and non-blocking by default.
+LLM candidate detection and adjudication remain **v2 layers**: provisioned in config/schema, disabled, and non-blocking by default.
+
+---
+
+## Pilot production launch
+
+Start the review UI in production mode (no run pre-loaded):
+
+```bash
+dupe-engine review-ui \
+  --workspace /data/review_ui_jobs \
+  --host 0.0.0.0 \
+  --port 8765 \
+  --no-browser
+```
+
+Or via Docker (preferred for server deploys):
+
+```bash
+docker run -d \
+  --name dupe-engine-review \
+  -p 8765:8765 \
+  --env-file /path/to/.env \
+  -v /data/review_ui_jobs:/data/review_ui_jobs \
+  -v /data/runs:/data/runs \
+  dupe-engine-worker:v0.10.9 \
+  dupe-engine review-ui \
+    --workspace /data/review_ui_jobs \
+    --host 0.0.0.0 \
+    --port 8765 \
+    --no-browser
+```
+
+Do **not** pass `--run-dir` in production. That flag is for debug/dev use only — it pre-loads a specific past run on startup. Without it, the UI starts clean and loads a run automatically after each job completes.
+
+Check that the server is up:
+
+```bash
+curl http://localhost:8765/api/status
+```
+
+Expected:
+
+```json
+{"ok": true, "workspace_dir": "/data/review_ui_jobs", "has_run": false}
+```
+
+`has_run: false` confirms the server started clean.
+
+---
+
+## v0.10.9 semantic precision reranker
+
+v0.10.9 adds an optional embedding precision reranker that gates pure-embedding candidates (those found only by semantic similarity, not deterministic multiview) before they reach the review queue.
+
+Enable it:
+
+```bash
+export DUPE_EMBEDDING_RERANKER_ENABLED=true
+export DUPE_EMBEDDING_RERANKER_ACTION=demote   # or: drop
+export DUPE_EMBEDDING_RERANKER_MIN_CONFIDENCE=0.80
+```
+
+How it works:
+
+```text
+For each pure-embedding candidate:
+  - Compute a precision score from base confidence +/- OCR/tesseract/same-doc adjustments
+  - If precision score >= min_confidence: keep (pass through unchanged)
+  - If precision score < min_confidence AND action=demote: lower confidence to 0.49, route to calibration_only
+  - If precision score < min_confidence AND action=drop: set confidence to 0.0, route to calibration_only (audit trail preserved)
+```
+
+Simulation tool (offline, no engine run required):
+
+```bash
+python tools/v0109_reranker_sim.py /path/to/candidate_summary.csv \
+  --min-confidence 0.80 \
+  --action demote \
+  --threshold-start 0.80 \
+  --threshold-end 0.94 \
+  --threshold-step 0.02
+```
+
+See `docs/V0_10_9_SEMANTIC_RERANKER_PLAN.md` for design details.
 
 ---
 

@@ -260,7 +260,7 @@ def add_tui_parser(subparsers: argparse._SubParsersAction) -> None:
 
 def add_review_ui_parser(subparsers: argparse._SubParsersAction) -> None:
     parser = subparsers.add_parser("review-ui", help="Open the local Medical Records Sorter Assist review UI")
-    parser.add_argument("--run-dir", default=None, help="Optional existing v0.8.6+ UI run artifact folder to open immediately")
+    parser.add_argument("--run-dir", default=None, help="Debug/dev only: open an existing run artifact folder immediately on startup. Omit in production — the UI starts clean and loads a run automatically after a job completes.")
     parser.add_argument("--workspace", default="output/review_ui_jobs", help="Local workspace where browser-uploaded jobs are stored")
     parser.add_argument("--host", default="127.0.0.1", help="Host/interface for the local review UI server")
     parser.add_argument("--port", type=int, default=8765, help="Port for the local review UI server")
