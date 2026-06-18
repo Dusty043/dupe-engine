@@ -1,0 +1,35 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        tesseract-ocr \
+        tesseract-ocr-eng \
+        poppler-utils \
+        libgl1 \
+        libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY pyproject.toml README.md requirements.txt ./
+COPY src ./src
+
+RUN python -m pip install --upgrade pip \
+    && python -m pip install -e .
+
+# Worker writes job workdirs here; ECS task ephemeral storage or a bind-mount
+# can override this via DUPE_WORKER_WORKDIR.
+RUN mkdir -p /tmp/dupe-worker
+
+# Required at runtime (inject via ECS task definition or Secrets Manager):
+#   DUPE_OPENAI_API_KEY
+#   DUPE_SQS_QUEUE_URL
+#   DUPE_S3_BUCKET
+#   DUPE_DYNAMO_TABLE
+#   DUPE_AWS_REGION
+
+CMD ["dupe-engine", "worker"]

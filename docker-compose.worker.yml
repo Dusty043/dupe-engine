@@ -1,0 +1,23 @@
+# Standalone worker compose — mirrors the ECS task definition shape.
+# Usage:
+#   docker compose -f docker-compose.worker.yml up
+#   docker compose -f docker-compose.worker.yml up --scale dupe-worker=2
+#
+# Required env (set in .env or export before running):
+#   DUPE_OPENAI_API_KEY
+#   DUPE_SQS_QUEUE_URL
+#   DUPE_S3_BUCKET
+#   DUPE_DYNAMO_TABLE
+#   DUPE_AWS_REGION     (default: us-east-1)
+
+services:
+  dupe-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    image: dupe-engine-worker:v0.10.9
+    env_file:
+      - .env
+    environment:
+      DUPE_WORKER_WORKDIR: /tmp/dupe-worker
+    restart: on-failure:3
