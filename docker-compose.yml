@@ -1,14 +1,43 @@
 services:
-  dupe-worker:
+
+  # -----------------------------------------------------------------------
+  # Local dev: single-node mode (no SQS/S3/DynamoDB required)
+  # Usage: docker compose up dupe-ui
+  # -----------------------------------------------------------------------
+  dupe-ui:
     build: .
-    image: dupe-engine-worker:v0.10.7
+    image: dupe-engine:v0.10.9
     env_file:
       - .env
     volumes:
-      - /srv/data/dupe-engine/corpora:/data/corpora
-      - /srv/data/dupe-engine/truth:/data/truth
-      - /srv/data/dupe-engine/runs:/data/runs
-      - /srv/data/dupe-engine/logs:/data/logs
-      - /srv/data/dupe-engine/cache:/data/cache
-    working_dir: /app
-    command: ["dupe-engine", "doctor"]
+      - ${DUPE_DATA_DIR:-/data}/review_ui_jobs:/data/review_ui_jobs
+      - ${DUPE_DATA_DIR:-/data}/runs:/data/runs
+    ports:
+      - "${DUPE_UI_PORT:-8765}:8765"
+    command:
+      - dupe-engine
+      - review-ui
+      - --workspace
+      - /data/review_ui_jobs
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "8765"
+      - --no-browser
+
+  # -----------------------------------------------------------------------
+  # AWS pilot: SQS worker (set DUPE_SQS_QUEUE_URL, DUPE_S3_BUCKET,
+  #            DUPE_DYNAMO_TABLE, DUPE_AWS_REGION, DUPE_OPENAI_API_KEY)
+  # Usage: docker compose up dupe-worker
+  # Scale: docker compose up --scale dupe-worker=2 dupe-worker
+  # -----------------------------------------------------------------------
+  dupe-worker:
+    build: .
+    image: dupe-engine:v0.10.9
+    env_file:
+      - .env
+    environment:
+      DUPE_WORKER_WORKDIR: /tmp/dupe-worker
+    command:
+      - dupe-engine
+      - worker

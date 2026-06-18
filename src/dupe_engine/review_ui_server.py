@@ -22,6 +22,11 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urlparse
 
+from . import job_status as _job_status_module
+from . import job_queue as _job_queue_module
+from . import artifact_store as _artifact_store_module
+from .log import log as _log
+
 ALLOWED_REVIEW_LABELS = {
     "duplicate",
     "likely_duplicate",
@@ -56,14 +61,30 @@ class UploadPart:
     payload: bytes
 
 
+def _aws_mode() -> bool:
+    """True when DynamoDB table is configured — use persistent job store."""
+    return bool(os.environ.get("DUPE_DYNAMO_TABLE", ""))
+
+
+def _sqs_mode() -> bool:
+    """True when SQS queue URL is configured — UI enqueues instead of running engine inline."""
+    return bool(os.environ.get("DUPE_SQS_QUEUE_URL", ""))
+
+
+def _s3_mode() -> bool:
+    """True when S3 bucket is configured — inputs are uploaded to S3 before enqueueing."""
+    return bool(os.environ.get("DUPE_S3_BUCKET", ""))
+
+
 class ReviewJobStore:
-    """In-memory local job registry for one review-ui server process."""
+    """Job registry — backed by DynamoDB when DUPE_DYNAMO_TABLE is set, in-memory otherwise."""
 
     def __init__(self, *, workspace_dir: Path, current_run_dir: Path | None = None) -> None:
         self.workspace_dir = workspace_dir.expanduser().resolve()
         self.workspace_dir.mkdir(parents=True, exist_ok=True)
         self.current_run_dir = current_run_dir.expanduser().resolve() if current_run_dir else None
-        self.jobs: dict[str, dict[str, Any]] = {}
+        # In-memory fallback store (used when DUPE_DYNAMO_TABLE is unset)
+        self._mem_jobs: dict[str, dict[str, Any]] = {}
         self.lock = threading.RLock()
 
     def set_current_run(self, run_dir: Path | None) -> None:
@@ -97,27 +118,41 @@ class ReviewJobStore:
             "error": None,
             "command": [],
         }
-        with self.lock:
-            self.jobs[job_id] = record
+        if _aws_mode():
+            _job_status_module.put_job(record)
+        else:
+            with self.lock:
+                self._mem_jobs[job_id] = record
         return dict(record)
 
     def update_job(self, job_id: str, **updates: Any) -> dict[str, Any]:
+        if _aws_mode():
+            _job_status_module.update_job(job_id, **updates)
+            record = _job_status_module.get_job(job_id) or {}
+            return record
         with self.lock:
-            if job_id not in self.jobs:
+            if job_id not in self._mem_jobs:
                 raise ReviewUiError(f"Unknown job: {job_id}")
-            self.jobs[job_id].update(updates)
-            self.jobs[job_id]["updated_at"] = utc_now()
-            return dict(self.jobs[job_id])
+            self._mem_jobs[job_id].update(updates)
+            self._mem_jobs[job_id]["updated_at"] = utc_now()
+            return dict(self._mem_jobs[job_id])
 
     def get_job(self, job_id: str) -> dict[str, Any]:
-        with self.lock:
-            if job_id not in self.jobs:
+        if _aws_mode():
+            record = _job_status_module.get_job(job_id)
+            if record is None:
                 raise ReviewUiError(f"Unknown job: {job_id}")
-            return dict(self.jobs[job_id])
+            return record
+        with self.lock:
+            if job_id not in self._mem_jobs:
+                raise ReviewUiError(f"Unknown job: {job_id}")
+            return dict(self._mem_jobs[job_id])
 
     def list_jobs(self) -> list[dict[str, Any]]:
+        if _aws_mode():
+            return _job_status_module.list_jobs(limit=100)
         with self.lock:
-            return sorted((dict(job) for job in self.jobs.values()), key=lambda item: item.get("created_at", ""), reverse=True)
+            return sorted((dict(job) for job in self._mem_jobs.values()), key=lambda item: item.get("created_at", ""), reverse=True)
 
 
 def serve_review_ui(args: argparse.Namespace) -> None:
@@ -342,9 +377,44 @@ def create_upload_job_from_request(handler: BaseHTTPRequestHandler, store: Revie
         ere_files=[path.name for path in ere_files],
         settings=settings,
     )
-    thread = threading.Thread(target=run_engine_job, args=(store, job_id), daemon=True)
-    thread.start()
+
+    if _sqs_mode():
+        _dispatch_job_via_sqs(job_id=job_id, job_dir=job_dir, settings=settings)
+    else:
+        thread = threading.Thread(target=run_engine_job, args=(store, job_id), daemon=True)
+        thread.start()
+
     return job
+
+
+def _dispatch_job_via_sqs(*, job_id: str, job_dir: Path, settings: dict[str, Any]) -> None:
+    """Upload inputs to S3 (if configured) and enqueue the SQS job message."""
+    input_prefix = ""
+    output_prefix = ""
+
+    if _s3_mode():
+        input_prefix = _artifact_store_module.make_input_prefix(job_id)
+        output_prefix = _artifact_store_module.make_output_prefix(job_id)
+        _log("info", "s3_input_upload_start", job_id=job_id, prefix=input_prefix)
+        _artifact_store_module.upload_dir(job_dir / "input", input_prefix)
+        _log("info", "s3_input_upload_done", job_id=job_id)
+
+    message = {
+        "job_id": job_id,
+        "input_prefix": input_prefix,
+        "output_prefix": output_prefix,
+        "engine_version": "v0.10.9",
+        "config": {
+            "embedding_reranker_enabled": settings.get("embedding_reranker_enabled", True),
+            "embedding_reranker_min_confidence": settings.get("embedding_reranker_min_confidence", 0.80),
+            "embedding_reranker_ocr_penalty": settings.get("embedding_reranker_ocr_penalty", 0.01),
+            "embedding_reranker_same_doc_bonus": settings.get("embedding_reranker_same_doc_bonus", 0.03),
+            "embedding_reranker_tesseract_bonus": settings.get("embedding_reranker_tesseract_bonus", 0.02),
+            "embedding_reranker_action": settings.get("embedding_reranker_action", "demote"),
+        },
+    }
+    _job_queue_module.send_job(message)
+    _log("info", "job_enqueued", job_id=job_id, queue_url=os.environ.get("DUPE_SQS_QUEUE_URL", "local"))
 
 
 def parse_job_settings(form: dict[str, list[UploadPart]]) -> dict[str, Any]:
@@ -474,6 +544,7 @@ def run_engine_job(store: ReviewJobStore, job_id: str) -> None:
             results_path=results_path,
             settings=settings,
         )
+        _log("info", "job_started", job_id=job_id, mode="local_subprocess")
         store.update_job(job_id, status="running", stage="running_engine", command=command)
         env = os.environ.copy()
         src_root = str(Path(__file__).resolve().parents[1])
@@ -490,6 +561,7 @@ def run_engine_job(store: ReviewJobStore, job_id: str) -> None:
         stdout_tail = tail_text(completed.stdout)
         stderr_tail = tail_text(completed.stderr)
         if completed.returncode != 0:
+            _log("error", "job_failed", job_id=job_id, returncode=completed.returncode, mode="local_subprocess")
             store.update_job(
                 job_id,
                 status="failed",
@@ -502,6 +574,7 @@ def run_engine_job(store: ReviewJobStore, job_id: str) -> None:
             return
         validate_run_dir(run_dir)
         store.set_current_run(run_dir)
+        _log("info", "job_completed", job_id=job_id, mode="local_subprocess")
         store.update_job(
             job_id,
             status="succeeded",

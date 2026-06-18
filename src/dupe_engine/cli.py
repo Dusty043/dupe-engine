@@ -39,6 +39,7 @@ def main() -> None:
     add_eval_all_parser(subparsers)
     add_tui_parser(subparsers)
     add_review_ui_parser(subparsers)
+    add_worker_parser(subparsers)
     add_calibrate_parser(subparsers)
     add_calibrate_loop_parser(subparsers)
     add_calibrate_loop_stress_parser(subparsers)
@@ -64,6 +65,8 @@ def main() -> None:
             command_tui(args, config)
         elif args.command == "review-ui":
             command_review_ui(args, config)
+        elif args.command == "worker":
+            command_worker(args, config)
         elif args.command == "calibrate":
             command_calibrate(args, config)
         elif args.command == "calibrate-loop":
@@ -266,6 +269,12 @@ def add_review_ui_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--port", type=int, default=8765, help="Port for the local review UI server")
     parser.add_argument("--no-browser", action="store_true", help="Do not automatically open a browser window")
 
+
+def add_worker_parser(subparsers: argparse._SubParsersAction) -> None:
+    subparsers.add_parser(
+        "worker",
+        help="Run the long-polling SQS worker (AWS pilot mode). Polls DUPE_SQS_QUEUE_URL, processes one job at a time.",
+    )
 
 
 def add_calibrate_parser(subparsers: argparse._SubParsersAction) -> None:
@@ -519,6 +528,12 @@ def command_review_ui(args: argparse.Namespace, config: EngineConfig) -> None:
         serve_review_ui(args)
     except ReviewUiError as exc:
         raise SystemExit(f"Review UI error: {exc}") from None
+
+
+def command_worker(args: argparse.Namespace, config: EngineConfig) -> None:
+    from .worker import run_worker_loop
+
+    run_worker_loop()
 
 
 def command_tui(args: argparse.Namespace, config: EngineConfig) -> None:
