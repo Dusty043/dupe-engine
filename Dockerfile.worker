@@ -23,7 +23,11 @@ RUN python -m pip install --upgrade pip \
 
 # Worker writes job workdirs here; ECS task ephemeral storage or a bind-mount
 # can override this via DUPE_WORKER_WORKDIR.
-RUN mkdir -p /tmp/dupe-worker
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /tmp/dupe-worker \
+    && chown -R appuser:appuser /tmp/dupe-worker /app
+
+USER appuser
 
 # Required at runtime (inject via ECS task definition or Secrets Manager):
 #   DUPE_OPENAI_API_KEY

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import sys
 import threading
-import time
 import traceback
 from datetime import datetime, timezone
 from pathlib import Path
@@ -27,6 +27,11 @@ ENGINE_VERSION = "v0.10.9"
 _EXTEND_INTERVAL = 60
 # How much to extend by each heartbeat.
 _EXTEND_BY = 300
+
+# job_id must be a safe filesystem component — no path separators or traversal.
+_JOB_ID_RE = re.compile(r'^[A-Za-z0-9_-]{8,80}$')
+
+_VALID_RERANKER_ACTIONS = frozenset({"demote", "drop"})
 
 
 def _workdir_base() -> Path:
@@ -55,7 +60,11 @@ def _poll_once() -> None:
     message, receipt_handle = result
     job_id = message.get("job_id") or ""
     if not job_id:
-        log("warn", "sqs_message_missing_job_id", receipt_handle=receipt_handle)
+        log("error", "sqs_message_missing_job_id", receipt_handle=receipt_handle)
+        job_queue.delete_job(receipt_handle)
+        return
+    if not _JOB_ID_RE.fullmatch(job_id):
+        log("error", "sqs_message_invalid_job_id", job_id=job_id, receipt_handle=receipt_handle)
         job_queue.delete_job(receipt_handle)
         return
 
@@ -94,12 +103,33 @@ def _visibility_heartbeat(receipt_handle: str, stop: threading.Event) -> None:
             log("warn", "visibility_extend_failed", error=str(exc))
 
 
+def _validate_s3_prefix(prefix: str, field: str) -> None:
+    """Reject prefixes that point at a different bucket than DUPE_S3_BUCKET."""
+    if not prefix:
+        return
+    expected_bucket = os.environ.get("DUPE_S3_BUCKET", "")
+    if not expected_bucket:
+        return
+    try:
+        bucket, _ = artifact_store.parse_s3_uri(prefix)
+    except ValueError as exc:
+        raise ValueError(f"Invalid S3 URI in {field}: {prefix!r}") from exc
+    if bucket != expected_bucket:
+        raise ValueError(
+            f"S3 prefix in {field} targets unexpected bucket {bucket!r} "
+            f"(expected {expected_bucket!r})"
+        )
+
+
 def _process_job(message: dict[str, Any], receipt_handle: str) -> bool:
     """Download, run engine, upload. Returns True on success."""
     job_id = message["job_id"]
     input_prefix = message.get("input_prefix", "")
     output_prefix = message.get("output_prefix", "")
     config_overrides: dict[str, Any] = message.get("config") or {}
+
+    _validate_s3_prefix(input_prefix, "input_prefix")
+    _validate_s3_prefix(output_prefix, "output_prefix")
 
     job_status.update_job(job_id, status="running", started_at=_utc_now())
     log("info", "job_started", job_id=job_id, input_prefix=input_prefix, output_prefix=output_prefix)
@@ -204,17 +234,31 @@ def _build_config(overrides: dict[str, Any]) -> EngineConfig:
     from dataclasses import replace
     base = EngineConfig.from_env()
     kwargs: dict[str, Any] = {}
-    field_map = {
-        "embedding_reranker_enabled": "embedding_reranker_enabled",
-        "embedding_reranker_min_confidence": "embedding_reranker_min_confidence",
-        "embedding_reranker_ocr_penalty": "embedding_reranker_ocr_penalty",
-        "embedding_reranker_same_doc_bonus": "embedding_reranker_same_doc_bonus",
-        "embedding_reranker_tesseract_bonus": "embedding_reranker_tesseract_bonus",
-        "embedding_reranker_action": "embedding_reranker_action",
+    float_fields = {
+        "embedding_reranker_min_confidence",
+        "embedding_reranker_ocr_penalty",
+        "embedding_reranker_same_doc_bonus",
+        "embedding_reranker_tesseract_bonus",
     }
-    for msg_key, config_key in field_map.items():
-        if msg_key in overrides:
-            kwargs[config_key] = overrides[msg_key]
+    bool_fields = {"embedding_reranker_enabled"}
+    for msg_key in ("embedding_reranker_enabled", "embedding_reranker_min_confidence",
+                    "embedding_reranker_ocr_penalty", "embedding_reranker_same_doc_bonus",
+                    "embedding_reranker_tesseract_bonus", "embedding_reranker_action"):
+        if msg_key not in overrides:
+            continue
+        raw = overrides[msg_key]
+        if msg_key in float_fields:
+            kwargs[msg_key] = float(raw)
+        elif msg_key in bool_fields:
+            kwargs[msg_key] = bool(raw)
+        elif msg_key == "embedding_reranker_action":
+            action = str(raw).strip().lower()
+            if action not in _VALID_RERANKER_ACTIONS:
+                raise ValueError(
+                    f"Invalid embedding_reranker_action {action!r}; "
+                    f"must be one of {sorted(_VALID_RERANKER_ACTIONS)}"
+                )
+            kwargs[msg_key] = action
     if kwargs:
         return replace(base, **kwargs)
     return base

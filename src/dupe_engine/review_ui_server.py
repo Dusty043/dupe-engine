@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import collections
 import json
 from dataclasses import dataclass
 from email.parser import BytesParser
@@ -13,6 +14,8 @@ import shutil
 import subprocess
 import sys
 import threading
+import time
+import traceback
 import uuid
 import webbrowser
 from datetime import datetime, timezone
@@ -47,7 +50,18 @@ REQUIRED_RUN_FILES = [
 
 STATIC_DIR = Path(__file__).with_name("review_ui_static")
 MAX_UPLOAD_BYTES = 2 * 1024 * 1024 * 1024
+MAX_JSON_BODY_BYTES = 1 * 1024 * 1024  # 1 MB — review decisions are small JSON
 PDF_SUFFIX = ".pdf"
+
+# Rate limiting: max concurrent uploads per source IP.
+MAX_CONCURRENT_UPLOADS_PER_IP = 3
+_active_uploads: dict[str, int] = collections.defaultdict(int)
+_uploads_lock = threading.Lock()
+
+# Internal job record fields that must not be returned to API clients.
+_INTERNAL_JOB_FIELDS = frozenset({
+    "job_dir", "input_dir", "work_dir", "run_dir", "results_path",
+})
 
 
 class ReviewUiError(RuntimeError):
@@ -74,6 +88,16 @@ def _sqs_mode() -> bool:
 def _s3_mode() -> bool:
     """True when S3 bucket is configured — inputs are uploaded to S3 before enqueueing."""
     return bool(os.environ.get("DUPE_S3_BUCKET", ""))
+
+
+def _allowed_origin() -> str:
+    """Return the single origin permitted for CORS. Defaults to localhost."""
+    return os.environ.get("DUPE_UI_ALLOWED_ORIGIN", "http://localhost:8765")
+
+
+def _sanitize_job_for_api(job: dict[str, Any]) -> dict[str, Any]:
+    """Strip internal filesystem paths before sending a job record to a client."""
+    return {k: v for k, v in job.items() if k not in _INTERNAL_JOB_FIELDS}
 
 
 class ReviewJobStore:
@@ -225,23 +249,26 @@ def build_handler(*, store: ReviewJobStore, static_dir: Path) -> type[BaseHTTPRe
                             "schema_version": "dupe_engine_review_ui_payload_v0_9_5",
                             "has_run": False,
                             "workspace_dir": str(store.workspace_dir),
-                            "jobs": store.list_jobs(),
+                            "jobs": [_sanitize_job_for_api(j) for j in store.list_jobs()],
                         })
                         return
                     validate_run_dir(run_dir)
                     payload = load_run_payload(run_dir)
                     payload["has_run"] = True
-                    payload["jobs"] = store.list_jobs()
+                    payload["jobs"] = [_sanitize_job_for_api(j) for j in store.list_jobs()]
                     self.send_json(payload)
                     return
                 if path == "/api/jobs":
-                    self.send_json({"jobs": store.list_jobs()})
+                    self.send_json({"jobs": [_sanitize_job_for_api(j) for j in store.list_jobs()]})
                     return
                 if path.startswith("/api/jobs/"):
                     job_id = path.removeprefix("/api/jobs/").strip("/")
                     job = store.get_job(job_id)
-                    job["progress"] = load_job_progress(Path(job["run_dir"]))
-                    self.send_json(job)
+                    run_dir_path = Path(job["run_dir"]) if job.get("run_dir") else None
+                    progress = load_job_progress(run_dir_path) if run_dir_path else None
+                    public_job = _sanitize_job_for_api(job)
+                    public_job["progress"] = progress
+                    self.send_json(public_job)
                     return
                 if path == "/api/review-decisions":
                     self.send_json(load_review_decisions(require_current_run(store)))
@@ -256,7 +283,8 @@ def build_handler(*, store: ReviewJobStore, static_dir: Path) -> type[BaseHTTPRe
             except FileNotFoundError:
                 self.send_error_json(HTTPStatus.NOT_FOUND, "File not found")
             except Exception as exc:  # pragma: no cover - defensive server boundary
-                self.send_error_json(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
+                _log("error", "unhandled_get_error", path=self.path, error=str(exc), trace=traceback.format_exc())
+                self.send_error_json(HTTPStatus.INTERNAL_SERVER_ERROR, "An internal error occurred")
 
         def do_POST(self) -> None:  # noqa: N802
             parsed = urlparse(self.path)
@@ -278,11 +306,13 @@ def build_handler(*, store: ReviewJobStore, static_dir: Path) -> type[BaseHTTPRe
             except ReviewUiError as exc:
                 self.send_error_json(HTTPStatus.BAD_REQUEST, str(exc))
             except Exception as exc:  # pragma: no cover - defensive server boundary
-                self.send_error_json(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
+                _log("error", "unhandled_post_error", path=parsed.path, error=str(exc), trace=traceback.format_exc())
+                self.send_error_json(HTTPStatus.INTERNAL_SERVER_ERROR, "An internal error occurred")
 
         def do_OPTIONS(self) -> None:  # noqa: N802
+            origin = _allowed_origin()
             self.send_response(HTTPStatus.NO_CONTENT)
-            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Access-Control-Allow-Origin", origin)
             self.send_header("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
             self.send_header("Access-Control-Allow-Headers", "Content-Type")
             self.end_headers()
@@ -291,6 +321,8 @@ def build_handler(*, store: ReviewJobStore, static_dir: Path) -> type[BaseHTTPRe
             length = int(self.headers.get("Content-Length") or "0")
             if length <= 0:
                 return {}
+            if length > MAX_JSON_BODY_BYTES:
+                raise ReviewUiError(f"JSON request body exceeds {MAX_JSON_BODY_BYTES // 1024} KB limit")
             raw = self.rfile.read(length).decode("utf-8")
             try:
                 data = json.loads(raw)
@@ -306,6 +338,7 @@ def build_handler(*, store: ReviewJobStore, static_dir: Path) -> type[BaseHTTPRe
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.send_header("Content-Length", str(len(body)))
             self.send_header("Cache-Control", "no-store")
+            self.send_header("Access-Control-Allow-Origin", _allowed_origin())
             self.end_headers()
             self.wfile.write(body)
 
@@ -344,6 +377,21 @@ def require_current_run(store: ReviewJobStore) -> Path:
 
 
 def create_upload_job_from_request(handler: BaseHTTPRequestHandler, store: ReviewJobStore) -> dict[str, Any]:
+    client_ip = handler.client_address[0] if handler.client_address else "unknown"
+    with _uploads_lock:
+        if _active_uploads[client_ip] >= MAX_CONCURRENT_UPLOADS_PER_IP:
+            raise ReviewUiError(
+                f"Too many concurrent uploads from this address (max {MAX_CONCURRENT_UPLOADS_PER_IP})"
+            )
+        _active_uploads[client_ip] += 1
+    try:
+        return _create_upload_job_inner(handler, store, client_ip)
+    finally:
+        with _uploads_lock:
+            _active_uploads[client_ip] = max(0, _active_uploads[client_ip] - 1)
+
+
+def _create_upload_job_inner(handler: BaseHTTPRequestHandler, store: ReviewJobStore, client_ip: str) -> dict[str, Any]:
     content_length = int(handler.headers.get("Content-Length") or "0")
     if content_length <= 0:
         raise ReviewUiError("Upload request is empty")
@@ -378,13 +426,16 @@ def create_upload_job_from_request(handler: BaseHTTPRequestHandler, store: Revie
         settings=settings,
     )
 
+    _log("info", "job_upload_received", job_id=job_id, client_ip=client_ip,
+         received_count=len(received_files), ere_count=len(ere_files))
+
     if _sqs_mode():
         _dispatch_job_via_sqs(job_id=job_id, job_dir=job_dir, settings=settings)
     else:
         thread = threading.Thread(target=run_engine_job, args=(store, job_id), daemon=True)
         thread.start()
 
-    return job
+    return _sanitize_job_for_api(job)
 
 
 def _dispatch_job_via_sqs(*, job_id: str, job_dir: Path, settings: dict[str, Any]) -> None:
@@ -726,8 +777,27 @@ def load_review_decisions(run_dir: Path) -> dict[str, Any]:
     return data
 
 
+_MAX_REVIEWER_NOTE_LEN = 2000
+_MAX_REVIEWER_NAME_LEN = 200
+
+
 def upsert_review_decisions(run_dir: Path, payload: dict[str, Any]) -> dict[str, Any]:
     current = load_review_decisions(run_dir)
+
+    # Load known candidate IDs for validation.
+    candidates_path = run_dir / "candidates.json"
+    known_candidate_ids: set[str] | None = None
+    if candidates_path.exists():
+        try:
+            candidates_data = load_json(candidates_path)
+            if isinstance(candidates_data, list):
+                known_candidate_ids = {str(c.get("candidate_id", "")) for c in candidates_data if isinstance(c, dict)}
+            elif isinstance(candidates_data, dict):
+                items = candidates_data.get("candidates") or candidates_data.get("items") or []
+                known_candidate_ids = {str(c.get("candidate_id", "")) for c in items if isinstance(c, dict)}
+        except Exception:
+            pass
+
     incoming: list[dict[str, Any]]
     if "decision" in payload:
         decision = payload["decision"]
@@ -747,9 +817,14 @@ def upsert_review_decisions(run_dir: Path, payload: dict[str, Any]) -> dict[str,
         if isinstance(existing, dict) and existing.get("candidate_id"):
             by_candidate[str(existing["candidate_id"])] = existing
 
+    saved_count = 0
     for raw in incoming:
         normalized = normalize_decision(raw)
-        by_candidate[normalized["candidate_id"]] = normalized
+        cid = normalized["candidate_id"]
+        if known_candidate_ids is not None and cid not in known_candidate_ids:
+            raise ReviewUiError(f"decision.candidate_id {cid!r} not found in this run")
+        by_candidate[cid] = normalized
+        saved_count += 1
 
     updated = {
         "schema_version": current.get("schema_version", "dupe_engine_review_decisions_v0_8_6"),
@@ -757,6 +832,9 @@ def upsert_review_decisions(run_dir: Path, payload: dict[str, Any]) -> dict[str,
         "decisions": sorted(by_candidate.values(), key=lambda item: str(item.get("reviewed_at", ""))),
     }
     write_json_atomic(run_dir / "review_decisions.json", updated)
+    _log("info", "review_decisions_saved",
+         run_dir=run_dir.name, saved=saved_count,
+         total_decisions=len(updated["decisions"]))
     return updated
 
 
@@ -768,12 +846,15 @@ def normalize_decision(raw: dict[str, Any]) -> dict[str, Any]:
     if human_label not in ALLOWED_REVIEW_LABELS:
         allowed = ", ".join(sorted(ALLOWED_REVIEW_LABELS))
         raise ReviewUiError(f"decision.human_label must be one of: {allowed}")
-    reviewed_at = str(raw.get("reviewed_at") or datetime.now(timezone.utc).isoformat())
+    # Always use a server-generated timestamp — never trust client-supplied values.
+    reviewed_at = datetime.now(timezone.utc).isoformat()
+    reviewer_note = str(raw.get("reviewer_note") or "")[:_MAX_REVIEWER_NOTE_LEN]
+    reviewer_name = str(raw.get("reviewer_name") or "")[:_MAX_REVIEWER_NAME_LEN]
     return {
         "candidate_id": candidate_id,
         "human_label": human_label,
-        "reviewer_note": str(raw.get("reviewer_note") or ""),
-        "reviewer_name": str(raw.get("reviewer_name") or ""),
+        "reviewer_note": reviewer_note,
+        "reviewer_name": reviewer_name,
         "reviewed_at": reviewed_at,
     }
 

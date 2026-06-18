@@ -124,6 +124,7 @@ def download_prefix(s3_prefix: str, local_dir: str | Path) -> list[Path]:
     import boto3
     s3 = boto3.client("s3", region_name=_aws_region())
     paginator = s3.get_paginator("list_objects_v2")
+    base_resolved = local_dir.resolve()
     downloaded: list[Path] = []
     for page in paginator.paginate(Bucket=bucket, Prefix=prefix_key):
         for obj in page.get("Contents") or []:
@@ -131,7 +132,9 @@ def download_prefix(s3_prefix: str, local_dir: str | Path) -> list[Path]:
             rel = key[len(prefix_key):]
             if not rel:
                 continue
-            dest = local_dir / rel
+            dest = (local_dir / rel).resolve()
+            if not str(dest).startswith(str(base_resolved) + os.sep):
+                raise ValueError(f"S3 key path escapes staging directory: {key!r}")
             dest.parent.mkdir(parents=True, exist_ok=True)
             s3.download_file(bucket, key, str(dest))
             downloaded.append(dest)
