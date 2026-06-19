@@ -32,11 +32,89 @@ const state = {
 
 const app = document.getElementById('app');
 
+// ---------------------------------------------------------------------------
+// Auth token — stored in sessionStorage so it clears when the tab closes.
+// Set via the login overlay or by appending ?token=... to the URL on first load.
+// ---------------------------------------------------------------------------
+function _getToken() {
+  return sessionStorage.getItem('dupe_auth_token') || '';
+}
+function _setToken(t) {
+  if (t) sessionStorage.setItem('dupe_auth_token', t.trim());
+  else sessionStorage.removeItem('dupe_auth_token');
+}
+
+// Pre-seed from URL: ?token=xxx  (stripped from history immediately)
+(function seedTokenFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const t = params.get('token');
+  if (t) {
+    _setToken(t);
+    params.delete('token');
+    const clean = window.location.pathname + (params.toString() ? '?' + params : '');
+    window.history.replaceState({}, '', clean);
+  }
+})();
+
+async function apiFetch(url, opts = {}) {
+  const token = _getToken();
+  const headers = { ...(opts.headers || {}) };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  const res = await fetch(url, { ...opts, headers });
+  if (res.status === 401) {
+    _setToken('');
+    showTokenOverlay();
+    throw new Error('Authentication required');
+  }
+  return res;
+}
+
+function showTokenOverlay() {
+  if (document.getElementById('_auth_overlay')) return;
+  const overlay = document.createElement('div');
+  overlay.id = '_auth_overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:9999';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:10px;padding:2rem 2.5rem;max-width:380px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.25)">
+      <h2 style="margin:0 0 .5rem;font-size:1.1rem;font-weight:700">Access token required</h2>
+      <p style="margin:0 0 1.2rem;font-size:.875rem;color:#555">Enter the bearer token provided for this instance.</p>
+      <input id="_auth_input" type="password" placeholder="paste token here"
+        style="width:100%;box-sizing:border-box;padding:.6rem .75rem;border:1px solid #ccc;border-radius:6px;font-size:.95rem;margin-bottom:.75rem">
+      <button id="_auth_submit"
+        style="width:100%;padding:.65rem;background:#1a56db;color:#fff;border:none;border-radius:6px;font-size:.95rem;cursor:pointer;font-weight:600">
+        Sign in
+      </button>
+      <p id="_auth_err" style="color:#c00;font-size:.8rem;margin:.5rem 0 0;min-height:1em"></p>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const input = document.getElementById('_auth_input');
+  const btn   = document.getElementById('_auth_submit');
+  const err   = document.getElementById('_auth_err');
+
+  async function tryLogin() {
+    const t = input.value.trim();
+    if (!t) { err.textContent = 'Token cannot be empty.'; return; }
+    btn.disabled = true;
+    try {
+      const res = await fetch('/api/health', { headers: { Authorization: 'Bearer ' + t } });
+      if (res.status === 401) { err.textContent = 'Invalid token. Try again.'; btn.disabled = false; return; }
+      _setToken(t);
+      overlay.remove();
+      boot();
+    } catch (_) { err.textContent = 'Network error. Try again.'; btn.disabled = false; }
+  }
+
+  btn.addEventListener('click', tryLogin);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+  setTimeout(() => input.focus(), 50);
+}
+
 boot();
 
 async function boot() {
   try {
-    const response = await fetch('/api/run', { cache: 'no-store' });
+    const response = await apiFetch('/api/run', { cache: 'no-store' });
     if (!response.ok) throw new Error(await responseText(response));
     const data = await response.json();
     state.jobs = data.jobs || [];
@@ -760,7 +838,7 @@ async function startUploadJob(event) {
   state.pollError = null;
   updateUploadCta();
   try {
-    const response = await fetch('/api/jobs', { method: 'POST', body: formData });
+    const response = await apiFetch('/api/jobs', { method: 'POST', body: formData });
     if (!response.ok) throw new Error(await responseText(response));
     state.activeJob = await response.json();
     state.uploading = false;
@@ -788,14 +866,14 @@ function clearJobPolling() {
 
 async function refreshJob(jobId) {
   try {
-    const response = await fetch(`/api/jobs/${encodeURIComponent(jobId)}`, { cache: 'no-store' });
+    const response = await apiFetch(`/api/jobs/${encodeURIComponent(jobId)}`, { cache: 'no-store' });
     if (!response.ok) throw new Error(await responseText(response));
     const job = await response.json();
     state.activeJob = job;
     state.pollError = null;
     if (job.status === 'succeeded') {
       clearJobPolling();
-      const runResponse = await fetch('/api/run', { cache: 'no-store' });
+      const runResponse = await apiFetch('/api/run', { cache: 'no-store' });
       if (!runResponse.ok) throw new Error(await responseText(runResponse));
       const runData = await runResponse.json();
       loadRunData(runData);
@@ -812,7 +890,7 @@ async function refreshJob(jobId) {
 }
 
 async function startNewBatch() {
-  const response = await fetch('/api/clear-run', { method: 'POST' });
+  const response = await apiFetch('/api/clear-run', { method: 'POST' });
   if (!response.ok) {
     showToast(await responseText(response));
     return;
@@ -837,7 +915,7 @@ async function saveDecision() {
     reviewer_name: state.reviewerName || '',
     reviewed_at: new Date().toISOString(),
   };
-  const response = await fetch('/api/review-decisions', {
+  const response = await apiFetch('/api/review-decisions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ decision }),
