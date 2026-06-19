@@ -101,6 +101,9 @@ function showTokenOverlay() {
       if (res.status === 401) { err.textContent = 'Invalid token. Try again.'; btn.disabled = false; return; }
       _setToken(t);
       overlay.remove();
+      state.loading = true;
+      state.error = null;
+      render();
       boot();
     } catch (_) { err.textContent = 'Network error. Try again.'; btn.disabled = false; }
   }
