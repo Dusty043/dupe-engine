@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import re
 import shutil
+import signal
 import sys
 import threading
 import traceback
@@ -10,12 +11,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from . import artifact_store, job_queue, job_status
+from . import artifact_store, audit, job_queue, job_status
 from .capabilities import build_capability_report
 from .config import EngineConfig
 from .engine import run_ab_compare
 from .fallback_audit import build_fallback_audit, write_fallback_audit_json
-from .log import log
+from .log import log, log_exception
 from .reporting import build_report, write_json
 from .ui_artifacts import write_ui_run_artifacts
 
@@ -42,14 +43,24 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+_stop_event = threading.Event()
+
+
+def _handle_sigterm(signum: int, frame: object) -> None:
+    log("info", "worker_sigterm_received")
+    _stop_event.set()
+
+
 def run_worker_loop() -> None:
     """Long-polling SQS worker loop. Runs until KeyboardInterrupt or SIGTERM."""
+    signal.signal(signal.SIGTERM, _handle_sigterm)
     log("info", "worker_started", engine_version=ENGINE_VERSION)
     try:
-        while True:
+        while not _stop_event.is_set():
             _poll_once()
     except KeyboardInterrupt:
-        log("info", "worker_stopped", reason="keyboard_interrupt")
+        pass
+    log("info", "worker_stopped")
 
 
 def _poll_once() -> None:
@@ -82,8 +93,10 @@ def _poll_once() -> None:
     try:
         success = _process_job(message, receipt_handle)
     except Exception as exc:
-        log("error", "job_unhandled_exception", job_id=job_id, error=str(exc), trace=traceback.format_exc())
+        log_exception("error", "job_unhandled_exception", exc, job_id=job_id)
         _mark_failed(job_id, str(exc))
+        audit.record_event(job_id=job_id, action="process", actor="worker",
+                           resource=job_id, outcome="failure")
     finally:
         stop_event.set()
 
@@ -132,7 +145,9 @@ def _process_job(message: dict[str, Any], receipt_handle: str) -> bool:
     _validate_s3_prefix(output_prefix, "output_prefix")
 
     job_status.update_job(job_id, status="running", started_at=_utc_now())
-    log("info", "job_started", job_id=job_id, input_prefix=input_prefix, output_prefix=output_prefix)
+    log("info", "job_started", job_id=job_id)
+    audit.record_event(job_id=job_id, action="process", actor="worker",
+                       resource=job_id, outcome="started")
 
     workdir = _workdir_base() / job_id
     input_dir = workdir / "input"
@@ -205,11 +220,15 @@ def _process_job(message: dict[str, Any], receipt_handle: str) -> bool:
             match_count=len(matches),
         )
         log("info", "job_completed", job_id=job_id)
+        audit.record_event(job_id=job_id, action="process", actor="worker",
+                           resource=job_id, outcome="success")
         return True
 
     except Exception as exc:
-        log("error", "job_failed", job_id=job_id, error=str(exc), trace=traceback.format_exc())
+        log_exception("error", "job_failed", exc, job_id=job_id)
         _mark_failed(job_id, str(exc))
+        audit.record_event(job_id=job_id, action="process", actor="worker",
+                           resource=job_id, outcome="failure")
         return False
     finally:
         _cleanup_workdir(workdir, job_id)

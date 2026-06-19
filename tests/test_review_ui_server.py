@@ -18,7 +18,7 @@ def write_minimal_run_dir(path: Path) -> None:
     payloads = {
         "run_manifest.json": {"schema_version": "dupe_engine_ui_run_v0_8_6", "summary": {}},
         "pages.json": {"schema_version": "dupe_engine_pages_v0_8_6", "pages": []},
-        "candidates.json": {"schema_version": "dupe_engine_candidates_v0_8_6", "candidates": []},
+        "candidates.json": {"schema_version": "dupe_engine_candidates_v0_8_6", "candidates": [{"candidate_id": "cand_1"}]},
         "capabilities.json": {},
         "metrics.json": {"schema_version": "dupe_engine_metrics_v0_8_6", "summary": {}},
         "review_decisions.json": {"schema_version": "dupe_engine_review_decisions_v0_8_6", "decisions": []},

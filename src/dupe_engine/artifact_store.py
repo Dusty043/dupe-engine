@@ -14,6 +14,14 @@ def _aws_region() -> str:
     return os.environ.get("DUPE_AWS_REGION", "us-east-1")
 
 
+def _sse_extra_args() -> dict[str, str]:
+    """Server-side encryption args for S3 puts. Uses KMS default key when no ID is set."""
+    kms_key_id = os.environ.get("DUPE_S3_KMS_KEY_ID", "").strip()
+    if kms_key_id:
+        return {"ServerSideEncryption": "aws:kms", "SSEKMSKeyId": kms_key_id}
+    return {"ServerSideEncryption": "aws:kms"}
+
+
 def _aws_mode() -> bool:
     return bool(_s3_bucket())
 
@@ -73,7 +81,7 @@ def upload_file(local_path: str | Path, s3_uri: str) -> None:
     bucket, key = parse_s3_uri(s3_uri)
     import boto3
     s3 = boto3.client("s3", region_name=_aws_region())
-    s3.upload_file(str(local_path), bucket, key)
+    s3.upload_file(str(local_path), bucket, key, ExtraArgs=_sse_extra_args())
 
 
 def upload_dir(local_dir: str | Path, s3_prefix: str) -> list[str]:

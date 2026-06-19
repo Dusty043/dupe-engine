@@ -523,7 +523,9 @@ def command_analyze_calibration(args: argparse.Namespace, config: EngineConfig) 
 
 def command_review_ui(args: argparse.Namespace, config: EngineConfig) -> None:
     from .review_ui_server import ReviewUiError, serve_review_ui
+    from .security import assert_baa_endpoint
 
+    assert_baa_endpoint(config)
     try:
         serve_review_ui(args)
     except ReviewUiError as exc:
@@ -531,8 +533,10 @@ def command_review_ui(args: argparse.Namespace, config: EngineConfig) -> None:
 
 
 def command_worker(args: argparse.Namespace, config: EngineConfig) -> None:
+    from .security import assert_baa_endpoint
     from .worker import run_worker_loop
 
+    assert_baa_endpoint(config)
     run_worker_loop()
 
 

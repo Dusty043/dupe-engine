@@ -25,10 +25,12 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urlparse
 
+from . import audit as _audit_module
 from . import job_status as _job_status_module
 from . import job_queue as _job_queue_module
 from . import artifact_store as _artifact_store_module
-from .log import log as _log
+from .log import log as _log, log_exception as _log_exception
+from .security import auth_required, require_tls_or_loopback
 
 ALLOWED_REVIEW_LABELS = {
     "duplicate",
@@ -95,9 +97,21 @@ def _allowed_origin() -> str:
     return os.environ.get("DUPE_UI_ALLOWED_ORIGIN", "http://localhost:8765")
 
 
+_PHI_LOG_ENABLED_TRUE = {"1", "true", "yes", "y", "on"}
+
 def _sanitize_job_for_api(job: dict[str, Any]) -> dict[str, Any]:
-    """Strip internal filesystem paths before sending a job record to a client."""
-    return {k: v for k, v in job.items() if k not in _INTERNAL_JOB_FIELDS}
+    """Strip internal filesystem paths and PHI-adjacent fields from a job record."""
+    result = {k: v for k, v in job.items() if k not in _INTERNAL_JOB_FIELDS}
+    if os.environ.get("DUPE_LOG_PHI", "").strip().lower() not in _PHI_LOG_ENABLED_TRUE:
+        # stdout_tail / stderr_tail may contain PHI (file content, names).
+        # error may contain exception messages with identifiers.
+        # All three are still accessible via authenticated download endpoints.
+        for phi_field in ("stdout_tail", "stderr_tail"):
+            if phi_field in result:
+                result[phi_field] = "[PHI-REDACTED]" if result[phi_field] else ""
+        if result.get("error"):
+            result["error"] = "[see audit log]"
+    return result
 
 
 class ReviewJobStore:
@@ -192,7 +206,9 @@ def serve_review_ui(args: argparse.Namespace) -> None:
     port = int(getattr(args, "port", 8765))
     open_browser = not bool(getattr(args, "no_browser", False))
 
-    handler = build_handler(store=store, static_dir=STATIC_DIR)
+    require_tls_or_loopback(host)
+
+    handler = build_handler(store=store, static_dir=STATIC_DIR, server_host=host)
     server = ThreadingHTTPServer((host, port), handler)
     url = f"http://{host}:{server.server_address[1]}"
 
@@ -228,22 +244,51 @@ def validate_run_dir(run_dir: Path) -> None:
         raise ReviewUiError(f"Review UI static assets are missing: {STATIC_DIR}")
 
 
-def build_handler(*, store: ReviewJobStore, static_dir: Path) -> type[BaseHTTPRequestHandler]:
+def build_handler(*, store: ReviewJobStore, static_dir: Path, server_host: str = "127.0.0.1") -> type[BaseHTTPRequestHandler]:
     class ReviewUiRequestHandler(BaseHTTPRequestHandler):
         server_version = "DupeEngineReviewUI/0.9.8"
 
         def log_message(self, fmt: str, *args: Any) -> None:
             print(f"{self.address_string()} - {fmt % args}")
 
+        def _client_ip(self) -> str:
+            return self.client_address[0] if self.client_address else "unknown"
+
+        def _is_authenticated(self) -> bool:
+            return auth_required(server_host, self.headers.get("Authorization"))
+
+        def _require_auth(self) -> bool:
+            """Return True if authenticated. Send 401 and return False otherwise."""
+            if self._is_authenticated():
+                return True
+            self.send_response(HTTPStatus.UNAUTHORIZED)
+            self.send_header("WWW-Authenticate", 'Bearer realm="dupe-engine-review-ui"')
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return False
+
         def do_GET(self) -> None:  # noqa: N802
             parsed = urlparse(self.path)
             path = parsed.path
+            client_ip = self._client_ip()
             try:
+                # Health is intentionally open — browser can check status before login.
                 if path == "/api/health":
                     self.send_json({"ok": True, "workspace_dir": str(store.workspace_dir), "has_run": bool(store.get_current_run())})
                     return
+
+                # All other /api/* and /run-artifacts/* routes touch PHI — require auth.
+                if path.startswith("/api/") or path.startswith("/run-artifacts/"):
+                    if not self._require_auth():
+                        return
+
                 if path == "/api/run":
                     run_dir = store.get_current_run()
+                    _audit_module.record_event(
+                        job_id=run_dir.name if run_dir else "none",
+                        action="read", actor=client_ip,
+                        resource="run_payload", outcome="access",
+                    )
                     if run_dir is None:
                         self.send_json({
                             "schema_version": "dupe_engine_review_ui_payload_v0_9_5",
@@ -264,6 +309,10 @@ def build_handler(*, store: ReviewJobStore, static_dir: Path) -> type[BaseHTTPRe
                 if path.startswith("/api/jobs/"):
                     job_id = path.removeprefix("/api/jobs/").strip("/")
                     job = store.get_job(job_id)
+                    _audit_module.record_event(
+                        job_id=job_id, action="read", actor=client_ip,
+                        resource="job_detail", outcome="access",
+                    )
                     run_dir_path = Path(job["run_dir"]) if job.get("run_dir") else None
                     progress = load_job_progress(run_dir_path) if run_dir_path else None
                     public_job = _sanitize_job_for_api(job)
@@ -271,11 +320,21 @@ def build_handler(*, store: ReviewJobStore, static_dir: Path) -> type[BaseHTTPRe
                     self.send_json(public_job)
                     return
                 if path == "/api/review-decisions":
-                    self.send_json(load_review_decisions(require_current_run(store)))
+                    run_dir = require_current_run(store)
+                    _audit_module.record_event(
+                        job_id=run_dir.name, action="read", actor=client_ip,
+                        resource="review_decisions", outcome="access",
+                    )
+                    self.send_json(load_review_decisions(run_dir))
                     return
                 if path.startswith("/run-artifacts/"):
                     rel = path.removeprefix("/run-artifacts/")
-                    self.send_file_from_base(require_current_run(store), rel)
+                    run_dir = require_current_run(store)
+                    _audit_module.record_event(
+                        job_id=run_dir.name, action="read", actor=client_ip,
+                        resource=f"artifact:{rel}", outcome="access",
+                    )
+                    self.send_file_from_base(run_dir, rel)
                     return
                 self.send_static(path, static_dir)
             except ReviewUiError as exc:
@@ -283,22 +342,43 @@ def build_handler(*, store: ReviewJobStore, static_dir: Path) -> type[BaseHTTPRe
             except FileNotFoundError:
                 self.send_error_json(HTTPStatus.NOT_FOUND, "File not found")
             except Exception as exc:  # pragma: no cover - defensive server boundary
-                _log("error", "unhandled_get_error", path=self.path, error=str(exc), trace=traceback.format_exc())
+                _log_exception("error", "unhandled_get_error", exc, path=self.path)
                 self.send_error_json(HTTPStatus.INTERNAL_SERVER_ERROR, "An internal error occurred")
 
         def do_POST(self) -> None:  # noqa: N802
             parsed = urlparse(self.path)
+            client_ip = self._client_ip()
             try:
+                # All POST routes mutate PHI state — require auth.
+                if not self._require_auth():
+                    return
                 if parsed.path == "/api/review-decisions":
                     payload = self.read_json_body()
-                    decisions = upsert_review_decisions(require_current_run(store), payload)
+                    run_dir = require_current_run(store)
+                    _audit_module.record_event(
+                        job_id=run_dir.name, action="write", actor=client_ip,
+                        resource="review_decisions", outcome="started",
+                    )
+                    decisions = upsert_review_decisions(run_dir, payload)
+                    _audit_module.record_event(
+                        job_id=run_dir.name, action="write", actor=client_ip,
+                        resource="review_decisions", outcome="success",
+                    )
                     self.send_json(decisions)
                     return
                 if parsed.path == "/api/jobs":
                     job = create_upload_job_from_request(self, store)
+                    _audit_module.record_event(
+                        job_id=job.get("job_id", "unknown"), action="upload", actor=client_ip,
+                        resource="job_files", outcome="success",
+                    )
                     self.send_json(job, status=HTTPStatus.ACCEPTED)
                     return
                 if parsed.path == "/api/clear-run":
+                    _audit_module.record_event(
+                        job_id="none", action="clear_run", actor=client_ip,
+                        resource="active_run", outcome="success",
+                    )
                     store.set_current_run(None)
                     self.send_json({"ok": True, "has_run": False})
                     return
@@ -306,7 +386,7 @@ def build_handler(*, store: ReviewJobStore, static_dir: Path) -> type[BaseHTTPRe
             except ReviewUiError as exc:
                 self.send_error_json(HTTPStatus.BAD_REQUEST, str(exc))
             except Exception as exc:  # pragma: no cover - defensive server boundary
-                _log("error", "unhandled_post_error", path=parsed.path, error=str(exc), trace=traceback.format_exc())
+                _log_exception("error", "unhandled_post_error", exc, path=parsed.path)
                 self.send_error_json(HTTPStatus.INTERNAL_SERVER_ERROR, "An internal error occurred")
 
         def do_OPTIONS(self) -> None:  # noqa: N802
@@ -314,7 +394,7 @@ def build_handler(*, store: ReviewJobStore, static_dir: Path) -> type[BaseHTTPRe
             self.send_response(HTTPStatus.NO_CONTENT)
             self.send_header("Access-Control-Allow-Origin", origin)
             self.send_header("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
-            self.send_header("Access-Control-Allow-Headers", "Content-Type")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
             self.end_headers()
 
         def read_json_body(self) -> dict[str, Any]:
@@ -499,7 +579,8 @@ def parse_job_settings(form: dict[str, list[UploadPart]]) -> dict[str, Any]:
         "openai_ocr_selection_mode": selection_mode,
         "tesseract_profiles": profiles.replace(" ", ""),
         "multipass_visual_all_pages": parse_bool(form_value(form, "multipass_visual_all_pages", "false")),
-        "include_text_preview": parse_bool(form_value(form, "include_text_preview", "false")),
+        # Phase 3: server controls text preview — client toggle is advisory only.
+        "include_text_preview": os.environ.get("DUPE_INCLUDE_TEXT_PREVIEW", "").strip().lower() in _PHI_LOG_ENABLED_TRUE,
     }
 
 
