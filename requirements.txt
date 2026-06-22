@@ -1,8 +1,12 @@
+# Core deps are declared in pyproject.toml.
+# Install with: pip install -e '.[aws]'   (includes boto3 for AWS/Bedrock)
+#               pip install -e '.[dev]'   (adds pytest)
+#
+# This file exists for tooling compatibility only.
+# pip install -r requirements.txt is NOT the canonical install path.
 pymupdf>=1.23
 pillow>=10
 scikit-learn>=1.3
 numpy>=1.24
-# Optional OCR Python wrapper. Requires the system tesseract binary too.
-# pytesseract>=0.3
-# AWS integration (optional — only needed when DUPE_SQS_QUEUE_URL / DUPE_S3_BUCKET / DUPE_DYNAMO_TABLE are set)
+pytesseract>=0.3
 boto3>=1.34

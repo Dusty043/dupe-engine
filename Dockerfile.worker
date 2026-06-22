@@ -19,7 +19,7 @@ COPY pyproject.toml README.md requirements.txt ./
 COPY src ./src
 
 RUN python -m pip install --upgrade pip \
-    && python -m pip install -e .
+    && python -m pip install -e '.[aws]'
 
 # Worker writes job workdirs here; ECS task ephemeral storage or a bind-mount
 # can override this via DUPE_WORKER_WORKDIR.

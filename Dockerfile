@@ -22,7 +22,7 @@ COPY config ./config
 COPY scripts ./scripts
 
 RUN python -m pip install --upgrade pip \
-    && python -m pip install -e .
+    && python -m pip install -e '.[aws]'
 
 RUN mkdir -p /data/corpora /data/truth /data/runs /data/logs /data/cache
 
