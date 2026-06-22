@@ -101,28 +101,23 @@ _PHI_LOG_ENABLED_TRUE = {"1", "true", "yes", "y", "on"}
 
 
 def _phi_logging_enabled() -> bool:
-    return (
-        os.environ.get("DUPE_LOG_PHI", "").strip().lower() in _PHI_LOG_ENABLED_TRUE
-        or os.environ.get("DUPE_DEMO_MODE", "").strip().lower() in _PHI_LOG_ENABLED_TRUE
-    )
+    return os.environ.get("DUPE_LOG_PHI", "").strip().lower() in _PHI_LOG_ENABLED_TRUE
 
 
 def _sanitize_job_for_api(job: dict[str, Any]) -> dict[str, Any]:
-    """Strip internal filesystem paths and PHI-adjacent fields from a job record.
+    """Strip internal filesystem paths from a job record.
 
-    In demo mode (DUPE_DEMO_MODE=true) or when DUPE_LOG_PHI=true, full error
-    output is preserved so failures can be diagnosed without checking the audit log.
+    By default, stdout_tail / stderr_tail / error are redacted because they may
+    contain extracted text or file names. Set DUPE_LOG_PHI=true to include them
+    in the API response (useful for diagnosing failures).
     """
     result = {k: v for k, v in job.items() if k not in _INTERNAL_JOB_FIELDS}
     if not _phi_logging_enabled():
-        # stdout_tail / stderr_tail may contain PHI (file content, names).
-        # error may contain exception messages with identifiers.
-        # Full output is still accessible via authenticated download endpoints.
         for phi_field in ("stdout_tail", "stderr_tail"):
             if phi_field in result:
-                result[phi_field] = "[redacted — set DUPE_LOG_PHI=true or DUPE_DEMO_MODE=true to see]" if result[phi_field] else ""
+                result[phi_field] = "[set DUPE_LOG_PHI=true to see]" if result[phi_field] else ""
         if result.get("error"):
-            result["error"] = "[redacted — set DUPE_LOG_PHI=true or DUPE_DEMO_MODE=true to see, or check the audit log]"
+            result["error"] = "[set DUPE_LOG_PHI=true to see full error]"
     return result
 
 
@@ -258,7 +253,7 @@ def validate_run_dir(run_dir: Path) -> None:
 
 def build_handler(*, store: ReviewJobStore, static_dir: Path, server_host: str = "127.0.0.1") -> type[BaseHTTPRequestHandler]:
     class ReviewUiRequestHandler(BaseHTTPRequestHandler):
-        server_version = "DupeEngineReviewUI/0.9.8"
+        server_version = "DupeEngineReviewUI/0.10.9"
 
         def log_message(self, fmt: str, *args: Any) -> None:
             print(f"{self.address_string()} - {fmt % args}")
