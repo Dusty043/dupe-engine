@@ -53,15 +53,13 @@ def check_bearer_token(authorization_header: str | None) -> bool:
 def auth_required(host: str, authorization_header: str | None) -> bool:
     """Return True when the request is authenticated (or auth is not needed).
 
-    On loopback with no token configured: open (dev/local default).
-    On non-loopback with a token configured: token required.
-    On non-loopback with no token: denied (set DUPE_UI_AUTH_TOKEN).
+    No token configured: open access (network security handled by the caller's
+    infrastructure — Tailscale, VPN, security group, etc.).
+    Token configured: bearer token required on every request.
     """
     token = _auth_token()
-    if not token and is_loopback_host(host):
-        return True  # loopback + no token → open for local/dev use
     if not token:
-        return False  # non-loopback + no token → deny
+        return True  # no token set → open; rely on network-level access control
     return check_bearer_token(authorization_header)
 
 
