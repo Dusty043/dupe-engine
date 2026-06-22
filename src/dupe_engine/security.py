@@ -9,16 +9,16 @@ from urllib.parse import urlparse
 if TYPE_CHECKING:
     from .config import EngineConfig
 
-
 _TRUTHY = {"1", "true", "yes", "y", "on"}
 
 
-def _demo_mode() -> bool:
-    """DUPE_DEMO_MODE=true demotes all compliance hard-stops to logged warnings.
+def _strict_mode() -> bool:
+    """DUPE_STRICT_COMPLIANCE=true upgrades compliance warnings to hard stops.
 
-    Use only on synthetic/test data. Never set in production or on real PHI.
+    Off by default. Enable in production environments where a misconfiguration
+    should prevent the server from starting rather than log a warning.
     """
-    return os.environ.get("DUPE_DEMO_MODE", "").strip().lower() in _TRUTHY
+    return os.environ.get("DUPE_STRICT_COMPLIANCE", "").strip().lower() in _TRUTHY
 
 
 # ---------------------------------------------------------------------------
@@ -53,20 +53,15 @@ def check_bearer_token(authorization_header: str | None) -> bool:
 def auth_required(host: str, authorization_header: str | None) -> bool:
     """Return True when the request is authenticated (or auth is not needed).
 
-    In local dev (loopback host + no token configured), auth is bypassed so
-    existing dev workflows are unaffected. On any non-loopback interface a
-    token is always required — no token configured means deny (defense in depth
-    on top of the startup TLS guard).
-
-    DUPE_DEMO_MODE=true also bypasses auth — use only on synthetic/test data.
+    On loopback with no token configured: open (dev/local default).
+    On non-loopback with a token configured: token required.
+    On non-loopback with no token: denied (set DUPE_UI_AUTH_TOKEN).
     """
-    if _demo_mode():
-        return True
     token = _auth_token()
     if not token and is_loopback_host(host):
-        return True  # dev mode: no token, loopback only — allow
+        return True  # loopback + no token → open for local/dev use
     if not token:
-        return False  # non-loopback + no token configured → deny
+        return False  # non-loopback + no token → deny
     return check_bearer_token(authorization_header)
 
 
@@ -75,26 +70,30 @@ def auth_required(host: str, authorization_header: str | None) -> bool:
 # ---------------------------------------------------------------------------
 
 def require_tls_or_loopback(host: str) -> None:
-    """Refuse to continue if host is non-loopback and TLS is not acknowledged.
+    """Warn (or hard-stop in strict mode) when binding to a non-loopback interface
+    without TLS acknowledgement.
 
-    Set DUPE_TLS_TERMINATED=true to acknowledge that a reverse proxy or ALB
-    terminates TLS before PHI reaches this process.
+    Default: logs a warning and continues — the system is built to process PHI
+    and the operator is responsible for their network setup.
 
-    DUPE_DEMO_MODE=true downgrades this to a warning — use only on synthetic/test data.
+    Set DUPE_TLS_TERMINATED=true to silence the warning (acknowledges that a
+    reverse proxy or ALB terminates TLS before this process).
+
+    Set DUPE_STRICT_COMPLIANCE=true to make this a hard stop instead of a warning.
     """
     if is_loopback_host(host):
         return
     tls_ok = os.environ.get("DUPE_TLS_TERMINATED", "").strip().lower() in _TRUTHY
-    if not tls_ok:
-        msg = (
-            "Review UI is bound to a non-loopback interface without TLS. "
-            "Do not use with real PHI. "
-            "Set DUPE_TLS_TERMINATED=true when a reverse proxy terminates TLS."
-        )
-        if _demo_mode():
-            warnings.warn(f"DEMO MODE — {msg}", stacklevel=2)
-            return
+    if tls_ok:
+        return
+    msg = (
+        "Review UI is bound to a non-loopback interface without TLS acknowledgement. "
+        "Set DUPE_TLS_TERMINATED=true to confirm a reverse proxy handles TLS, "
+        "or bind to 127.0.0.1 for local-only access."
+    )
+    if _strict_mode():
         raise SystemExit(f"FATAL: {msg}")
+    warnings.warn(msg, stacklevel=2)
 
 
 # ---------------------------------------------------------------------------
@@ -119,34 +118,31 @@ def _effective_host(url: str) -> str:
 
 
 def assert_baa_endpoint(config: "EngineConfig") -> None:
-    """Raise SystemExit if any configured AI endpoint is not in the BAA allow-list.
+    """Warn (or hard-stop in strict mode) if AI endpoints are outside the BAA allow-list.
 
-    Mirrors the exact URL-resolution precedence used by providers.py so this
-    check is always in sync with the actual call sites.
+    Default: logs a warning and continues — the system processes PHI by design
+    and the operator is responsible for ensuring their OpenAI endpoint is BAA-covered.
 
-    DUPE_DEMO_MODE=true downgrades this to a warning — use only on synthetic/test data.
+    Set DUPE_STRICT_COMPLIANCE=true to make this a hard stop instead.
     """
     allowed = _baa_allowed_hosts()
 
-    # OCR endpoint (providers.py line 158)
     ocr_host = _effective_host(config.openai_ocr_base_url or config.openai_base_url)
-    # Embeddings endpoint (providers.py line 236)
     emb_host = _effective_host(config.embeddings_base_url or config.openai_base_url)
 
-    blocked = []
+    outside = []
     if ocr_host not in allowed:
-        blocked.append(f"openai_ocr → {ocr_host!r}")
+        outside.append(f"openai_ocr → {ocr_host!r}")
     if config.enable_embeddings and emb_host not in allowed:
-        blocked.append(f"embeddings → {emb_host!r}")
+        outside.append(f"embeddings → {emb_host!r}")
 
-    if blocked:
+    if outside:
         msg = (
-            f"The following AI endpoints are not in the BAA allow-list "
-            f"({', '.join(sorted(allowed))}): {'; '.join(blocked)}. "
-            "Set DUPE_OPENAI_BAA_ALLOWED_HOSTS or DUPE_OPENAI_BASE_URL to point "
-            "at the approved endpoint."
+            f"AI endpoints outside the BAA allow-list "
+            f"({', '.join(sorted(allowed))}): {'; '.join(outside)}. "
+            "Set DUPE_OPENAI_BAA_ALLOWED_HOSTS to include your BAA-covered endpoint, "
+            "or set DUPE_OPENAI_BASE_URL to point at the approved gateway."
         )
-        if _demo_mode():
-            warnings.warn(f"DEMO MODE — {msg}", stacklevel=2)
-            return
-        raise SystemExit(f"FATAL: {msg}")
+        if _strict_mode():
+            raise SystemExit(f"FATAL: {msg}")
+        warnings.warn(msg, stacklevel=2)

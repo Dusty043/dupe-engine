@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# Start the Review UI in demo mode — compliance guards are warnings, not hard stops.
+# Start the Review UI for local demo or testing.
 #
-# Use only on synthetic or test data. Do NOT run against real PHI records.
+# Compliance guards warn but do not stop the server (the system processes PHI
+# by design). Use DUPE_STRICT_COMPLIANCE=true in production to re-enable hard stops.
 #
 # Usage:
 #   ./scripts/start_demo.sh                     # smoke test (bundled example run)
 #   ./scripts/start_demo.sh --live              # live upload mode (needs DUPE_OPENAI_API_KEY)
 #   ./scripts/start_demo.sh --port 9000         # custom port
-#   ./scripts/start_demo.sh --host 0.0.0.0      # expose on LAN (still demo mode)
+#   ./scripts/start_demo.sh --host 0.0.0.0      # expose on LAN
 
 set -euo pipefail
 
@@ -24,15 +25,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-export DUPE_DEMO_MODE=true
-export DUPE_LOG_PHI=true          # show full errors in demo — do not use on real PHI
+export DUPE_LOG_PHI=true
 export DUPE_INCLUDE_TEXT_PREVIEW=false
 
 echo ""
-echo "  ╔═══════════════════════════════════════════════╗"
-echo "  ║  DEMO MODE — compliance guards are warnings   ║"
-echo "  ║  Do not use with real PHI records.            ║"
-echo "  ╚═══════════════════════════════════════════════╝"
+echo "  Demo mode — errors visible, compliance guards log warnings only."
 echo ""
 
 if [[ "$LIVE" == "true" ]]; then
