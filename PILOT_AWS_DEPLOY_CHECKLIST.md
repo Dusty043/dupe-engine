@@ -97,6 +97,9 @@ DUPE_OPENAI_OCR_MAX_PAGES_PER_DOCUMENT=5
 DUPE_INCLUDE_TEXT_PREVIEW=false
 DUPE_LOG_PHI=false
 DUPE_PERSIST_EXTRACTED_TEXT=false
+DUPE_STRICT_COMPLIANCE=true
+DUPE_TLS_TERMINATED=true
+DUPE_UI_AUTH_TOKEN=<set-a-strong-token>
 EOF
 sudo chmod 600 /srv/apps/dupe-engine/.env
 ```
@@ -156,7 +159,9 @@ curl http://<internal-ip>:8765/api/status
 - [ ] Page images render in the review UI
 - [ ] Reviewer decision saves and persists within the session
 - [ ] `docker logs dupe-engine-review` shows no errors
-- [ ] No PHI is written to logs (`DUPE_LOG_PHI=false` is set)
+- [ ] Extracted text not written to logs (`DUPE_LOG_PHI=false`, `DUPE_INCLUDE_TEXT_PREVIEW=false`, `DUPE_PERSIST_EXTRACTED_TEXT=false`)
+- [ ] `DUPE_STRICT_COMPLIANCE=true` is set (compliance guards hard-stop on misconfiguration)
+- [ ] `DUPE_UI_AUTH_TOKEN` is set to a strong token
 
 ---
 

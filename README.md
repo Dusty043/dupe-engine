@@ -498,7 +498,7 @@ PYTHONPATH=src pytest
 
 ## PHI and deployment notes
 
-The current system is local-first. For a v1 pilot, the natural deployment target is an internal server or VM with mounted internal storage.
+The system processes PHI by design — that is its purpose. Compliance guards (TLS check, BAA endpoint check) log warnings by default and do not stop the server. Set `DUPE_STRICT_COMPLIANCE=true` in production to re-enable hard stops if a misconfiguration should prevent startup.
 
 Recommended pilot shape:
 
@@ -510,12 +510,15 @@ PDFs and run artifacts stay on internal storage
 reviewers access via internal URL
 ```
 
-Avoid enabling text previews or PHI logging on real records unless explicitly approved:
+Production environment variables:
 
 ```text
-DUPE_INCLUDE_TEXT_PREVIEW=false
-DUPE_LOG_PHI=false
-DUPE_PERSIST_EXTRACTED_TEXT=false
+DUPE_STRICT_COMPLIANCE=true          re-enable hard stops on TLS/BAA misconfiguration
+DUPE_TLS_TERMINATED=true             acknowledge that a reverse proxy handles TLS
+DUPE_UI_AUTH_TOKEN=<strong-token>    require bearer token for all UI access
+DUPE_INCLUDE_TEXT_PREVIEW=false      don't include extracted page text in run artifacts
+DUPE_PERSIST_EXTRACTED_TEXT=false    don't write extracted text to disk
+DUPE_LOG_PHI=false                   don't include extracted text in job error output
 ```
 
 The engine generates review assistance. Human reviewers make final workflow decisions.
