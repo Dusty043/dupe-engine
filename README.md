@@ -227,11 +227,36 @@ dupe-engine review-ui --run-dir ./output/runs/received_vs_ere
 
 ---
 
-## OpenAI OCR fallback
+## Vision OCR fallback
 
-Mandatory fallback does **not** mean every page is sent to OpenAI. Only selected weak/vision-needed pages are sent, capped by budget. Skipped eligible pages are reported.
+When Tesseract can't read a page, the engine escalates selected weak pages to a vision model. Only selected pages are sent, capped by budget. Skipped eligible pages are reported.
 
-Current defaults:
+### Provider selection
+
+```text
+DUPE_VISION_OCR_PROVIDER=openai    default — uses OpenAI key
+DUPE_VISION_OCR_PROVIDER=bedrock   AWS Bedrock Claude (IAM auth, no key needed)
+```
+
+**Bedrock path** (recommended for AWS deployments):
+
+```text
+DUPE_VISION_OCR_PROVIDER=bedrock
+DUPE_BEDROCK_OCR_MODEL=us.anthropic.claude-haiku-4-5-20251001-v1:0
+DUPE_BEDROCK_REGION=us-east-1
+```
+
+When Bedrock is primary, OpenAI is kept as a silent failsafe: if Bedrock returns an error on a page, the engine retries with OpenAI if a key is present, skips gracefully if not. Both paths are independently visible in the audit trail.
+
+Install boto3 for Bedrock support:
+
+```bash
+pip install 'dupe-engine[aws]'
+```
+
+Docker images already include it via `pip install -e '.[aws]'`.
+
+### Selection budget
 
 ```text
 DUPE_OPENAI_OCR_SELECTION_MODE=weak_pages_or_vision_expected

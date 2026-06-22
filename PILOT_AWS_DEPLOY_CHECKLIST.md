@@ -33,7 +33,8 @@ Security group:
   - Outbound HTTPS (443) for OpenAI API calls
 
 IAM role:
-  - SecretsManagerReadWrite (to fetch OpenAI key)
+  - SecretsManagerReadWrite (to fetch OpenAI key if using OpenAI path)
+  - bedrock:InvokeModel on arn:aws:bedrock:*::foundation-model/anthropic.claude-* (for Bedrock OCR)
   - No S3 access needed for v1 (local storage only)
 ```
 
@@ -88,12 +89,22 @@ docker save dupe-engine-worker:v0.10.9 | gzip | ssh ec2-user@<host> "docker load
 # On the EC2 instance:
 sudo mkdir -p /srv/apps/dupe-engine
 sudo tee /srv/apps/dupe-engine/.env > /dev/null <<'EOF'
-DUPE_OPENAI_API_KEY=sk-...
+# --- Vision OCR: Bedrock (IAM auth, no key needed on AWS) ---
+DUPE_VISION_OCR_PROVIDER=bedrock
+DUPE_BEDROCK_OCR_MODEL=us.anthropic.claude-haiku-4-5-20251001-v1:0
+DUPE_BEDROCK_REGION=us-east-1
+
+# --- OpenAI key: omit when using Bedrock; add only as break-glass failsafe ---
+# DUPE_OPENAI_API_KEY=sk-...
+
+# --- OCR budget ---
 DUPE_OPENAI_OCR_ENABLED=true
 DUPE_REQUIRE_OPENAI_OCR=true
 DUPE_OPENAI_OCR_DRY_RUN=false
 DUPE_OPENAI_OCR_MAX_PAGES_PER_JOB=50
 DUPE_OPENAI_OCR_MAX_PAGES_PER_DOCUMENT=5
+
+# --- PHI / compliance ---
 DUPE_INCLUDE_TEXT_PREVIEW=false
 DUPE_LOG_PHI=false
 DUPE_PERSIST_EXTRACTED_TEXT=false
