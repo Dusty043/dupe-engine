@@ -46,6 +46,7 @@ def main() -> None:
     add_continuous_calibration_parser(subparsers)
     add_prune_calibration_run_parser(subparsers)
     add_analyze_calibration_parser(subparsers)
+    add_heal_parser(subparsers)
 
     args = parser.parse_args()
     config = build_config(args)
@@ -79,6 +80,8 @@ def main() -> None:
             command_prune_calibration_run(args, config)
         elif args.command == "analyze-calibration":
             command_analyze_calibration(args, config)
+        elif args.command == "heal":
+            command_heal(args)
         else:
             parser.error(f"Unknown command: {args.command}")
     except TruthFileError as exc:
@@ -402,6 +405,36 @@ def add_analyze_calibration_parser(subparsers: argparse._SubParsersAction) -> No
     parser.add_argument("--model", default=None, help="Analysis LLM model; defaults to DUPE_LLM_ANALYSIS_MODEL/DUPE_LLM_MODEL/gpt-4o-mini")
     parser.add_argument("--dry-run", action="store_true", help="Write heuristic analysis only; do not call an LLM provider")
     parser.add_argument("--include-text-snippets", action="store_true", help="Include limited false-negative metadata snippets in analysis input. Default is metrics-only.")
+
+def add_heal_parser(subparsers: argparse._SubParsersAction) -> None:
+    parser = subparsers.add_parser(
+        "heal",
+        help="Diagnose a completed run, prescribe targeted config fixes, and optionally re-run to verify improvement",
+    )
+    parser.add_argument("--run-dir", required=True, help="Completed run directory to diagnose (must contain results.json)")
+    parser.add_argument("--truth", default=None, help="Optional pair-level truth JSON for recall/FN analysis")
+    parser.add_argument(
+        "--feedback",
+        default=None,
+        help=(
+            "Optional reviewer feedback JSON with missed/false-alarm verdicts. "
+            'Format: {"version":"1","feedback_pairs":[{"doc_a":"...","page_a":1,'
+            '"doc_b":"...","page_b":2,"verdict":"missed_duplicate","notes":"..."}]}'
+        ),
+    )
+    parser.add_argument("--pdf-dir", default=None, help="PDF corpus directory — required when using --apply")
+    parser.add_argument("--apply", action="store_true", help="Re-run the job with the prescribed config changes")
+    parser.add_argument("--iterations", type=int, default=1, help="Maximum heal cycles when using --apply (default: 1)")
+    parser.add_argument("--target-recall", type=float, default=None, help="Recall target for HEALED certification (e.g. 0.85)")
+    parser.add_argument("--target-queue-size", type=float, default=None, help="Max queue candidates per 100 pages for HEALED certification (e.g. 50)")
+    parser.add_argument("--out-dir", default=None, help="Output directory for prescription.json and heal artifacts (default: <run-dir>/heal_output)")
+    parser.add_argument("--verbose", action="store_true", help="Print the full re-run command when using --apply")
+
+
+def command_heal(args: argparse.Namespace) -> None:
+    from .healing_harness import run_heal
+    run_heal(args)
+
 
 def command_calibrate(args: argparse.Namespace, config: EngineConfig) -> None:
     from .calibration_harness import CalibrationError, run_calibration
