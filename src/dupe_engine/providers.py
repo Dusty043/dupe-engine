@@ -13,6 +13,7 @@ from PIL import Image, ImageEnhance, ImageOps
 from .capabilities import (
     ProviderStatus,
     check_adjudicator_status,
+    check_bedrock_embeddings_status,
     check_bedrock_ocr_status,
     check_embeddings_status,
     check_llm_candidate_detector_status,
@@ -464,8 +465,73 @@ class _CascadeOcrProvider:
         return result
 
 
+class BedrockEmbeddingProvider:
+    """Amazon Titan Embeddings V2 via Bedrock IAM auth.
+
+    Titan takes one text per InvokeModel call (no batch array like OpenAI).
+    embed_texts loops over inputs; boto3 is imported lazily so the rest of
+    the engine works without it installed.
+
+    Supported dimensions: 256, 512, 1024 (default). Set DUPE_EMBEDDINGS_DIMENSIONS
+    to override. Vectors are normalized by default.
+    """
+
+    def __init__(self, config: EngineConfig):
+        self.config = config
+        self._status = check_bedrock_embeddings_status(config)
+
+    def healthcheck(self) -> ProviderStatus:
+        return self._status
+
+    def embed_texts(self, texts: list[str]) -> EmbeddingResult:
+        if not self._status.available:
+            return EmbeddingResult(
+                vectors=[],
+                provider="bedrock",
+                model=self.config.bedrock_embeddings_model,
+                metadata={"skipped_reason": self._status.reason},
+            )
+        try:
+            import boto3  # noqa: PLC0415
+        except ImportError:
+            return EmbeddingResult(
+                vectors=[],
+                provider="bedrock",
+                model=self.config.bedrock_embeddings_model,
+                metadata={"skipped_reason": "boto3 not installed"},
+            )
+        client = boto3.client("bedrock-runtime", region_name=self.config.bedrock_region)
+        vectors: list[list[float]] = []
+        total_tokens = 0
+        for text in texts:
+            payload: dict[str, object] = {"inputText": text, "normalize": True}
+            if self.config.embeddings_dimensions:
+                payload["dimensions"] = self.config.embeddings_dimensions
+            response = client.invoke_model(
+                modelId=self.config.bedrock_embeddings_model,
+                body=json.dumps(payload),
+                contentType="application/json",
+                accept="application/json",
+            )
+            body = json.loads(response["body"].read())
+            vectors.append(body["embedding"])
+            total_tokens += body.get("inputTextTokenCount", 0)
+        return EmbeddingResult(
+            vectors=vectors,
+            provider="bedrock",
+            model=self.config.bedrock_embeddings_model,
+            metadata={"total_input_tokens": total_tokens, "text_count": len(texts)},
+        )
+
+
 def make_embedding_provider(config: EngineConfig) -> EmbeddingProvider:
+    provider = config.embeddings_provider.lower()
+    if provider == "bedrock":
+        status = check_bedrock_embeddings_status(config)
+        if status.available:
+            return BedrockEmbeddingProvider(config)
+        return NoopEmbeddingProvider(status)
     status = check_embeddings_status(config)
-    if status.available and config.embeddings_provider.lower() == "openai":
+    if status.available and provider == "openai":
         return OpenAIEmbeddingProvider(config)
     return NoopEmbeddingProvider(status)

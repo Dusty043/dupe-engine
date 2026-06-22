@@ -473,6 +473,64 @@ def _api_key_present(provider: str, config: EngineConfig | None = None) -> bool:
     return False
 
 
+def check_bedrock_embeddings_status(config: EngineConfig) -> ProviderStatus:
+    """Credential check for Amazon Titan Embeddings V2 via Bedrock IAM auth."""
+    if config.embeddings_provider.lower() != "bedrock":
+        return ProviderStatus(
+            layer="embeddings",
+            enabled=False,
+            available=False,
+            provider="bedrock",
+            status="disabled",
+            reason="DUPE_EMBEDDINGS_PROVIDER is not 'bedrock'",
+            model=config.bedrock_embeddings_model,
+        )
+    try:
+        import boto3  # noqa: PLC0415
+    except ImportError:
+        return ProviderStatus(
+            layer="embeddings",
+            enabled=True,
+            available=False,
+            provider="bedrock",
+            status="unavailable",
+            reason="boto3 not installed; pip install 'dupe-engine[aws]'",
+            model=config.bedrock_embeddings_model,
+            required=config.require_embeddings,
+            role="detector",
+        )
+    try:
+        session = boto3.Session(region_name=config.bedrock_region)
+        creds = session.get_credentials()
+        if creds is None:
+            raise RuntimeError("No AWS credentials found")
+        creds.get_frozen_credentials()
+    except Exception as exc:
+        return ProviderStatus(
+            layer="embeddings",
+            enabled=True,
+            available=False,
+            provider="bedrock",
+            status="unavailable",
+            reason=f"AWS credentials not available: {exc}",
+            model=config.bedrock_embeddings_model,
+            required=config.require_embeddings,
+            role="detector",
+        )
+    return ProviderStatus(
+        layer="embeddings",
+        enabled=True,
+        available=True,
+        provider="bedrock",
+        status="available",
+        reason="Bedrock embeddings provider configured and available",
+        model=config.bedrock_embeddings_model,
+        required=config.require_embeddings,
+        role="detector",
+        details=_embedding_details(config),
+    )
+
+
 def check_embeddings_status(config: EngineConfig) -> ProviderStatus:
     if not config.enable_embeddings:
         return ProviderStatus(
@@ -549,13 +607,16 @@ def check_embeddings_status(config: EngineConfig) -> ProviderStatus:
             details=_embedding_details(config),
         )
 
+    if provider == "bedrock":
+        return check_bedrock_embeddings_status(config)
+
     return ProviderStatus(
         layer="embeddings",
         enabled=True,
         available=False,
         provider=config.embeddings_provider,
         status="unknown_provider",
-        reason=f"Unsupported embeddings provider: {config.embeddings_provider}; v0.9.8 supports openai only",
+        reason=f"Unsupported embeddings provider: {config.embeddings_provider}; supports openai or bedrock",
         model=config.embeddings_model or None,
         endpoint_configured=endpoint_configured,
         required=config.require_embeddings,
@@ -576,7 +637,7 @@ def _embedding_details(config: EngineConfig) -> dict[str, Any]:
         "min_text_chars": config.embeddings_min_text_chars,
         "create_candidates": config.embeddings_create_candidates,
         "skip_exact_matches": config.embeddings_skip_exact_matches,
-        "provider_family": "openai",
+        "provider_family": config.embeddings_provider,
         "base_url_configured": bool(config.embeddings_base_url or config.openai_base_url),
         "ai_route": "text_embedding",
         "input_kind": "page_text_pair",
@@ -693,13 +754,52 @@ def _check_openai_like_llm_layer(
             details=details,
         )
 
+    if provider_normalized == "bedrock":
+        try:
+            import boto3  # noqa: PLC0415
+            session = boto3.Session()
+            creds = session.get_credentials()
+            if creds is None:
+                raise RuntimeError("No AWS credentials found")
+            creds.get_frozen_credentials()
+            creds_ok = True
+        except Exception as _exc:
+            creds_ok = False
+            creds_reason = str(_exc)
+        if not creds_ok:
+            return ProviderStatus(
+                layer=layer,
+                enabled=True,
+                available=False,
+                provider="bedrock",
+                status="unavailable",
+                reason=f"AWS credentials not available for Bedrock {layer}: {creds_reason}",
+                model=model or None,
+                required=required,
+                role=role,
+                details=details,
+            )
+        reason = success_reason if model_configured else f"model not set for {layer}; set DUPE_LLM_MODEL or DUPE_BEDROCK_LLM_MODEL"
+        return ProviderStatus(
+            layer=layer,
+            enabled=True,
+            available=False,  # integration deferred; will become True when v2 callers are wired
+            provider="bedrock",
+            status="provisioned_not_active",
+            reason=reason,
+            model=model or None,
+            required=required,
+            role=role,
+            details=details,
+        )
+
     return ProviderStatus(
         layer=layer,
         enabled=True,
         available=False,
         provider=provider,
         status="unknown_provider",
-        reason=f"Unsupported provider for {layer}: {provider}; v0.9.8 supports openai only",
+        reason=f"Unsupported provider for {layer}: {provider}; supports openai or bedrock",
         model=model or None,
         endpoint_configured=endpoint_configured,
         required=required,

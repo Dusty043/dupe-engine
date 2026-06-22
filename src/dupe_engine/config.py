@@ -104,6 +104,10 @@ class EngineConfig:
     bedrock_ocr_model: str = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
     bedrock_region: str = "us-east-1"
     bedrock_ocr_timeout_seconds: int = 60
+    bedrock_embeddings_model: str = "amazon.titan-embed-text-v2:0"
+    bedrock_embeddings_timeout_seconds: int = 30
+    # Default Bedrock Claude model for LLM/adjudicator routes when provider="bedrock"
+    bedrock_llm_model: str = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
 
     enable_openai_ocr: bool = True
     openai_ocr_provider: str = "openai"
@@ -316,6 +320,9 @@ class EngineConfig:
             bedrock_ocr_model=env_str("DUPE_BEDROCK_OCR_MODEL", "us.anthropic.claude-haiku-4-5-20251001-v1:0") or "us.anthropic.claude-haiku-4-5-20251001-v1:0",
             bedrock_region=env_str("DUPE_BEDROCK_REGION", "us-east-1") or "us-east-1",
             bedrock_ocr_timeout_seconds=env_int("DUPE_BEDROCK_OCR_TIMEOUT_SECONDS", 60),
+            bedrock_embeddings_model=env_str("DUPE_BEDROCK_EMBEDDINGS_MODEL", "amazon.titan-embed-text-v2:0") or "amazon.titan-embed-text-v2:0",
+            bedrock_embeddings_timeout_seconds=env_int("DUPE_BEDROCK_EMBEDDINGS_TIMEOUT_SECONDS", 30),
+            bedrock_llm_model=env_str("DUPE_BEDROCK_LLM_MODEL", "us.anthropic.claude-haiku-4-5-20251001-v1:0") or "us.anthropic.claude-haiku-4-5-20251001-v1:0",
             enable_openai_ocr=env_bool("DUPE_OPENAI_OCR_ENABLED", True),
             openai_ocr_provider=env_str("DUPE_OPENAI_OCR_PROVIDER", "openai") or "openai",
             openai_ocr_base_url=env_str("DUPE_OPENAI_OCR_BASE_URL", openai_base_url),
