@@ -8,7 +8,7 @@ from .ai_ledger import ROUTE_VISION_OCR_EXTRACTION, add_page_ai_event, make_ai_r
 from .config import EngineConfig
 from .hashing import sha256_bytes
 from .models import PageMatch, PageRecord
-from .providers import OcrResult, make_ocr_provider, make_openai_ocr_provider
+from .providers import OcrResult, make_ocr_provider, make_openai_ocr_provider, make_vision_ocr_provider
 from .text import normalize_text_for_hash, normalize_text_for_similarity, substantial_text, tokenize_for_similarity
 from .progress import emit_progress
 
@@ -95,6 +95,8 @@ def record_vision_ocr_event(
     status: str,
     config: EngineConfig,
     reason: str,
+    provider: str | None = None,
+    model: str | None = None,
     selected: bool = True,
     attempted: bool = False,
     succeeded: bool = False,
@@ -109,8 +111,8 @@ def record_vision_ocr_event(
         make_ai_route_event(
             route=ROUTE_VISION_OCR_EXTRACTION,
             status=status,
-            provider=config.openai_ocr_provider,
-            model=config.openai_ocr_model,
+            provider=provider or config.openai_ocr_provider,
+            model=model or config.openai_ocr_model,
             subject_type="page",
             subject_id=page_subject_id(page),
             input_kind="page_image",
@@ -163,7 +165,7 @@ def apply_openai_ocr_fallback(matches: list[PageMatch], config: EngineConfig, pa
     if not selected:
         return 0
 
-    provider = make_openai_ocr_provider(config)
+    provider = make_vision_ocr_provider(config)
     status = provider.healthcheck()
 
     if config.openai_ocr_dry_run:
@@ -211,7 +213,7 @@ def apply_openai_ocr_fallback(matches: list[PageMatch], config: EngineConfig, pa
         result = provider.extract_page_text(Path(page.image_path))
         page.openai_ocr_attempted = True
         page.openai_ocr_provider = result.provider
-        page.openai_ocr_model = config.openai_ocr_model
+        page.openai_ocr_model = str(result.metadata.get("model") or config.openai_ocr_model)
         page.openai_ocr_text = result.text
         page.openai_ocr_word_count = word_count(result.text, config)
         page.openai_ocr_usable = openai_ocr_is_usable(result.text, config)
@@ -239,6 +241,8 @@ def apply_openai_ocr_fallback(matches: list[PageMatch], config: EngineConfig, pa
             status="completed" if not page.openai_ocr_error else "error",
             config=config,
             reason=reason,
+            provider=result.provider,
+            model=page.openai_ocr_model,
             attempted=True,
             succeeded=page.openai_ocr_usable and not bool(page.openai_ocr_error),
             changed_evidence=improved,
@@ -251,6 +255,7 @@ def apply_openai_ocr_fallback(matches: list[PageMatch], config: EngineConfig, pa
                 "quality": quality_metadata,
                 "response_id": result.metadata.get("response_id"),
                 "skipped_reason": page.openai_ocr_skip_reason or "",
+                "cascade_from": result.metadata.get("cascade_from"),
             },
         )
         emit_progress(
@@ -310,7 +315,7 @@ def apply_openai_ocr_post_candidate_rescue(matches: list[PageMatch], config: Eng
     if not selected:
         return 0
 
-    provider = make_openai_ocr_provider(config)
+    provider = make_vision_ocr_provider(config)
     status = provider.healthcheck()
 
     if config.openai_ocr_dry_run:
@@ -358,7 +363,7 @@ def apply_openai_ocr_post_candidate_rescue(matches: list[PageMatch], config: Eng
         result = provider.extract_page_text(Path(page.image_path))
         page.openai_ocr_attempted = True
         page.openai_ocr_provider = result.provider
-        page.openai_ocr_model = config.openai_ocr_model
+        page.openai_ocr_model = str(result.metadata.get("model") or config.openai_ocr_model)
         page.openai_ocr_text = result.text
         page.openai_ocr_word_count = word_count(result.text, config)
         page.openai_ocr_usable = openai_ocr_is_usable(result.text, config)

@@ -378,6 +378,58 @@ def check_openai_ocr_status(config: EngineConfig) -> ProviderStatus:
     )
 
 
+def check_bedrock_ocr_status(config: EngineConfig) -> ProviderStatus:
+    """Return availability status for the Bedrock Claude vision OCR provider."""
+    if config.vision_ocr_provider.lower() != "bedrock":
+        return ProviderStatus(
+            layer="bedrock_ocr_fallback",
+            enabled=False,
+            available=False,
+            provider="bedrock",
+            status="disabled",
+            reason="DUPE_VISION_OCR_PROVIDER is not 'bedrock'",
+            model=config.bedrock_ocr_model,
+        )
+    try:
+        import boto3  # noqa: PLC0415
+    except ImportError:
+        return ProviderStatus(
+            layer="bedrock_ocr_fallback",
+            enabled=True,
+            available=False,
+            provider="bedrock",
+            status="unavailable",
+            reason="boto3 not installed; pip install 'dupe-engine[aws]'",
+            model=config.bedrock_ocr_model,
+        )
+    try:
+        session = boto3.Session(region_name=config.bedrock_region)
+        creds = session.get_credentials()
+        if creds is None:
+            raise RuntimeError("No AWS credentials found")
+        creds.get_frozen_credentials()
+    except Exception as exc:
+        return ProviderStatus(
+            layer="bedrock_ocr_fallback",
+            enabled=True,
+            available=False,
+            provider="bedrock",
+            status="unavailable",
+            reason=f"AWS credentials not available: {exc}",
+            model=config.bedrock_ocr_model,
+        )
+    return ProviderStatus(
+        layer="bedrock_ocr_fallback",
+        enabled=True,
+        available=True,
+        provider="bedrock",
+        status="available",
+        reason="Bedrock OCR provider configured and available",
+        model=config.bedrock_ocr_model,
+        role="enrichment",
+    )
+
+
 def _openai_ocr_details(config: EngineConfig) -> dict[str, Any]:
     return {
         "max_pages_per_job": config.openai_ocr_max_pages_per_job,

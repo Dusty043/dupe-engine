@@ -96,6 +96,15 @@ class EngineConfig:
     tesseract_min_words: int = 40
     tesseract_preprocessing_profiles: str = "standard,grayscale,high_contrast"
     ocr_service_url: str = ""
+    # vision_ocr_provider selects the primary vision OCR backend: "openai" (default)
+    # or "bedrock". When "bedrock" is selected, OpenAI is kept as a silent failsafe
+    # and is only used if the Bedrock call returns an error. If no OpenAI key is
+    # configured, the failsafe is skipped gracefully.
+    vision_ocr_provider: str = "openai"
+    bedrock_ocr_model: str = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
+    bedrock_region: str = "us-east-1"
+    bedrock_ocr_timeout_seconds: int = 60
+
     enable_openai_ocr: bool = True
     openai_ocr_provider: str = "openai"
     openai_ocr_base_url: str = ""
@@ -303,6 +312,10 @@ class EngineConfig:
             tesseract_min_words=env_int("DUPE_TESSERACT_MIN_WORDS", 40),
             tesseract_preprocessing_profiles=env_str("DUPE_TESSERACT_PREPROCESSING_PROFILES", "standard,grayscale,high_contrast") or "standard",
             ocr_service_url=env_str("DUPE_OCR_SERVICE_URL", ""),
+            vision_ocr_provider=env_str("DUPE_VISION_OCR_PROVIDER", "openai") or "openai",
+            bedrock_ocr_model=env_str("DUPE_BEDROCK_OCR_MODEL", "us.anthropic.claude-haiku-4-5-20251001-v1:0") or "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+            bedrock_region=env_str("DUPE_BEDROCK_REGION", "us-east-1") or "us-east-1",
+            bedrock_ocr_timeout_seconds=env_int("DUPE_BEDROCK_OCR_TIMEOUT_SECONDS", 60),
             enable_openai_ocr=env_bool("DUPE_OPENAI_OCR_ENABLED", True),
             openai_ocr_provider=env_str("DUPE_OPENAI_OCR_PROVIDER", "openai") or "openai",
             openai_ocr_base_url=env_str("DUPE_OPENAI_OCR_BASE_URL", openai_base_url),

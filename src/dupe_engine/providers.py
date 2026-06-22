@@ -13,6 +13,7 @@ from PIL import Image, ImageEnhance, ImageOps
 from .capabilities import (
     ProviderStatus,
     check_adjudicator_status,
+    check_bedrock_ocr_status,
     check_embeddings_status,
     check_llm_candidate_detector_status,
     check_openai_ocr_status,
@@ -335,6 +336,132 @@ def make_openai_ocr_provider(config: EngineConfig) -> OcrProvider:
     if status.available:
         return OpenAIOcrProvider(config)
     return NoopOcrProvider(status)
+
+
+class BedrockOcrProvider:
+    """Amazon Bedrock Claude vision OCR fallback.
+
+    Uses the Bedrock InvokeModel API with the Anthropic messages format.
+    boto3 is imported lazily so the rest of the engine works without it.
+    Configure via DUPE_BEDROCK_OCR_MODEL and DUPE_BEDROCK_REGION.
+    """
+
+    def __init__(self, config: EngineConfig):
+        self.config = config
+        self._status = check_bedrock_ocr_status(config)
+
+    def healthcheck(self) -> ProviderStatus:
+        return self._status
+
+    def extract_page_text(self, image_path: Path) -> OcrResult:
+        if not self._status.available:
+            return OcrResult(provider="bedrock", metadata={"skipped_reason": self._status.reason})
+        try:
+            import boto3  # noqa: PLC0415
+        except ImportError:
+            return OcrResult(provider="bedrock", metadata={"skipped_reason": "boto3 not installed"})
+        try:
+            image_b64 = base64.b64encode(image_path.read_bytes()).decode("ascii")
+            client = boto3.client(
+                "bedrock-runtime",
+                region_name=self.config.bedrock_region,
+            )
+            payload = {
+                "anthropic_version": "bedrock-2023-05-31",
+                "max_tokens": 2500,
+                "messages": [{
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "image",
+                            "source": {
+                                "type": "base64",
+                                "media_type": "image/png",
+                                "data": image_b64,
+                            },
+                        },
+                        {
+                            "type": "text",
+                            "text": "Extract the readable text from this medical-record page. Return plain text only.",
+                        },
+                    ],
+                }],
+            }
+            response = client.invoke_model(
+                modelId=self.config.bedrock_ocr_model,
+                body=json.dumps(payload),
+                contentType="application/json",
+                accept="application/json",
+            )
+            body = json.loads(response["body"].read())
+            text = body.get("content", [{}])[0].get("text", "")
+            usage = body.get("usage", {})
+            return OcrResult(
+                text=str(text).strip(),
+                provider="bedrock",
+                confidence=None,
+                metadata={
+                    "model": self.config.bedrock_ocr_model,
+                    "input_tokens": usage.get("input_tokens"),
+                    "output_tokens": usage.get("output_tokens"),
+                },
+            )
+        except Exception as exc:
+            return OcrResult(provider="bedrock", metadata={"error": str(exc)})
+
+
+def make_vision_ocr_provider(config: EngineConfig) -> OcrProvider:
+    """Return the vision OCR provider chain for the current config.
+
+    When DUPE_VISION_OCR_PROVIDER=bedrock:
+      Primary:  BedrockOcrProvider
+      Failsafe: OpenAIOcrProvider (only used if Bedrock returns an error;
+                skipped silently if no OpenAI key is configured)
+
+    When DUPE_VISION_OCR_PROVIDER=openai (default):
+      Primary:  OpenAIOcrProvider (no failsafe needed)
+    """
+    if config.vision_ocr_provider.lower() == "bedrock":
+        bedrock_status = check_bedrock_ocr_status(config)
+        primary: OcrProvider = BedrockOcrProvider(config) if bedrock_status.available else NoopOcrProvider(bedrock_status)
+        openai_status = check_openai_ocr_status(config)
+        failsafe: OcrProvider | None = OpenAIOcrProvider(config) if openai_status.available else None
+        return _CascadeOcrProvider(primary, failsafe)
+    return make_openai_ocr_provider(config)
+
+
+class _CascadeOcrProvider:
+    """Try primary; on error silently fall back to failsafe if available.
+
+    Used for Bedrock → OpenAI cascade. Both providers are independently
+    observable: result.provider carries the name of whichever actually ran,
+    and metadata["cascade_from"] is set when the failsafe took over.
+    """
+
+    def __init__(self, primary: OcrProvider, failsafe: OcrProvider | None):
+        self._primary = primary
+        self._failsafe = failsafe
+
+    def healthcheck(self) -> ProviderStatus:
+        return self._primary.healthcheck()
+
+    def extract_page_text(self, image_path: Path) -> OcrResult:
+        result = self._primary.extract_page_text(image_path)
+        if result.metadata.get("error") and self._failsafe is not None:
+            fallback = self._failsafe.extract_page_text(image_path)
+            if not fallback.metadata.get("error") and not fallback.metadata.get("skipped_reason"):
+                return OcrResult(
+                    text=fallback.text,
+                    provider=fallback.provider,
+                    confidence=fallback.confidence,
+                    metadata={
+                        **fallback.metadata,
+                        "cascade_from": result.provider,
+                        "cascade_reason": "primary_error",
+                        "cascade_primary_error": result.metadata.get("error", ""),
+                    },
+                )
+        return result
 
 
 def make_embedding_provider(config: EngineConfig) -> EmbeddingProvider:
