@@ -66,11 +66,11 @@ class TestAuthRequired(unittest.TestCase):
         self.assertTrue(auth_required("localhost", None))
         self.assertTrue(auth_required("::1", None))
 
-    def test_non_loopback_no_token_denied(self):
+    def test_no_token_open_access(self):
         from src.dupe_engine.security import auth_required
-        # Non-loopback + no token → deny (defense in depth)
-        self.assertFalse(auth_required("0.0.0.0", None))
-        self.assertFalse(auth_required("10.0.0.1", None))
+        # No token configured → open access; network-level control via Tailscale/VPN
+        self.assertTrue(auth_required("0.0.0.0", None))
+        self.assertTrue(auth_required("10.0.0.1", None))
 
     def test_correct_token_passes(self):
         from src.dupe_engine.security import auth_required
@@ -112,10 +112,22 @@ class TestBaaAssertion(unittest.TestCase):
         # Should not raise — api.openai.com is the default allowed host
         assert_baa_endpoint(cfg)
 
-    def test_unknown_host_rejected(self):
+    def test_unknown_host_warns_by_default(self):
+        import warnings
         from src.dupe_engine.security import assert_baa_endpoint
         from src.dupe_engine.config import EngineConfig
         with _setenv({"DUPE_OPENAI_BASE_URL": "https://my-proxy.internal/v1"}):
+            cfg = EngineConfig.from_env()
+            with self.assertWarns(UserWarning):
+                assert_baa_endpoint(cfg)
+
+    def test_unknown_host_rejected_in_strict_mode(self):
+        from src.dupe_engine.security import assert_baa_endpoint
+        from src.dupe_engine.config import EngineConfig
+        with _setenv({
+            "DUPE_OPENAI_BASE_URL": "https://my-proxy.internal/v1",
+            "DUPE_STRICT_COMPLIANCE": "true",
+        }):
             cfg = EngineConfig.from_env()
             with self.assertRaises(SystemExit):
                 assert_baa_endpoint(cfg)
@@ -369,10 +381,10 @@ class TestHttpAuthGate(unittest.TestCase):
         handler = self._make_handler_instance("/api/jobs", token="pilot-token")
         self.assertTrue(handler._is_authenticated())
 
-    def test_non_loopback_no_token_rejected(self):
-        # No DUPE_UI_AUTH_TOKEN set — non-loopback should be denied
+    def test_no_token_open_access(self):
+        # No DUPE_UI_AUTH_TOKEN set → open access (network-level auth via Tailscale/VPN)
         handler = self._make_handler_instance("/api/run")
-        self.assertFalse(handler._is_authenticated())
+        self.assertTrue(handler._is_authenticated())
 
 
 # ---------------------------------------------------------------------------
@@ -394,9 +406,9 @@ class TestJobSanitization(unittest.TestCase):
         }
         result = _sanitize_job_for_api(job)
         self.assertNotIn("job_dir", result)
-        self.assertEqual(result["stdout_tail"], "[PHI-REDACTED]")
-        self.assertEqual(result["stderr_tail"], "[PHI-REDACTED]")
-        self.assertEqual(result["error"], "[see audit log]")
+        self.assertEqual(result["stdout_tail"], "[set DUPE_LOG_PHI=true to see]")
+        self.assertEqual(result["stderr_tail"], "[set DUPE_LOG_PHI=true to see]")
+        self.assertEqual(result["error"], "[set DUPE_LOG_PHI=true to see full error]")
 
     def test_phi_passthrough_when_enabled(self):
         from src.dupe_engine.review_ui_server import _sanitize_job_for_api

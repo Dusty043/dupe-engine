@@ -290,16 +290,21 @@ def test_disabled_config_is_pass_through() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Case 8: drop action removes row
+# Case 8: drop action zeroes confidence (kept for audit trail)
 # ---------------------------------------------------------------------------
 
-def test_drop_action_removes_row() -> None:
+def test_drop_action_zeroes_confidence() -> None:
+    # drop sets confidence=0.0 and routes to calibration_only rather than
+    # removing the row, so summarize_reranker can count the event in the audit trail.
     config = enabled_config(embedding_reranker_action="drop")
     low = make_embedding_match(confidence=0.80, a_ocr=True)   # score=0.75 → drop
     high = make_embedding_match(confidence=0.92)               # kept
     result = apply_embedding_reranker([low, high], config)
-    assert len(result) == 1
-    assert result[0].confidence == pytest.approx(0.92)
+    assert len(result) == 2
+    dropped = next(m for m in result if m.confidence == pytest.approx(0.0))
+    kept = next(m for m in result if m.confidence != pytest.approx(0.0))
+    assert dropped is not None
+    assert kept.confidence == pytest.approx(0.92)
 
 
 def test_drop_action_event_attached_to_dropped_match() -> None:

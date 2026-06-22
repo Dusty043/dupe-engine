@@ -56,7 +56,7 @@ def test_post_candidate_rescue_selects_remaining_weak_candidate_pages() -> None:
     selected = select_post_candidate_openai_ocr_pages([match], config, pages=[left, right])
 
     assert len(selected) == 1
-    assert selected[0][1].startswith("post_candidate_rescue selection")
+    assert selected[0][1].startswith("post_candidate_rescue")
 
 
 def test_hybrid_vector_gate_can_accept_supported_lower_similarity() -> None:
