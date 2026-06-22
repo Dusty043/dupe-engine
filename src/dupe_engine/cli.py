@@ -49,6 +49,12 @@ def main() -> None:
     add_heal_parser(subparsers)
 
     args = parser.parse_args()
+
+    # heal is dispatch before build_config — it needs no API keys or engine config
+    if args.command == "heal":
+        command_heal(args)
+        return
+
     config = build_config(args)
 
     try:
@@ -80,8 +86,6 @@ def main() -> None:
             command_prune_calibration_run(args, config)
         elif args.command == "analyze-calibration":
             command_analyze_calibration(args, config)
-        elif args.command == "heal":
-            command_heal(args)
         else:
             parser.error(f"Unknown command: {args.command}")
     except TruthFileError as exc:

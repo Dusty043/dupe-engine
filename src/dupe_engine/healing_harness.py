@@ -113,7 +113,7 @@ def assess_run(
     if not results_path.exists():
         raise FileNotFoundError(f"No results.json in {run_dir} — is this a valid run directory?")
 
-    results = _read_json(results_path)
+    results = _read_json(results_path, required=True)
     summary = results.get("summary", {})
     capabilities = results.get("capabilities", {})
 
@@ -225,12 +225,18 @@ def diagnose_run(
     # Read pre-classified FN rows from CSV (written at eval time with page-level data)
     fn_csv = assessment.run_dir / "false_negatives.csv"
     if fn_csv.exists():
-        with open(fn_csv, newline="") as f:
-            for row in csv.DictReader(f):
-                reason = row.get("reason_missed") or "deterministic_threshold_or_candidate_generation_miss"
-                row["_heal_root_cause"] = reason
-                fn_rows.append(row)
-                issue_counts[reason] = issue_counts.get(reason, 0) + 1
+        try:
+            f_handle = open(fn_csv, newline="", encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as exc:
+            print(f"[heal] Warning: could not read {fn_csv}: {exc} — FN classification skipped")
+            f_handle = None
+        if f_handle is not None:
+            with f_handle:
+                for row in csv.DictReader(f_handle):
+                    reason = row.get("reason_missed") or "deterministic_threshold_or_candidate_generation_miss"
+                    row["_heal_root_cause"] = reason
+                    fn_rows.append(row)
+                    issue_counts[reason] = issue_counts.get(reason, 0) + 1
     elif assessment.has_truth and assessment.fn_count > 0:
         # Truth eval shows FNs but CSV wasn't written — can't classify without page records
         issue_counts["deterministic_threshold_or_candidate_generation_miss"] = assessment.fn_count
@@ -321,19 +327,26 @@ def apply_heal(
         print(f"[heal] Command: {' '.join(cmd)}")
 
     t0 = time.monotonic()
-    result = subprocess.run(cmd, capture_output=not verbose)
+    # Always capture stderr so failure messages are available in heal_run_status.json.
+    # Route stdout to terminal when verbose, pipe it when quiet.
+    result = subprocess.run(
+        cmd,
+        stdout=None if verbose else subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
     elapsed = time.monotonic() - t0
 
+    stderr_tail = result.stderr.decode("utf-8", errors="replace")[-2000:] if result.stderr else ""
     status = "succeeded" if result.returncode == 0 else "failed"
     _write_json(healed_run_dir / "heal_run_status.json", {
         "status": status,
         "exit_code": result.returncode,
         "runtime_seconds": round(elapsed, 1),
+        "stderr_tail": stderr_tail if status == "failed" else None,
     })
 
     if result.returncode != 0:
-        tail = result.stderr.decode("utf-8", errors="replace")[-2000:] if result.stderr else ""
-        raise RuntimeError(f"Healed re-run failed (exit {result.returncode}):\n{tail}")
+        raise RuntimeError(f"Healed re-run failed (exit {result.returncode}):\n{stderr_tail}")
 
     return healed_run_dir
 
@@ -571,11 +584,11 @@ def _print_prescription(p: HealPrescription) -> None:
 
 def _print_comparison(c: HealComparison) -> None:
     print(f"  Health:    {c.before.health_score:.0f} → {c.after.health_score:.0f}  ({c.health_delta:+.1f})")
-    if c.recall_delta is not None:
+    if c.recall_delta is not None and c.before.recall is not None and c.after.recall is not None:
         print(f"  Recall:    {c.before.recall:.1%} → {c.after.recall:.1%}  ({c.recall_delta:+.1%})")
-    if c.precision_delta is not None:
+    if c.precision_delta is not None and c.before.precision is not None and c.after.precision is not None:
         print(f"  Precision: {c.before.precision:.1%} → {c.after.precision:.1%}  ({c.precision_delta:+.1%})")
-    if c.queue_delta is not None:
+    if c.queue_delta is not None and c.before.queue_per_100_pages is not None and c.after.queue_per_100_pages is not None:
         print(f"  Queue:     {c.before.queue_per_100_pages:.0f} → {c.after.queue_per_100_pages:.0f}/100 pages  ({c.queue_delta:+.1f})")
 
 
@@ -622,11 +635,17 @@ def _certification_to_dict(c: HealCertification) -> dict[str, Any]:
     }
 
 
-def _read_json(path: Path) -> dict[str, Any]:
+def _read_json(path: Path, *, required: bool = False) -> dict[str, Any]:
     try:
         with open(path) as f:
             return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+    except FileNotFoundError:
+        if required:
+            raise
+        return {}
+    except json.JSONDecodeError as exc:
+        if required:
+            raise ValueError(f"Malformed JSON in {path}: {exc}") from exc
         return {}
 
 
