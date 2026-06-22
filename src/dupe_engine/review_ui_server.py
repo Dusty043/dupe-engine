@@ -99,18 +99,30 @@ def _allowed_origin() -> str:
 
 _PHI_LOG_ENABLED_TRUE = {"1", "true", "yes", "y", "on"}
 
+
+def _phi_logging_enabled() -> bool:
+    return (
+        os.environ.get("DUPE_LOG_PHI", "").strip().lower() in _PHI_LOG_ENABLED_TRUE
+        or os.environ.get("DUPE_DEMO_MODE", "").strip().lower() in _PHI_LOG_ENABLED_TRUE
+    )
+
+
 def _sanitize_job_for_api(job: dict[str, Any]) -> dict[str, Any]:
-    """Strip internal filesystem paths and PHI-adjacent fields from a job record."""
+    """Strip internal filesystem paths and PHI-adjacent fields from a job record.
+
+    In demo mode (DUPE_DEMO_MODE=true) or when DUPE_LOG_PHI=true, full error
+    output is preserved so failures can be diagnosed without checking the audit log.
+    """
     result = {k: v for k, v in job.items() if k not in _INTERNAL_JOB_FIELDS}
-    if os.environ.get("DUPE_LOG_PHI", "").strip().lower() not in _PHI_LOG_ENABLED_TRUE:
+    if not _phi_logging_enabled():
         # stdout_tail / stderr_tail may contain PHI (file content, names).
         # error may contain exception messages with identifiers.
-        # All three are still accessible via authenticated download endpoints.
+        # Full output is still accessible via authenticated download endpoints.
         for phi_field in ("stdout_tail", "stderr_tail"):
             if phi_field in result:
-                result[phi_field] = "[PHI-REDACTED]" if result[phi_field] else ""
+                result[phi_field] = "[redacted — set DUPE_LOG_PHI=true or DUPE_DEMO_MODE=true to see]" if result[phi_field] else ""
         if result.get("error"):
-            result["error"] = "[see audit log]"
+            result["error"] = "[redacted — set DUPE_LOG_PHI=true or DUPE_DEMO_MODE=true to see, or check the audit log]"
     return result
 
 

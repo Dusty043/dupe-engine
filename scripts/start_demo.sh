@@ -25,7 +25,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 export DUPE_DEMO_MODE=true
-export DUPE_LOG_PHI=false
+export DUPE_LOG_PHI=true          # show full errors in demo — do not use on real PHI
 export DUPE_INCLUDE_TEXT_PREVIEW=false
 
 echo ""
