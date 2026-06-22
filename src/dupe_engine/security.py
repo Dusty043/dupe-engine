@@ -2,11 +2,23 @@ from __future__ import annotations
 
 import hmac
 import os
+import warnings
 from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 if TYPE_CHECKING:
     from .config import EngineConfig
+
+
+_TRUTHY = {"1", "true", "yes", "y", "on"}
+
+
+def _demo_mode() -> bool:
+    """DUPE_DEMO_MODE=true demotes all compliance hard-stops to logged warnings.
+
+    Use only on synthetic/test data. Never set in production or on real PHI.
+    """
+    return os.environ.get("DUPE_DEMO_MODE", "").strip().lower() in _TRUTHY
 
 
 # ---------------------------------------------------------------------------
@@ -45,7 +57,11 @@ def auth_required(host: str, authorization_header: str | None) -> bool:
     existing dev workflows are unaffected. On any non-loopback interface a
     token is always required — no token configured means deny (defense in depth
     on top of the startup TLS guard).
+
+    DUPE_DEMO_MODE=true also bypasses auth — use only on synthetic/test data.
     """
+    if _demo_mode():
+        return True
     token = _auth_token()
     if not token and is_loopback_host(host):
         return True  # dev mode: no token, loopback only — allow
@@ -63,17 +79,22 @@ def require_tls_or_loopback(host: str) -> None:
 
     Set DUPE_TLS_TERMINATED=true to acknowledge that a reverse proxy or ALB
     terminates TLS before PHI reaches this process.
+
+    DUPE_DEMO_MODE=true downgrades this to a warning — use only on synthetic/test data.
     """
     if is_loopback_host(host):
         return
-    tls_ok = os.environ.get("DUPE_TLS_TERMINATED", "").strip().lower() in {"1", "true", "yes"}
+    tls_ok = os.environ.get("DUPE_TLS_TERMINATED", "").strip().lower() in _TRUTHY
     if not tls_ok:
-        raise SystemExit(
-            "FATAL: Review UI is bound to a non-loopback interface without TLS. "
-            "PHI must never cross a network in plaintext. "
-            "Either bind to 127.0.0.1 (default) or set DUPE_TLS_TERMINATED=true "
-            "to acknowledge that a reverse proxy/ALB terminates TLS before this process."
+        msg = (
+            "Review UI is bound to a non-loopback interface without TLS. "
+            "Do not use with real PHI. "
+            "Set DUPE_TLS_TERMINATED=true when a reverse proxy terminates TLS."
         )
+        if _demo_mode():
+            warnings.warn(f"DEMO MODE — {msg}", stacklevel=2)
+            return
+        raise SystemExit(f"FATAL: {msg}")
 
 
 # ---------------------------------------------------------------------------
@@ -102,6 +123,8 @@ def assert_baa_endpoint(config: "EngineConfig") -> None:
 
     Mirrors the exact URL-resolution precedence used by providers.py so this
     check is always in sync with the actual call sites.
+
+    DUPE_DEMO_MODE=true downgrades this to a warning — use only on synthetic/test data.
     """
     allowed = _baa_allowed_hosts()
 
@@ -117,10 +140,13 @@ def assert_baa_endpoint(config: "EngineConfig") -> None:
         blocked.append(f"embeddings → {emb_host!r}")
 
     if blocked:
-        raise SystemExit(
-            "FATAL: The following AI endpoints are not in the BAA allow-list "
+        msg = (
+            f"The following AI endpoints are not in the BAA allow-list "
             f"({', '.join(sorted(allowed))}): {'; '.join(blocked)}. "
-            "Set DUPE_OPENAI_BAA_ALLOWED_HOSTS to include your BAA-covered gateway, "
-            "or configure DUPE_OPENAI_BASE_URL / DUPE_OPENAI_OCR_BASE_URL to point "
+            "Set DUPE_OPENAI_BAA_ALLOWED_HOSTS or DUPE_OPENAI_BASE_URL to point "
             "at the approved endpoint."
         )
+        if _demo_mode():
+            warnings.warn(f"DEMO MODE — {msg}", stacklevel=2)
+            return
+        raise SystemExit(f"FATAL: {msg}")
