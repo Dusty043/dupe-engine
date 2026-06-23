@@ -69,6 +69,24 @@ async function apiFetch(url, opts = {}) {
   return res;
 }
 
+// Browsers can't send Authorization headers on <img src="..."> requests.
+// Images use data-auth-src; this loader fetches them with the token and
+// swaps in an object URL so the page preview always renders.
+async function loadAuthImages() {
+  const imgs = document.querySelectorAll('img[data-auth-src]');
+  await Promise.all(Array.from(imgs).map(async img => {
+    const url = img.getAttribute('data-auth-src');
+    if (!url) return;
+    try {
+      const res = await apiFetch(url);
+      if (!res.ok) return;
+      const blob = await res.blob();
+      img.src = URL.createObjectURL(blob);
+      img.removeAttribute('data-auth-src');
+    } catch { /* leave image blank on error */ }
+  }));
+}
+
 function showTokenOverlay() {
   if (document.getElementById('_auth_overlay')) return;
   const overlay = document.createElement('div');
@@ -202,6 +220,7 @@ function render() {
     </div>
   `;
   bindEvents();
+  loadAuthImages();
 }
 
 function renderUploadShell() {
@@ -673,7 +692,7 @@ function renderPagePane(side, kind) {
         ${badge(`Page ${side?.page || page.page_number || '?'}`, kind === 'received' ? 'info' : 'ere')}
       </div>
       <div class="image-frame">
-        ${imageUrl ? `<img src="${escapeAttr(imageUrl)}" alt="${escapeAttr(label)} page preview" />` : '<div class="empty-state"><p>No page preview asset available.</p></div>'}
+        ${imageUrl ? `<img data-auth-src="${escapeAttr(imageUrl)}" alt="${escapeAttr(label)} page preview" />` : '<div class="empty-state"><p>No page preview asset available.</p></div>'}
       </div>
       <div class="page-facts">
         ${fact('Text source', side?.best_text_source || page.best_text_source || page.text_source)}
