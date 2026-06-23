@@ -44,9 +44,7 @@ def build_prescription(diagnosis: "HealDiagnosis") -> "HealPrescription":
         if result is None:
             continue
         new_flags, delta, note = result
-        for flag in new_flags:
-            if flag not in cli_args:
-                cli_args.append(flag)
+        _merge_flags(cli_args, new_flags)
         config_delta.update(delta)
         if note:
             notes.append(note)
@@ -70,6 +68,33 @@ def build_prescription(diagnosis: "HealDiagnosis") -> "HealPrescription":
         expected_recall_delta=expected_recall_delta,
         notes=notes,
     )
+
+
+# ---------------------------------------------------------------------------
+# Flag merging
+# ---------------------------------------------------------------------------
+
+def _merge_flags(cli_args: list[str], new_flags: list[str]) -> None:
+    """Merge new_flags into cli_args, skipping flag+value pairs whose flag name
+    already appears. Operates on (--flag [value]) pairs so a shared numeric
+    value like '7' in '--top-k 7' doesn't mistakenly block '--max-pages 7'."""
+    existing = {f for f in cli_args if f.startswith("--")}
+    i = 0
+    while i < len(new_flags):
+        token = new_flags[i]
+        if token.startswith("--"):
+            has_value = (i + 1 < len(new_flags) and not new_flags[i + 1].startswith("--"))
+            if token not in existing:
+                existing.add(token)
+                cli_args.append(token)
+                if has_value:
+                    cli_args.append(new_flags[i + 1])
+            i += 2 if has_value else 1
+        else:
+            # Bare positional (shouldn't appear in practice, keep anyway)
+            if token not in cli_args:
+                cli_args.append(token)
+            i += 1
 
 
 # ---------------------------------------------------------------------------
