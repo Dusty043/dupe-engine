@@ -22,3 +22,4 @@ tmp/
 *_HANDOFF.md
 V0108_PATCH_APPLIED.md
 v0_10_9_reranker_spec.md
+.gstack/
