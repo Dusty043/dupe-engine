@@ -60,38 +60,38 @@ class TestAuthRequired(unittest.TestCase):
         os.environ.pop("DUPE_UI_AUTH_TOKEN", None)
 
     def test_dev_mode_loopback_no_token(self):
-        from src.dupe_engine.security import auth_required
+        from dupe_engine.security import auth_required
         # Local dev: loopback + no token → allow
         self.assertTrue(auth_required("127.0.0.1", None))
         self.assertTrue(auth_required("localhost", None))
         self.assertTrue(auth_required("::1", None))
 
     def test_no_token_open_access(self):
-        from src.dupe_engine.security import auth_required
+        from dupe_engine.security import auth_required
         # No token configured → open access; network-level control via Tailscale/VPN
         self.assertTrue(auth_required("0.0.0.0", None))
         self.assertTrue(auth_required("10.0.0.1", None))
 
     def test_correct_token_passes(self):
-        from src.dupe_engine.security import auth_required
+        from dupe_engine.security import auth_required
         os.environ["DUPE_UI_AUTH_TOKEN"] = "secret123"
         self.assertTrue(auth_required("0.0.0.0", "Bearer secret123"))
         self.assertTrue(auth_required("127.0.0.1", "Bearer secret123"))
 
     def test_wrong_token_denied(self):
-        from src.dupe_engine.security import auth_required
+        from dupe_engine.security import auth_required
         os.environ["DUPE_UI_AUTH_TOKEN"] = "secret123"
         self.assertFalse(auth_required("0.0.0.0", "Bearer wrong"))
         self.assertFalse(auth_required("0.0.0.0", None))
 
     def test_missing_bearer_scheme_denied(self):
-        from src.dupe_engine.security import auth_required
+        from dupe_engine.security import auth_required
         os.environ["DUPE_UI_AUTH_TOKEN"] = "secret123"
         self.assertFalse(auth_required("0.0.0.0", "Basic secret123"))
 
     def test_timing_safe_compare(self):
         # Even with a correct token, a wrong token must not pass
-        from src.dupe_engine.security import auth_required
+        from dupe_engine.security import auth_required
         os.environ["DUPE_UI_AUTH_TOKEN"] = "aaaaaaaaaa"
         self.assertFalse(auth_required("127.0.0.1", "Bearer aaaaaaaaab"))
 
@@ -102,28 +102,28 @@ class TestAuthRequired(unittest.TestCase):
 
 class TestBaaAssertion(unittest.TestCase):
     def _make_config(self, **kwargs) -> Any:
-        from src.dupe_engine.config import EngineConfig
+        from dupe_engine.config import EngineConfig
         return EngineConfig.from_env()
 
     def test_default_openai_allowed(self):
-        from src.dupe_engine.security import assert_baa_endpoint
-        from src.dupe_engine.config import EngineConfig
+        from dupe_engine.security import assert_baa_endpoint
+        from dupe_engine.config import EngineConfig
         cfg = EngineConfig.from_env()
         # Should not raise — api.openai.com is the default allowed host
         assert_baa_endpoint(cfg)
 
     def test_unknown_host_warns_by_default(self):
         import warnings
-        from src.dupe_engine.security import assert_baa_endpoint
-        from src.dupe_engine.config import EngineConfig
+        from dupe_engine.security import assert_baa_endpoint
+        from dupe_engine.config import EngineConfig
         with _setenv({"DUPE_OPENAI_BASE_URL": "https://my-proxy.internal/v1"}):
             cfg = EngineConfig.from_env()
             with self.assertWarns(UserWarning):
                 assert_baa_endpoint(cfg)
 
     def test_unknown_host_rejected_in_strict_mode(self):
-        from src.dupe_engine.security import assert_baa_endpoint
-        from src.dupe_engine.config import EngineConfig
+        from dupe_engine.security import assert_baa_endpoint
+        from dupe_engine.config import EngineConfig
         with _setenv({
             "DUPE_OPENAI_BASE_URL": "https://my-proxy.internal/v1",
             "DUPE_STRICT_COMPLIANCE": "true",
@@ -133,8 +133,8 @@ class TestBaaAssertion(unittest.TestCase):
                 assert_baa_endpoint(cfg)
 
     def test_custom_allowed_host_passes(self):
-        from src.dupe_engine.security import assert_baa_endpoint
-        from src.dupe_engine.config import EngineConfig
+        from dupe_engine.security import assert_baa_endpoint
+        from dupe_engine.config import EngineConfig
         with _setenv({
             "DUPE_OPENAI_BASE_URL": "https://my-proxy.internal/v1",
             "DUPE_OPENAI_BAA_ALLOWED_HOSTS": "my-proxy.internal,api.openai.com",
@@ -153,7 +153,7 @@ class TestLogPhiRedaction(unittest.TestCase):
 
     def _capture_log(self, **kwargs) -> dict:
         import io, sys
-        from src.dupe_engine.log import log
+        from dupe_engine.log import log
         buf = io.StringIO()
         old_stdout = sys.stdout
         sys.stdout = buf
@@ -181,7 +181,7 @@ class TestLogPhiRedaction(unittest.TestCase):
 
     def test_log_exception_hides_message_by_default(self):
         import io, sys
-        from src.dupe_engine.log import log_exception
+        from dupe_engine.log import log_exception
         buf = io.StringIO()
         old_stdout = sys.stdout
         sys.stdout = buf
@@ -199,7 +199,7 @@ class TestLogPhiRedaction(unittest.TestCase):
 
     def test_log_exception_shows_message_when_phi_enabled(self):
         import io, sys
-        from src.dupe_engine.log import log_exception
+        from dupe_engine.log import log_exception
         os.environ["DUPE_LOG_PHI"] = "true"
         buf = io.StringIO()
         old_stdout = sys.stdout
@@ -226,7 +226,7 @@ class TestAuditTrail(unittest.TestCase):
 
     def test_local_audit_write(self, tmp_path: Path | None = None):
         import tempfile
-        from src.dupe_engine.audit import record_event
+        from dupe_engine.audit import record_event
         with tempfile.TemporaryDirectory() as d:
             os.environ["DUPE_LOCAL_AUDIT_DIR"] = d
             record_event(
@@ -247,10 +247,10 @@ class TestAuditTrail(unittest.TestCase):
             self.assertIn("event_ts_id", e)
 
     def test_audit_fail_open(self):
-        from src.dupe_engine.audit import record_event
+        from dupe_engine.audit import record_event
         # No crash even if write fails
         os.environ["DUPE_DYNAMO_TABLE"] = "nonexistent-table"
-        with patch("src.dupe_engine.audit._write_dynamo", side_effect=RuntimeError("boto3 unavailable")):
+        with patch("dupe_engine.audit._write_dynamo", side_effect=RuntimeError("boto3 unavailable")):
             try:
                 record_event(job_id="x", action="read", actor="test", resource="r", outcome="access")
             except Exception as exc:  # pragma: no cover
@@ -258,7 +258,7 @@ class TestAuditTrail(unittest.TestCase):
 
     def test_audit_entries_are_unique(self):
         import tempfile
-        from src.dupe_engine.audit import record_event
+        from dupe_engine.audit import record_event
         with tempfile.TemporaryDirectory() as d:
             os.environ["DUPE_LOCAL_AUDIT_DIR"] = d
             for _ in range(5):
@@ -277,13 +277,13 @@ class TestSseKms(unittest.TestCase):
         os.environ.pop("DUPE_S3_KMS_KEY_ID", None)
 
     def test_default_aws_kms(self):
-        from src.dupe_engine.artifact_store import _sse_extra_args
+        from dupe_engine.artifact_store import _sse_extra_args
         args = _sse_extra_args()
         self.assertEqual(args["ServerSideEncryption"], "aws:kms")
         self.assertNotIn("SSEKMSKeyId", args)
 
     def test_custom_kms_key(self):
-        from src.dupe_engine.artifact_store import _sse_extra_args
+        from dupe_engine.artifact_store import _sse_extra_args
         os.environ["DUPE_S3_KMS_KEY_ID"] = "arn:aws:kms:us-east-1:123456789012:key/abcd"
         args = _sse_extra_args()
         self.assertEqual(args["SSEKMSKeyId"], "arn:aws:kms:us-east-1:123456789012:key/abcd")
@@ -298,7 +298,7 @@ class TestTextPreviewGate(unittest.TestCase):
         os.environ.pop("DUPE_INCLUDE_TEXT_PREVIEW", None)
 
     def _form_with(self, **extra) -> dict:
-        from src.dupe_engine.review_ui_server import UploadPart
+        from dupe_engine.review_ui_server import UploadPart
         base = {
             "dpi": [UploadPart(name="dpi", filename=None, payload=b"150")],
             "tesseract_profiles": [UploadPart(name="tesseract_profiles", filename=None, payload=b"standard")],
@@ -308,7 +308,7 @@ class TestTextPreviewGate(unittest.TestCase):
         return base
 
     def test_client_value_ignored(self):
-        from src.dupe_engine.review_ui_server import UploadPart, parse_job_settings
+        from dupe_engine.review_ui_server import UploadPart, parse_job_settings
         form = self._form_with(
             include_text_preview=[UploadPart(name="include_text_preview", filename=None, payload=b"true")]
         )
@@ -317,7 +317,7 @@ class TestTextPreviewGate(unittest.TestCase):
         self.assertFalse(settings["include_text_preview"])
 
     def test_server_env_controls_value(self):
-        from src.dupe_engine.review_ui_server import UploadPart, parse_job_settings
+        from dupe_engine.review_ui_server import UploadPart, parse_job_settings
         os.environ["DUPE_INCLUDE_TEXT_PREVIEW"] = "true"
         form = self._form_with(
             include_text_preview=[UploadPart(name="include_text_preview", filename=None, payload=b"false")]
@@ -338,7 +338,7 @@ class TestHttpAuthGate(unittest.TestCase):
     def _make_handler_instance(self, path: str, method: str = "GET", token: str | None = None):
         """Build a minimal ReviewUiRequestHandler-like object for testing."""
         import tempfile
-        from src.dupe_engine.review_ui_server import ReviewJobStore, build_handler
+        from dupe_engine.review_ui_server import ReviewJobStore, build_handler
         with tempfile.TemporaryDirectory() as d:
             store = ReviewJobStore(workspace_dir=Path(d))
             HandlerClass = build_handler(
@@ -396,7 +396,7 @@ class TestJobSanitization(unittest.TestCase):
         os.environ.pop("DUPE_LOG_PHI", None)
 
     def test_phi_fields_redacted_by_default(self):
-        from src.dupe_engine.review_ui_server import _sanitize_job_for_api
+        from dupe_engine.review_ui_server import _sanitize_job_for_api
         job = {
             "job_id": "j1",
             "job_dir": "/secret/path",
@@ -411,7 +411,7 @@ class TestJobSanitization(unittest.TestCase):
         self.assertEqual(result["error"], "[set DUPE_LOG_PHI=true to see full error]")
 
     def test_phi_passthrough_when_enabled(self):
-        from src.dupe_engine.review_ui_server import _sanitize_job_for_api
+        from dupe_engine.review_ui_server import _sanitize_job_for_api
         os.environ["DUPE_LOG_PHI"] = "true"
         job = {
             "job_id": "j1",
@@ -424,7 +424,7 @@ class TestJobSanitization(unittest.TestCase):
         self.assertEqual(result["error"], "original error")
 
     def test_empty_fields_pass_through(self):
-        from src.dupe_engine.review_ui_server import _sanitize_job_for_api
+        from dupe_engine.review_ui_server import _sanitize_job_for_api
         job = {"job_id": "j1", "stdout_tail": "", "stderr_tail": "", "error": None}
         result = _sanitize_job_for_api(job)
         # Empty/null fields should not become [PHI-REDACTED]
