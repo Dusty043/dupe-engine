@@ -449,7 +449,10 @@ def run_heal(args: Any) -> None:
         if not fb_path.exists():
             raise SystemExit(f"--feedback not found: {fb_path}")
         feedback_data = _read_json(fb_path)
-        feedback_pairs = feedback_data.get("feedback_pairs", [])
+        if isinstance(feedback_data, list):
+            feedback_pairs = feedback_data
+        else:
+            feedback_pairs = feedback_data.get("feedback_pairs", [])
         if not feedback_pairs:
             print("[heal] Warning: --feedback file has no feedback_pairs entries")
 
@@ -464,7 +467,10 @@ def run_heal(args: Any) -> None:
     truth_eval_path = run_dir / "truth_eval.json"
 
     print(f"\n[heal] Assessing: {run_dir}")
-    assessment = assess_run(run_dir, truth_eval_path if truth_eval_path.exists() else None, feedback_pairs)
+    try:
+        assessment = assess_run(run_dir, truth_eval_path if truth_eval_path.exists() else None, feedback_pairs)
+    except (FileNotFoundError, ValueError) as exc:
+        raise SystemExit(f"[heal] Error: {exc}") from exc
     _print_assessment(assessment)
 
     print(f"\n[heal] Diagnosing failure modes...")
