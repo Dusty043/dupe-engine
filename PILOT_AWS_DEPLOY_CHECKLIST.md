@@ -176,6 +176,18 @@ curl http://<internal-ip>:8765/api/status
 
 ---
 
+## Incident response
+
+See [`docs/INCIDENT_RESPONSE.html`](docs/INCIDENT_RESPONSE.html) — open in a browser for the full interactive failure mode model with escalation tiers and runbook steps for each scenario.
+
+Four tiers:
+- **Self-heal** (blue) — automated, nobody paged
+- **Runbook** (amber) — anyone with SSH access can follow the steps
+- **Call Dustin** (orange) — requires system knowledge
+- **Critical** (red) — data at risk, act immediately
+
+---
+
 ## Maintenance commands
 
 ```bash
@@ -194,19 +206,48 @@ docker stop dupe-engine-review
 docker rm dupe-engine-review
 docker run -d --name dupe-engine-review ...  # same command as step 6
 
-# Backup run artifacts
+# Backup run artifacts (90-day retention)
 tar czf /tmp/runs_backup_$(date +%Y%m%d).tar.gz /data/runs
 aws s3 cp /tmp/runs_backup_$(date +%Y%m%d).tar.gz s3://your-backup-bucket/dupe-engine/
+
+# Purge page images after review session (keep analysis data, remove large assets)
+find /data/runs -name "page_images" -type d -exec rm -rf {} + 2>/dev/null || true
+```
+
+### CloudWatch alarm setup
+
+```bash
+# EC2 status check alarm — alerts if instance fails 2 consecutive health checks
+aws cloudwatch put-metric-alarm \
+  --alarm-name "dupe-engine-instance-health" \
+  --namespace AWS/EC2 \
+  --metric-name StatusCheckFailed \
+  --dimensions Name=InstanceId,Value=<instance-id> \
+  --period 60 \
+  --evaluation-periods 2 \
+  --threshold 1 \
+  --comparison-operator GreaterThanOrEqualToThreshold \
+  --alarm-actions arn:aws:sns:<region>:<account-id>:dupe-engine-alerts \
+  --statistic Maximum
+
+# Create SNS topic for alerts (phone/email) if not already set up
+aws sns create-topic --name dupe-engine-alerts
+aws sns subscribe --topic-arn arn:aws:sns:<region>:<account-id>:dupe-engine-alerts \
+  --protocol sms --notification-endpoint <your-phone>
 ```
 
 ---
 
 ## Open questions (fill in before launch)
 
-- [ ] Which EC2 instance type? (t3.medium is minimum; t3.large preferred for 20+ page batches)
-- [ ] EBS vs EFS? (EFS only needed if multiple EC2 instances share storage)
-- [ ] Backup retention period for run artifacts?
-- [ ] Is a load balancer / HTTPS termination needed, or is VPN + HTTP sufficient for pilot?
-- [ ] Who has SSH access to the instance?
-- [ ] What is the escalation path if the container crashes overnight?
-- [ ] Should we set a CloudWatch alarm on the container health?
+- [x] Which EC2 instance type? → **t3.large** (t3.medium hits CPU credit limits on real patient batches; t3.large gives headroom without committing to a dedicated instance)
+- [x] EBS vs EFS? → **EBS** (single instance for pilot; EFS not needed)
+- [x] Backup retention period for run artifacts? → **90 days** for backups. Run analysis data (results.json, truth_eval.json, false_negatives.csv) retained long-term. Page images and other large assets deleted immediately after review session ends.
+- [x] Is a load balancer / HTTPS termination needed, or is VPN + HTTP sufficient for pilot? → **VPN + HTTP sufficient** for pilot. No load balancer needed.
+- [x] Who has SSH access to the instance? → **Dustin only**
+- [x] What is the escalation path if the container crashes overnight? → See `docs/INCIDENT_RESPONSE.html` for the full tiered model. Short version:
+  - **Self-heal**: container crash, API throttle — Docker restart policy handles it, CloudWatch alerts if it repeats
+  - **Runbook** (anyone with SSH): disk full, auth token wrong, job hung, permissions broken, security group change
+  - **Call Dustin**: EC2 instance down, corrupt job state, version rollback needed, AZ outage
+  - **IT**: VPN issues on reviewer side
+- [x] Should we set a CloudWatch alarm on the container health? → **Yes** — set up a CloudWatch alarm on container health / instance status checks

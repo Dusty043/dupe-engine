@@ -1,0 +1,832 @@
+<title>Incident Response — dupe-engine pilot</title>
+<style>
+  :root {
+    --ground:    #181C26;
+    --ground-2:  #1F2435;
+    --ground-3:  #252B3D;
+    --text:      #D4D8E8;
+    --text-dim:  #7A82A0;
+    --text-faint:#3D4460;
+    --blue:      #4A90D9;
+    --amber:     #F5A623;
+    --orange:    #E8682A;
+    --red:       #C93434;
+    --mono: ui-monospace,'Cascadia Code','JetBrains Mono',Menlo,monospace;
+    --sans: system-ui,-apple-system,'Helvetica Neue',sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ground);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* ── Header ── */
+  .hdr {
+    padding: 52px 40px 36px;
+    border-bottom: 1px solid rgba(74,144,217,.12);
+    max-width: 1200px;
+  }
+  .hdr-eye {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 14px;
+  }
+  .hdr-title {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -.025em;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .hdr-sub {
+    color: var(--text-dim);
+    font-size: 14px;
+    max-width: 520px;
+    line-height: 1.6;
+  }
+
+  /* ── Tier legend ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 22px 40px;
+    background: var(--ground-2);
+    border-bottom: 1px solid rgba(74,144,217,.08);
+    align-items: center;
+  }
+  .legend-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-right: 4px;
+  }
+  .tier {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px 7px 10px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+  }
+  .tier-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .tier-name { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; }
+  .tier-desc { font-size: 12px; color: var(--text-dim); }
+
+  .tier-a { background: rgba(74,144,217,.08); border-color: rgba(74,144,217,.2); }
+  .tier-a .tier-dot { background: var(--blue); }
+  .tier-a .tier-name { color: var(--blue); }
+
+  .tier-b { background: rgba(245,166,35,.07); border-color: rgba(245,166,35,.2); }
+  .tier-b .tier-dot { background: var(--amber); }
+  .tier-b .tier-name { color: var(--amber); }
+
+  .tier-c { background: rgba(232,104,42,.07); border-color: rgba(232,104,42,.2); }
+  .tier-c .tier-dot { background: var(--orange); }
+  .tier-c .tier-name { color: var(--orange); }
+
+  .tier-d { background: rgba(201,52,52,.08); border-color: rgba(201,52,52,.25); }
+  .tier-d .tier-dot { background: var(--red); }
+  .tier-d .tier-name { color: var(--red); }
+
+  /* ── Contacts bar ── */
+  .contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px 40px;
+    border-bottom: 1px solid rgba(74,144,217,.07);
+    align-items: center;
+  }
+  .contacts-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-right: 4px;
+  }
+  .contact {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 3px;
+    background: var(--ground-3);
+    border: 1px solid rgba(122,130,160,.15);
+    color: var(--text-dim);
+  }
+  .contact strong { color: var(--text); font-weight: 600; margin-right: 6px; }
+
+  /* ── Filters ── */
+  .filters {
+    display: flex;
+    gap: 4px;
+    padding: 20px 40px 14px;
+    flex-wrap: wrap;
+  }
+  .fbtn {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 3px;
+    border: 1px solid rgba(122,130,160,.18);
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .fbtn:hover { border-color: rgba(74,144,217,.4); color: var(--text); }
+  .fbtn.on { background: rgba(74,144,217,.1); border-color: var(--blue); color: var(--blue); }
+
+  /* ── Card grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 10px;
+    padding: 0 40px 60px;
+  }
+
+  .card {
+    background: var(--ground-2);
+    border-radius: 6px;
+    border: 1px solid rgba(122,130,160,.1);
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+  .card:hover { border-color: rgba(122,130,160,.25); }
+  .card.open { background: var(--ground-3); }
+
+  .card-self::before  { background: var(--blue); }
+  .card-runbook::before { background: var(--amber); }
+  .card-dustin::before  { background: var(--orange); }
+  .card-critical::before { background: var(--red); }
+
+  @keyframes heartbeat {
+    0%,100% { box-shadow: none; }
+    40%      { box-shadow: inset -1px 0 0 rgba(201,52,52,.06), 0 0 14px rgba(201,52,52,.08); }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .card-critical { animation: heartbeat 3.5s ease-in-out infinite; }
+  }
+
+  .card-layer {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 5px;
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .card-name {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    line-height: 1.3;
+  }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-self     { background: rgba(74,144,217,.12);  color: var(--blue);   border: 1px solid rgba(74,144,217,.25); }
+  .badge-runbook  { background: rgba(245,166,35,.1);   color: var(--amber);  border: 1px solid rgba(245,166,35,.25); }
+  .badge-dustin   { background: rgba(232,104,42,.1);   color: var(--orange); border: 1px solid rgba(232,104,42,.25); }
+  .badge-critical { background: rgba(201,52,52,.12);   color: var(--red);    border: 1px solid rgba(201,52,52,.3); }
+
+  .card-auto {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .auto-lbl {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--blue);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .card-body {
+    display: none;
+    border-top: 1px solid rgba(122,130,160,.1);
+    margin-top: 14px;
+    padding-top: 14px;
+  }
+  .card.open .card-body { display: block; }
+
+  .section { margin-bottom: 14px; }
+  .sec-lbl {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 7px;
+  }
+
+  .steps { list-style: none; counter-reset: s; }
+  .steps li {
+    counter-increment: s;
+    font-size: 13px;
+    line-height: 1.5;
+    padding-left: 22px;
+    position: relative;
+    margin-bottom: 5px;
+    color: var(--text);
+  }
+  .steps li::before {
+    content: counter(s);
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--blue);
+    position: absolute;
+    left: 0; top: 4px;
+    width: 14px;
+    text-align: right;
+  }
+
+  code {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    background: rgba(122,130,160,.12);
+    padding: 1px 5px;
+    border-radius: 2px;
+    color: var(--text);
+  }
+
+  .owner-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  .owner-lbl { color: var(--text-dim); font-size: 12px; }
+  .owner-chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+  .oc-auto   { background: rgba(74,144,217,.1);  color: var(--blue); }
+  .oc-runbk  { background: rgba(245,166,35,.1);  color: var(--amber); }
+  .oc-dustin { background: rgba(232,104,42,.1);  color: var(--orange); }
+  .oc-crit   { background: rgba(201,52,52,.1);   color: var(--red); }
+  .oc-it     { background: rgba(122,130,160,.1); color: var(--text-dim); }
+
+  .hint {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .06em;
+    color: var(--text-faint);
+    text-align: right;
+    margin-top: 10px;
+  }
+  .card.open .hint { display: none; }
+
+  .card.hidden { display: none; }
+
+  @media (max-width: 600px) {
+    .hdr, .legend, .contacts, .filters, .grid { padding-left: 16px; padding-right: 16px; }
+    .grid { grid-template-columns: 1fr; }
+    .legend { gap: 8px; }
+    .tier-desc { display: none; }
+  }
+</style>
+
+<div class="hdr">
+  <div class="hdr-eye">dupe-engine pilot / ops reference</div>
+  <h1 class="hdr-title">Incident response model</h1>
+  <p class="hdr-sub">For each failure mode: what self-heals, what needs a runbook, and what actually needs you. Click any card for the fix steps.</p>
+</div>
+
+<div class="legend">
+  <span class="legend-label">Tiers</span>
+  <div class="tier tier-a">
+    <div class="tier-dot"></div>
+    <span class="tier-name">Self-heal</span>
+    <span class="tier-desc">Automated — nobody paged</span>
+  </div>
+  <div class="tier tier-b">
+    <div class="tier-dot"></div>
+    <span class="tier-name">Runbook</span>
+    <span class="tier-desc">Anyone with SSH + these steps</span>
+  </div>
+  <div class="tier tier-c">
+    <div class="tier-dot"></div>
+    <span class="tier-name">Call Dustin</span>
+    <span class="tier-desc">Needs system knowledge</span>
+  </div>
+  <div class="tier tier-d">
+    <div class="tier-dot"></div>
+    <span class="tier-name">Critical</span>
+    <span class="tier-desc">Data at risk — act now</span>
+  </div>
+</div>
+
+<div class="contacts">
+  <span class="contacts-label">Who to reach</span>
+  <span class="contact"><strong>Self-heal</strong>CloudWatch SNS → your phone</span>
+  <span class="contact"><strong>Runbook</strong>Anyone with SSH key + this page</span>
+  <span class="contact"><strong>Dustin</strong>call / text</span>
+  <span class="contact"><strong>IT / Network</strong>internal IT helpdesk</span>
+  <span class="contact"><strong>AWS</strong>support.aws.amazon.com</span>
+</div>
+
+<div class="filters">
+  <button class="fbtn on" data-filter="all">All</button>
+  <button class="fbtn" data-filter="infra">Infrastructure</button>
+  <button class="fbtn" data-filter="app">Application</button>
+  <button class="fbtn" data-filter="data">Data</button>
+  <button class="fbtn" data-filter="network">Network</button>
+</div>
+
+<div class="grid">
+
+  <!-- SELF-HEAL cards -->
+
+  <div class="card card-self" data-layer="app">
+    <div class="card-layer">Application</div>
+    <div class="card-top">
+      <div class="card-name">Container crashes and restarts</div>
+      <span class="badge badge-self">Self-heal</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Automated</span>
+      <code>--restart unless-stopped</code> brings it back in &lt;30s. CloudWatch alarm fires if it stays down.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">If it restarts more than 3× in 5 minutes</div>
+        <ul class="steps">
+          <li>SSH into instance: <code>ssh ec2-user@&lt;host&gt;</code></li>
+          <li>Check logs: <code>docker logs dupe-engine-review --tail 100</code></li>
+          <li>If OOM (out of memory): upgrade to t3.large</li>
+          <li>If Python exception: call Dustin — patch needed</li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-auto">Automated</span>
+        <span class="owner-lbl">→ if repeated:</span>
+        <span class="owner-chip oc-dustin">Call Dustin</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <div class="card card-self" data-layer="app">
+    <div class="card-layer">Application</div>
+    <div class="card-top">
+      <div class="card-name">OpenAI / Bedrock API throttled</div>
+      <span class="badge badge-self">Self-heal</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Automated</span>
+      Engine retries on rate limit errors. Jobs slow down but complete. No intervention needed unless a job is stuck for &gt;30 minutes.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">If a job is stuck &gt;30 min</div>
+        <ul class="steps">
+          <li>In the review UI: cancel the stuck job and resubmit</li>
+          <li>Or restart container: <code>docker restart dupe-engine-review</code></li>
+          <li>Check API quota in OpenAI dashboard if repeated</li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-auto">Automated</span>
+        <span class="owner-lbl">→ if stuck:</span>
+        <span class="owner-chip oc-runbk">Runbook</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <!-- RUNBOOK cards -->
+
+  <div class="card card-runbook" data-layer="infra">
+    <div class="card-layer">Infrastructure</div>
+    <div class="card-top">
+      <div class="card-name">EBS disk approaching full</div>
+      <span class="badge badge-runbook">Runbook</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Detection</span>
+      CloudWatch alarm fires at 80% disk usage. Anyone with SSH can clear space using the steps below.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">Fix steps</div>
+        <ul class="steps">
+          <li>SSH in: <code>ssh ec2-user@&lt;host&gt;</code></li>
+          <li>Check usage: <code>df -h /data</code></li>
+          <li>Delete old page images (safe — regenerated on demand): <code>find /data/runs -name "page_images" -type d -exec rm -rf {} + 2>/dev/null || true</code></li>
+          <li>Verify space freed: <code>df -h /data</code></li>
+          <li>If still full, extend EBS volume in AWS Console → EC2 → Volumes → Modify</li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-runbk">Runbook</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <div class="card card-runbook" data-layer="app">
+    <div class="card-layer">Application</div>
+    <div class="card-top">
+      <div class="card-name">Reviewers locked out (auth token)</div>
+      <span class="badge badge-runbook">Runbook</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Symptom</span>
+      Review UI shows "Invalid token" or token overlay won't accept the password. No data at risk.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">Fix steps</div>
+        <ul class="steps">
+          <li>SSH in: <code>ssh ec2-user@&lt;host&gt;</code></li>
+          <li>Edit the env file: <code>sudo nano /srv/apps/dupe-engine/.env</code></li>
+          <li>Set or correct: <code>DUPE_UI_AUTH_TOKEN=&lt;correct-token&gt;</code></li>
+          <li>Restart container: <code>docker restart dupe-engine-review</code></li>
+          <li>Confirm with reviewers: the token overlay will accept the new token</li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-runbk">Runbook</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <div class="card card-runbook" data-layer="app">
+    <div class="card-layer">Application</div>
+    <div class="card-top">
+      <div class="card-name">Worker job hung / not completing</div>
+      <span class="badge badge-runbook">Runbook</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Symptom</span>
+      Job shows "Processing" in the UI for &gt;30 min and never finishes. No job-level timeout is currently set.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">Fix steps</div>
+        <ul class="steps">
+          <li>Check logs for what it's stuck on: <code>docker logs dupe-engine-review --tail 50</code></li>
+          <li>Restart container (clears all in-progress jobs): <code>docker restart dupe-engine-review</code></li>
+          <li>Resubmit the job from the review UI</li>
+          <li>If the same PDF repeatedly hangs, note the filename and call Dustin</li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-runbk">Runbook</span>
+        <span class="owner-lbl">→ if repeated:</span>
+        <span class="owner-chip oc-dustin">Call Dustin</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <div class="card card-runbook" data-layer="infra">
+    <div class="card-layer">Infrastructure</div>
+    <div class="card-top">
+      <div class="card-name">CPU throttling / jobs very slow</div>
+      <span class="badge badge-runbook">Runbook</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Cause</span>
+      t3 instances are burstable. CPU credit exhaustion throttles the instance to baseline (20% of a vCPU). Jobs still complete — just slowly.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">Fix steps</div>
+        <ul class="steps">
+          <li>Check CPU credits in CloudWatch: EC2 → Metrics → CPUCreditBalance</li>
+          <li>If credits near zero: upgrade instance type in AWS Console → EC2 → Stop instance → Change instance type → t3.large → Start</li>
+          <li>EBS data survives a stop/start — no data loss</li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-runbk">Runbook</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <div class="card card-runbook" data-layer="data">
+    <div class="card-layer">Data</div>
+    <div class="card-top">
+      <div class="card-name">/data permissions broken</div>
+      <span class="badge badge-runbook">Runbook</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Symptom</span>
+      Jobs fail immediately with a permissions error. Logs show <code>PermissionError</code> or <code>IOError</code> writing to <code>/data</code>.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">Fix steps</div>
+        <ul class="steps">
+          <li>SSH in and reset ownership: <code>sudo chown -R ec2-user:ec2-user /data</code></li>
+          <li>Restart container: <code>docker restart dupe-engine-review</code></li>
+          <li>Submit a test job to confirm</li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-runbk">Runbook</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <div class="card card-runbook" data-layer="network">
+    <div class="card-layer">Network</div>
+    <div class="card-top">
+      <div class="card-name">Security group blocks port 8765</div>
+      <span class="badge badge-runbook">Runbook</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Symptom</span>
+      Reviewers on VPN can't reach the UI. Server is running fine — only external access is blocked.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">Confirm it's the security group</div>
+        <ul class="steps">
+          <li>SSH into instance and confirm server is up: <code>curl http://localhost:8765/api/status</code></li>
+          <li>If that returns <code>{"ok": true}</code> — it's a network/SG issue, not the app</li>
+        </ul>
+      </div>
+      <div class="section">
+        <div class="sec-lbl">Fix in AWS Console</div>
+        <ul class="steps">
+          <li>EC2 → Instances → select instance → Security tab → click the security group</li>
+          <li>Inbound rules → Edit → Add rule: TCP 8765 from VPN CIDR</li>
+          <li>Save. Immediate effect — no restart needed.</li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-runbk">Runbook</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <!-- CALL DUSTIN cards -->
+
+  <div class="card card-dustin" data-layer="infra">
+    <div class="card-layer">Infrastructure</div>
+    <div class="card-top">
+      <div class="card-name">EC2 instance unreachable</div>
+      <span class="badge badge-dustin">Call Dustin</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Detection</span>
+      CloudWatch StatusCheckFailed alarm → SNS → text to Dustin's phone. Instance is down or unresponsive at the hypervisor level.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">What to do while waiting for Dustin</div>
+        <ul class="steps">
+          <li>In AWS Console: EC2 → Instances → check status. If "stopped": Start it.</li>
+          <li>If "running" but StatusCheck failing: reboot from Console → Actions → Reboot</li>
+          <li>If still failing after reboot: wait for Dustin — may need new instance</li>
+        </ul>
+      </div>
+      <div class="section">
+        <div class="sec-lbl">After instance is back</div>
+        <ul class="steps">
+          <li>Verify EBS still attached: check Volumes in Console</li>
+          <li>Start container if it didn't auto-restart: <code>docker start dupe-engine-review</code></li>
+          <li>Confirm: <code>curl http://localhost:8765/api/status</code></li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-dustin">Call Dustin</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <div class="card card-dustin" data-layer="app">
+    <div class="card-layer">Application</div>
+    <div class="card-top">
+      <div class="card-name">Corrupt job state / broken results</div>
+      <span class="badge badge-dustin">Call Dustin</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Symptom</span>
+      A job's results page shows errors or the UI crashes loading a specific run. The healing harness can repair some cases.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">Attempt self-repair first</div>
+        <ul class="steps">
+          <li>SSH in and run: <code>dupe-engine heal --run-dir /data/runs/&lt;job-id&gt; --verbose</code></li>
+          <li>If it reports "HEALED" or "IMPROVED" — the run is usable again</li>
+          <li>If it reports "RESISTANT" — call Dustin with the job ID and the error from <code>docker logs</code></li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-dustin">Call Dustin</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <div class="card card-dustin" data-layer="app">
+    <div class="card-layer">Application</div>
+    <div class="card-top">
+      <div class="card-name">Version rollback needed</div>
+      <span class="badge badge-dustin">Call Dustin</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">When</span>
+      A new deployment introduced a regression. Dustin has the prior image tags and knows which version is stable.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">Rollback (Dustin executes)</div>
+        <ul class="steps">
+          <li><code>docker stop dupe-engine-review</code></li>
+          <li><code>docker rm dupe-engine-review</code></li>
+          <li>Rerun the start command with the previous image tag (e.g. <code>dupe-engine-worker:v0.10.8</code>)</li>
+          <li>Data is on EBS — unaffected by image swap</li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-dustin">Call Dustin</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <!-- NETWORK / IT -->
+
+  <div class="card card-runbook" data-layer="network">
+    <div class="card-layer">Network</div>
+    <div class="card-top">
+      <div class="card-name">Reviewer can't connect (VPN side)</div>
+      <span class="badge badge-runbook">Runbook</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Key test</span>
+      If the server is reachable via SSH, the server is fine. VPN issues are on the client or IT side.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">Triage steps</div>
+        <ul class="steps">
+          <li>Confirm server is up: <code>curl http://localhost:8765/api/status</code> from SSH → should return <code>{"ok": true}</code></li>
+          <li>Ask the reviewer: are they on VPN? Can they reach any other internal resource?</li>
+          <li>If VPN is the issue: direct them to IT helpdesk — this is outside our stack</li>
+          <li>If multiple reviewers are affected: check the security group first (see card above)</li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-runbk">Runbook</span>
+        <span class="owner-lbl">→ VPN issue:</span>
+        <span class="owner-chip oc-it">IT</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <!-- CRITICAL cards -->
+
+  <div class="card card-critical" data-layer="infra">
+    <div class="card-layer">Infrastructure — Critical</div>
+    <div class="card-top">
+      <div class="card-name">AWS Availability Zone outage</div>
+      <span class="badge badge-critical">Critical</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Impact</span>
+      Full instance down. Single-AZ deployment means no automatic failover. Data is on EBS — tied to the same AZ. S3 backups are cross-region and safe.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">Recovery (Dustin + AWS)</div>
+        <ul class="steps">
+          <li>Check AWS Service Health Dashboard for the AZ outage — gives ETA</li>
+          <li>If outage is extended (&gt;2h): create a snapshot of the EBS volume from a healthy AZ</li>
+          <li>Launch a new EC2 instance in a different AZ, restore from snapshot</li>
+          <li>Restore latest S3 backup to <code>/data</code> if EBS is not recoverable</li>
+          <li>Restart container with same configuration</li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-dustin">Call Dustin</span>
+        <span class="owner-chip oc-it">AWS Support</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+  <div class="card card-critical" data-layer="data">
+    <div class="card-layer">Data — Critical</div>
+    <div class="card-top">
+      <div class="card-name">Run artifacts accidentally deleted</div>
+      <span class="badge badge-critical">Critical</span>
+    </div>
+    <div class="card-auto">
+      <span class="auto-lbl">Recovery path</span>
+      S3 backups retained 90 days. Page images are regeneratable — the irreplaceable data is <code>results.json</code>, <code>false_negatives.csv</code>, and <code>review_decisions.json</code>.
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="sec-lbl">Restore from S3 backup</div>
+        <ul class="steps">
+          <li>List available backups: <code>aws s3 ls s3://your-backup-bucket/dupe-engine/</code></li>
+          <li>Download closest backup: <code>aws s3 cp s3://your-backup-bucket/dupe-engine/runs_backup_YYYYMMDD.tar.gz /tmp/</code></li>
+          <li>Extract to <code>/data/runs</code>: <code>tar xzf /tmp/runs_backup_YYYYMMDD.tar.gz -C /</code></li>
+          <li>Fix permissions: <code>sudo chown -R ec2-user:ec2-user /data</code></li>
+          <li>Restart container</li>
+        </ul>
+      </div>
+      <div class="owner-row">
+        <span class="owner-lbl">Handles:</span>
+        <span class="owner-chip oc-dustin">Call Dustin</span>
+      </div>
+    </div>
+    <div class="hint">tap to expand fix steps</div>
+  </div>
+
+</div>
+
+<script>
+  // Filter tabs
+  document.querySelectorAll('.fbtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      const f = btn.dataset.filter;
+      document.querySelectorAll('.card').forEach(card => {
+        const layer = card.dataset.layer;
+        const match = f === 'all' || layer === f;
+        card.classList.toggle('hidden', !match);
+      });
+    });
+  });
+
+  // Expand/collapse cards
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('open');
+    });
+  });
+</script>
