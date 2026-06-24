@@ -12,6 +12,10 @@ ERE Medical Records
 
 The engine finds duplicate, likely duplicate, possible duplicate, and partial-overlap page candidates. The review UI lets staff inspect candidates side-by-side, save reviewer decisions, and export results.
 
+**v0.10.8** added HIPAA §164.312 remediation: bearer-token auth on all review UI endpoints, audit logging, PHI field redaction, and TLS guard. The server requires `DUPE_UI_AUTH_TOKEN` to start.
+
+**v0.10.9** added the healing harness (`dupe-engine heal`): reads a finished run's outputs, diagnoses false-negative root causes, and prescribes the CLI flag changes most likely to improve recall — without touching the core engine.
+
 ---
 
 ## How it works
@@ -23,9 +27,10 @@ PDFs
 -> selected OpenAI vision OCR rescue (budgeted)
 -> deterministic duplicate/overlap candidates
 -> optional bounded embedding recall
--> [v0.10.9] embedding precision reranker
--> review UI
+-> embedding precision reranker
+-> review UI (bearer-token auth, audit log)
 -> reviewer decisions / exports
+-> [healing harness] diagnose FNs -> prescribe flag changes -> re-run -> certify
 ```
 
 v0.10.9 is v1-safe: OCR and OpenAI OCR fallback are required. Semantic/vector recall is optional, bounded, and gated by the **embedding precision reranker** that demotes or drops low-confidence embedding candidates before they reach the review queue.
@@ -96,6 +101,38 @@ tesseract_ocr: available
 
 openai_ocr_fallback: available
   required: true
+```
+
+---
+
+## Healing harness
+
+`dupe-engine heal` reads a completed run, diagnoses why pairs were missed, and prescribes the CLI changes most likely to fix it.
+
+```bash
+dupe-engine heal \
+  --run-dir /path/to/run \
+  --truth truth_eval.json \
+  --feedback feedback.json \
+  --verbose
+```
+
+Add `--apply` to re-run the engine with prescribed flags. Add `--iterations N` to loop until certified or the limit is reached.
+
+Six phases: **Assess** → **Diagnose** → **Prescribe** → **Heal** → **Compare** → **Certify**
+
+Verdict: `HEALED` (all targets met), `IMPROVED` (partial gain), or `RESISTANT` (no meaningful change).
+
+Does not require `OPENAI_API_KEY` — dispatches before `build_config()`.
+
+Snapshots of each heal cycle's config are written to `.heal/vN/config.json` in the workspace. Git stays clean.
+
+Optional feedback file (`--feedback`): user-reported missed pairs, separate from `review_decisions.json`:
+
+```json
+[
+  {"id_a": "patient_001", "id_b": "patient_002", "verdict": "missed_duplicate"}
+]
 ```
 
 ---
@@ -422,19 +459,20 @@ DUPE_MAIN_REVIEW_MAX_CANDIDATES_PER_100_PAGES=50
 - Use budgeted OpenAI vision OCR fallback on selected weak pages
 - Generate candidate duplicate/overlap pairs
 - Gate embedding-only candidates with the precision reranker
-- Serve a local browser review UI
+- Serve a bearer-token-authenticated browser review UI with audit logging
 - Save reviewer decisions to `review_decisions.json`
 - Export reviewed results
+- Diagnose false-negative root causes and prescribe config improvements (healing harness)
 - Run truth-based calibration on synthetic corpora
 
 ### It does not do yet
 
 - Delete or modify source PDFs
 - Make final legal/medical determinations
-- Provide production auth or multi-user review locking
+- Multi-user review locking
 - Run embeddings by default (opt-in only)
 - Use LLM adjudication as a final decision layer
-- Host itself in a cloud environment out of the box
+- Host itself in a cloud environment out of the box (see `PILOT_AWS_DEPLOY_CHECKLIST.md`)
 
 ---
 
@@ -489,7 +527,10 @@ src/dupe_engine/engine.py               pipeline orchestration
 src/dupe_engine/ingest.py               PDF rendering / native text / OCR routing
 src/dupe_engine/ocr.py                  Tesseract + OpenAI fallback selection/execution
 src/dupe_engine/matchers.py             deterministic candidate generation
-src/dupe_engine/embedding_reranker.py   v0.10.9 embedding precision reranker
+src/dupe_engine/embedding_reranker.py   embedding precision reranker
+src/dupe_engine/healing_harness.py      6-phase heal pipeline
+src/dupe_engine/heal_prescriber.py      root-cause → CLI flag prescription engine
+src/dupe_engine/security.py             bearer-token auth, audit logging, PHI redaction
 src/dupe_engine/calibration_harness.py  calibration loop / sweep harness
 src/dupe_engine/review.py               reviewer labels / visibility
 src/dupe_engine/evaluation.py           truth evaluation
@@ -502,6 +543,10 @@ tools/v0109_reranker_sim.py             offline reranker simulation
 Key docs:
 
 ```text
+CHANGELOG.md
+PILOT_AWS_DEPLOY_CHECKLIST.md           AWS deployment runbook
+ONBOARDING.md                           project onboarding for new contributors
+docs/INCIDENT_RESPONSE.html             failure modes + escalation tiers (open in browser)
 docs/ARCHITECTURE.md
 docs/V0_10_9_SEMANTIC_RERANKER_PLAN.md
 docs/UI_RUN_ARTIFACTS.md
@@ -523,27 +568,31 @@ PYTHONPATH=src pytest
 
 ## PHI and deployment notes
 
-The system processes PHI by design — that is its purpose. Compliance guards (TLS check, BAA endpoint check) log warnings by default and do not stop the server. Set `DUPE_STRICT_COMPLIANCE=true` in production to re-enable hard stops if a misconfiguration should prevent startup.
+The system processes PHI by design — that is its purpose. v0.10.8 added HIPAA §164.312 controls: bearer-token auth on all review UI endpoints, per-access audit logging to `audit.jsonl`, PHI field redaction in server logs, and a TLS guard that refuses to start in non-local environments without HTTPS.
+
+`DUPE_UI_AUTH_TOKEN` is required to start the server. Unauthenticated requests receive a 401.
 
 Recommended pilot shape:
 
 ```text
-internal server / VM
-Python app serves the UI
-engine jobs run server-side
-PDFs and run artifacts stay on internal storage
-reviewers access via internal URL
+internal EC2 instance (t3.large)
+EBS volume for /data
+Docker container runs the review UI
+PDFs and run artifacts stay on internal EBS storage
+reviewers access via VPN
 ```
+
+See `PILOT_AWS_DEPLOY_CHECKLIST.md` for the full AWS deployment runbook and `docs/INCIDENT_RESPONSE.html` for the failure-mode and escalation model.
 
 Production environment variables:
 
 ```text
-DUPE_STRICT_COMPLIANCE=true          re-enable hard stops on TLS/BAA misconfiguration
+DUPE_UI_AUTH_TOKEN=<strong-token>    bearer token for all UI access (required)
+DUPE_STRICT_COMPLIANCE=true          hard-stop on TLS/BAA misconfiguration
 DUPE_TLS_TERMINATED=true             acknowledge that a reverse proxy handles TLS
-DUPE_UI_AUTH_TOKEN=<strong-token>    require bearer token for all UI access
+DUPE_LOG_PHI=false                   strip PHI from server logs (default)
 DUPE_INCLUDE_TEXT_PREVIEW=false      don't include extracted page text in run artifacts
 DUPE_PERSIST_EXTRACTED_TEXT=false    don't write extracted text to disk
-DUPE_LOG_PHI=false                   don't include extracted text in job error output
 ```
 
 The engine generates review assistance. Human reviewers make final workflow decisions.
