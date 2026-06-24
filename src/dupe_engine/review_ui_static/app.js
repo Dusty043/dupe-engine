@@ -207,10 +207,7 @@ function render() {
       ${renderTopbar()}
       <main class="main-grid ${state.reviewExpanded ? 'review-expanded' : ''}">
         <aside class="left-rail">
-          ${renderBatchSummary()}
-          ${renderRunStats()}
-          ${renderCapabilityCard()}
-          ${renderDiagnosticsCard()}
+          ${renderProgressCard()}
         </aside>
         <section class="content">
           ${renderQueueToolbar()}
@@ -444,10 +441,46 @@ function renderTopbar() {
           <button class="btn primary" data-action="new-batch">Start new batch</button>
           <button class="btn" data-action="export-csv">Export CSV</button>
           <button class="btn" data-action="export-json">Export decisions JSON</button>
-          <button class="btn ghost" data-action="toggle-diagnostics">${state.diagnosticsOpen ? 'Hide' : 'Show'} diagnostics</button>
         </div>
       </div>
     </header>
+  `;
+}
+
+function renderProgressCard() {
+  const counts = sourceCounts();
+  const total = state.run.candidates.length;
+  const reviewed = state.decisions.size;
+  const needsReview = total - reviewed;
+  const pct = total > 0 ? Math.round((reviewed / total) * 100) : 0;
+  return `
+    <section class="card">
+      <div class="card-body">
+        <div class="progress-header">
+          <h2>Review progress</h2>
+          <span class="progress-fraction">${reviewed} / ${total}</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" style="width:${pct}%"></div>
+        </div>
+        <div class="batch-cards">
+          <div class="batch-card received">
+            <div class="label">Received Records</div>
+            <div class="value">${counts.received}</div>
+            <div class="helper">Incoming pages</div>
+          </div>
+          <div class="batch-card ere">
+            <div class="label">ERE Records</div>
+            <div class="value">${counts.ere}</div>
+            <div class="helper">Comparison pages</div>
+          </div>
+        </div>
+        <div class="summary-mini">
+          ${needsReview > 0 ? `<span class="badge warn">${needsReview} to review</span>` : '<span class="badge good">All reviewed</span>'}
+          <span class="badge outline">${total} candidates</span>
+        </div>
+      </div>
+    </section>
   `;
 }
 
@@ -574,33 +607,17 @@ function renderQueueToolbar() {
   const visible = filteredCandidates();
   return `
     <section class="card">
-      <div class="card-header">
-        <div>
-          <h2>Candidate review queue</h2>
-          <p>${visible.length} candidates shown. Review decisions save back to <code>review_decisions.json</code>.</p>
-        </div>
-      </div>
       <div class="card-body">
         <div class="tabs">
           ${tab('needs_review', 'Needs Review')}
-          ${tab('secondary', 'Secondary Recall')}
-          ${tab('likely', 'Likely Duplicates')}
-          ${tab('partial', 'Partial Overlaps')}
           ${tab('reviewed', 'Reviewed')}
           ${tab('all', 'All')}
         </div>
         <div class="queue-toolbar">
           <label class="search-box">
             <span class="icon">⌕</span>
-            <input type="search" value="${escapeAttr(state.search)}" placeholder="Search file, page, label, reason..." data-action="search" />
+            <input type="search" value="${escapeAttr(state.search)}" placeholder="Search file or page..." data-action="search" />
           </label>
-          <select class="select" data-action="type-filter">
-            ${option('all', 'All match types')}
-            ${option('context', 'Context overlaps')}
-            ${option('image', 'Image duplicates')}
-            ${option('ocr', 'OCR-based')}
-            ${option('vision', 'Vision fallback expected')}
-          </select>
         </div>
         <div class="candidate-list">
           ${visible.length ? visible.map(renderCandidateCard).join('') : '<div class="empty-state"><h2>No candidates in this queue</h2><p>Try changing the filter or search term.</p></div>'}
@@ -627,26 +644,15 @@ function renderCandidateCard(c) {
   const reviewed = state.decisions.get(c.candidate_id);
   const active = state.selectedId === c.candidate_id ? ' active' : '';
   const reviewedClass = reviewed ? ' reviewed' : '';
-  const leftLabel = sideLabel(c.left, 'Left');
-  const rightLabel = sideLabel(c.right, 'Right');
   return `
     <button class="candidate-card${active}${reviewedClass}" data-candidate-id="${escapeAttr(c.candidate_id)}">
       <div class="candidate-top">
-        <div>
-          <div class="candidate-title">${escapeHtml(c.engine_label || c.review_bucket || 'candidate')} · ${Math.round((c.confidence || 0) * 100)}%</div>
-          <div class="candidate-meta">
-            ${badge(matchFamilyLabel(c), matchFamily(c) === 'image' ? 'danger' : 'info')}
-            ${badge(c.review_priority || 'priority', c.review_priority === 'high' ? 'warn' : 'outline')}
-            ${c.expected_min_layer ? badge(c.expected_min_layer, 'slate') : ''}
-            ${isRerankerDemoted(c) ? badge('Reranker demoted', 'slate') : ''}
-            ${reviewed ? badge(labelName(reviewed.human_label), 'good') : badge('Unreviewed', 'outline')}
-          </div>
-        </div>
-        <span class="badge outline">#${c.rank || ''}</span>
+        <div class="candidate-title">${escapeHtml(labelName(c.engine_label || c.review_bucket || 'candidate'))} · ${Math.round((c.confidence || 0) * 100)}%</div>
+        ${reviewed ? badge(labelName(reviewed.human_label), 'good') : badge('Needs review', 'outline')}
       </div>
       <div class="candidate-paths">
-        <div class="path-row"><b>${escapeHtml(leftLabel)}:</b><span>${escapeHtml(c.left?.document || '')} p.${escapeHtml(String(c.left?.page || ''))}</span></div>
-        <div class="path-row"><b>${escapeHtml(rightLabel)}:</b><span>${escapeHtml(c.right?.document || '')} p.${escapeHtml(String(c.right?.page || ''))}</span></div>
+        <div class="path-row"><b>Received:</b><span>${escapeHtml(c.left?.document || '')} p.${escapeHtml(String(c.left?.page || ''))}</span></div>
+        <div class="path-row"><b>ERE:</b><span>${escapeHtml(c.right?.document || '')} p.${escapeHtml(String(c.right?.page || ''))}</span></div>
       </div>
     </button>
   `;
@@ -659,13 +665,10 @@ function renderReview(c) {
       <div class="review-header">
         <div class="review-title">
           <h2>${escapeHtml(labelName(c.engine_label || c.review_bucket || 'candidate'))}</h2>
-          <p>${escapeHtml(c.candidate_id)} · ${escapeHtml(c.match_type || 'candidate')} · ${Math.round((c.confidence || 0) * 100)}% confidence</p>
+          <p>${Math.round((c.confidence || 0) * 100)}% match confidence</p>
         </div>
         <div class="review-actions">
           ${badge(decision ? `Reviewed: ${labelName(decision.human_label)}` : 'Unreviewed', decision ? 'good' : 'outline')}
-          ${c.expected_min_layer ? badge(`Layer: ${c.expected_min_layer}`, 'slate') : ''}
-          ${c.required_layers?.length ? badge(`Requires: ${c.required_layers.join(', ')}`, 'warn') : ''}
-          ${isRerankerDemoted(c) ? badge('Reranker demoted', 'slate') : ''}
           <button class="btn small" data-action="toggle-expanded-review">${state.reviewExpanded ? 'Exit large view' : 'Expand comparison'}</button>
         </div>
       </div>
@@ -694,41 +697,25 @@ function renderPagePane(side, kind) {
       <div class="image-frame">
         ${imageUrl ? `<img data-auth-src="${escapeAttr(imageUrl)}" alt="${escapeAttr(label)} page preview" />` : '<div class="empty-state"><p>No page preview asset available.</p></div>'}
       </div>
-      <div class="page-facts">
-        ${fact('Text source', side?.best_text_source || page.best_text_source || page.text_source)}
-        ${fact('Native text', side?.native_text_status || page.native_text_status)}
-        ${fact('OCR route', side?.ocr_route || page.ocr_route)}
-        ${fact('Best words', side?.best_word_count ?? page.best_word_count)}
-        ${fact('Tesseract', side?.tesseract_attempted ? (side?.tesseract_usable ? 'usable' : 'attempted') : 'not attempted')}
-        ${fact('Vision fallback', side?.openai_ocr_selected ? (side?.openai_ocr_usable ? 'usable' : 'selected') : 'not selected')}
-      </div>
     </section>
   `;
 }
 
 function renderDecisionPanel(c) {
-  const signals = Array.isArray(c.signals) ? c.signals.slice(0, 6) : [];
   return `
     <aside class="decision-panel">
-      <div class="panel-section">
-        <h3>Why this was flagged</h3>
-        <div class="explanation">${escapeHtml(explanation(c))}</div>
+      <div class="panel-section panel-decision-intro">
+        <h3>Is this a duplicate?</h3>
+        <p class="panel-confidence">${Math.round((c.confidence || 0) * 100)}% match confidence</p>
       </div>
       <div class="panel-section">
-        <h3>Signals</h3>
-        <div class="signal-list">
-          ${signals.length ? signals.map(renderSignal).join('') : '<div class="signal-item"><span>No detailed signals available.</span></div>'}
-        </div>
-      </div>
-      <div class="panel-section">
-        <h3>Reviewer decision</h3>
         <div class="decision-buttons">
           ${LABELS.map(([value, label]) => `<button class="decision-button ${state.draftLabel === value ? 'active' : ''}" data-decision-label="${value}">${escapeHtml(label)}</button>`).join('')}
         </div>
       </div>
       <div class="panel-section">
-        <h3>Note</h3>
-        <textarea class="note-box" data-action="note" placeholder="Add note...">${escapeHtml(state.draftNote || '')}</textarea>
+        <h3>Note <span class="note-optional">(optional)</span></h3>
+        <textarea class="note-box" data-action="note" placeholder="Add a note...">${escapeHtml(state.draftNote || '')}</textarea>
       </div>
       <div class="panel-section">
         <button class="btn primary block" data-action="save-decision" ${state.draftLabel ? '' : 'disabled'}>Save decision</button>
