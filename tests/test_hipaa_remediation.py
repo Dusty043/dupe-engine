@@ -405,10 +405,13 @@ class TestJobSanitization(unittest.TestCase):
             "error": "File not found: john_doe_2024.pdf",
         }
         result = _sanitize_job_for_api(job)
+        # Internal filesystem paths are stripped regardless of PHI logging
         self.assertNotIn("job_dir", result)
+        # Bulk output tails are gated behind DUPE_LOG_PHI (may contain extracted text)
         self.assertEqual(result["stdout_tail"], "[set DUPE_LOG_PHI=true to see]")
         self.assertEqual(result["stderr_tail"], "[set DUPE_LOG_PHI=true to see]")
-        self.assertEqual(result["error"], "[set DUPE_LOG_PHI=true to see full error]")
+        # Error message is always returned — reviewers are authorized to work with PHI
+        self.assertEqual(result["error"], "File not found: john_doe_2024.pdf")
 
     def test_phi_passthrough_when_enabled(self):
         from dupe_engine.review_ui_server import _sanitize_job_for_api
