@@ -113,11 +113,35 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .btn.small { padding: 7px 10px; font-size: 12px; }
 .btn.block { width: 100%; }
 
+/* Review mode: lock to viewport so comparison is always above the fold */
+.app-shell--review {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.app-shell--review .main-grid {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+.app-shell--review .left-rail {
+  overflow-y: auto;
+}
+.app-shell--review .content {
+  overflow-y: auto;
+}
+/* Remove the fixed max-height on the candidate list — left-rail scroll handles it */
+.app-shell--review .candidate-list {
+  max-height: none;
+}
+
 .main-grid {
   max-width: 1440px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: 320px minmax(0, 1fr);
   gap: 22px;
   padding: 24px 28px 48px;
 }

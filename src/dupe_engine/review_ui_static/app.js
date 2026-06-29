@@ -203,14 +203,14 @@ function render() {
 
   const selected = selectedCandidate();
   app.innerHTML = `
-    <div class="app-shell">
+    <div class="app-shell app-shell--review">
       ${renderTopbar()}
       <main class="main-grid ${state.reviewExpanded ? 'review-expanded' : ''}">
         <aside class="left-rail">
           ${renderProgressCard()}
+          ${renderQueueToolbar()}
         </aside>
         <section class="content">
-          ${renderQueueToolbar()}
           ${selected ? renderReview(selected) : renderEmptyReview()}
         </section>
       </main>
