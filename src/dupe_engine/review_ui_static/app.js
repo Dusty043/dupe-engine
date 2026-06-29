@@ -207,7 +207,6 @@ function render() {
       ${renderTopbar()}
       <main class="main-grid ${state.reviewExpanded ? 'review-expanded' : ''}">
         <aside class="left-rail">
-          ${renderProgressCard()}
           ${renderQueueToolbar()}
         </aside>
         <section class="content">
