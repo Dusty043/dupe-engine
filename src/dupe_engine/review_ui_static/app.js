@@ -326,26 +326,29 @@ function renderUploadBucket(kind, title, helper, inputName) {
 }
 
 function renderRecentJobs() {
-  const jobs = state.jobs || [];
+  const jobs = (state.jobs || []).filter((j) => j.status === 'succeeded');
   if (!jobs.length) return '';
   return `
     <section class="card recent-jobs">
       <div class="card-header">
         <div>
-          <h2>Recent local jobs</h2>
-          <p>Jobs exist only for this local UI server session.</p>
+          <h2>Previous runs</h2>
+          <p>Reopen a completed run to continue reviewing.</p>
         </div>
       </div>
       <div class="card-body job-list">
-        ${jobs.slice(0, 6).map((job) => `
+        ${jobs.slice(0, 8).map((job) => {
+          const date = job.created_at ? job.created_at.slice(0, 10) : '';
+          const candidates = job.candidate_count != null ? `${job.candidate_count} candidates` : `${(job.received_files || []).length} received · ${(job.ere_files || []).length} ERE`;
+          return `
           <div class="job-row">
-            <div>
-              <b>${escapeHtml(job.job_id)}</b>
-              <span>${escapeHtml((job.received_files || []).length)} received · ${escapeHtml((job.ere_files || []).length)} ERE</span>
+            <div class="job-row-info">
+              <b>${escapeHtml(date)}</b>
+              <span>${escapeHtml(candidates)}</span>
             </div>
-            ${badge(job.status || 'unknown', job.status === 'succeeded' ? 'good' : job.status === 'failed' ? 'danger' : 'info')}
-          </div>
-        `).join('')}
+            <button class="btn small primary" data-action="open-job" data-job-id="${escapeAttr(job.job_id)}">Open</button>
+          </div>`;
+        }).join('')}
       </div>
     </section>
   `;
@@ -820,6 +823,28 @@ function bindUploadEvents() {
   });
   document.querySelector('[data-action="upload-form"]')?.addEventListener('submit', startUploadJob);
   document.querySelector('[data-action="refresh-run"]')?.addEventListener('click', boot);
+  document.querySelectorAll('[data-action="open-job"]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const jobId = btn.dataset.jobId;
+      btn.disabled = true;
+      btn.textContent = 'Opening…';
+      try {
+        const res = await apiFetch('/api/run/load', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ job_id: jobId }),
+        });
+        if (!res.ok) throw new Error(await responseText(res));
+        const data = await res.json();
+        loadRunData(data);
+        state.loading = false;
+        render();
+      } catch (err) {
+        state.uploadError = err.message || 'Failed to open run';
+        render();
+      }
+    });
+  });
   document.querySelector('[data-action="cancel-to-upload"]')?.addEventListener('click', () => {
     clearJobPolling();
     state.activeJob = null;

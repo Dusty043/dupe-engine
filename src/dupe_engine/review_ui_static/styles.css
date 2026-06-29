@@ -686,7 +686,7 @@ button:disabled { cursor: not-allowed; opacity: .55; }
   border-radius: 14px;
   background: var(--surface-soft);
 }
-.job-row div { display: grid; gap: 3px; min-width: 0; }
+.job-row-info { display: grid; gap: 3px; min-width: 0; flex: 1 1 0; }
 .job-row b { font-size: 13px; }
 .job-row span { color: var(--muted); font-size: 12px; }
 .processing-card {

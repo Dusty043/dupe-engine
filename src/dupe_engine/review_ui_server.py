@@ -129,6 +129,47 @@ class ReviewJobStore:
         # In-memory fallback store (used when DUPE_DYNAMO_TABLE is unset)
         self._mem_jobs: dict[str, dict[str, Any]] = {}
         self.lock = threading.RLock()
+        self._scan_workspace()
+
+    def _scan_workspace(self) -> None:
+        """Populate _mem_jobs from completed job directories on disk (survives restarts)."""
+        if _aws_mode():
+            return
+        try:
+            for job_dir in sorted(self.workspace_dir.iterdir(), reverse=True):
+                if not job_dir.is_dir() or not job_dir.name.startswith("job_"):
+                    continue
+                if job_dir.name in self._mem_jobs:
+                    continue
+                run_dir = job_dir / "run"
+                manifest_path = run_dir / "run_manifest.json"
+                if not manifest_path.exists():
+                    continue
+                try:
+                    manifest = json.loads(manifest_path.read_text())
+                    received = sorted(f.name for f in (job_dir / "input" / "received_records").iterdir()) if (job_dir / "input" / "received_records").exists() else []
+                    ere = sorted(f.name for f in (job_dir / "input" / "ere_records").iterdir()) if (job_dir / "input" / "ere_records").exists() else []
+                    self._mem_jobs[job_dir.name] = {
+                        "job_id": job_dir.name,
+                        "status": "succeeded",
+                        "stage": "completed",
+                        "created_at": manifest.get("generated_at", ""),
+                        "updated_at": manifest.get("generated_at", ""),
+                        "finished_at": manifest.get("generated_at", ""),
+                        "received_files": received,
+                        "ere_files": ere,
+                        "settings": {},
+                        "job_dir": str(job_dir),
+                        "run_dir": str(run_dir),
+                        "candidate_count": manifest.get("candidate_count", 0),
+                        "page_count": manifest.get("page_count", 0),
+                        "command": manifest.get("command", ""),
+                        "error": None,
+                    }
+                except Exception:
+                    pass
+        except Exception:
+            pass
 
     def set_current_run(self, run_dir: Path | None) -> None:
         with self.lock:
@@ -386,6 +427,23 @@ def build_handler(*, store: ReviewJobStore, static_dir: Path, server_host: str =
                     )
                     store.set_current_run(None)
                     self.send_json({"ok": True, "has_run": False})
+                    return
+                if parsed.path == "/api/run/load":
+                    body = self.read_json_body()
+                    job_id = str(body.get("job_id", "")).strip()
+                    if not job_id or "/" in job_id or ".." in job_id:
+                        raise ReviewUiError("Invalid job_id")
+                    run_dir = store.workspace_dir / job_id / "run"
+                    validate_run_dir(run_dir)
+                    store.set_current_run(run_dir)
+                    _audit_module.record_event(
+                        job_id=job_id, action="load_run", actor=client_ip,
+                        resource="run_payload", outcome="success",
+                    )
+                    payload = load_run_payload(run_dir)
+                    payload["has_run"] = True
+                    payload["jobs"] = [_sanitize_job_for_api(j) for j in store.list_jobs()]
+                    self.send_json(payload)
                     return
                 self.send_error_json(HTTPStatus.NOT_FOUND, "Unknown API route")
             except ReviewUiError as exc:
