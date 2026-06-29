@@ -257,45 +257,42 @@ function renderUploadShell() {
             ${renderUploadBucket('ere', 'ERE Medical Records', 'Upload existing ERE records used as the comparison set.', 'ere_files')}
           </section>
 
-          <section class="card options-card">
-            <div class="card-header">
-              <div>
-                <h2>Run options</h2>
-                <p>Defaults require local OCR plus OpenAI vision fallback for v1 calibration.</p>
+          <details class="options-details">
+            <summary class="options-summary">Advanced options</summary>
+            <section class="card options-card">
+              <div class="card-body option-grid">
+                <label class="field-row">
+                  <span>DPI</span>
+                  <input name="dpi" type="number" min="72" max="300" value="150" />
+                </label>
+                <label class="field-row">
+                  <span>Tesseract profiles</span>
+                  <input name="tesseract_profiles" type="text" value="standard" />
+                </label>
+                <label class="field-row">
+                  <span>OpenAI fallback budget</span>
+                  <input name="openai_ocr_max_pages" type="number" min="1" max="500" value="50" />
+                </label>
+                <label class="field-row">
+                  <span>Fallback selection</span>
+                  <select name="openai_ocr_selection_mode">
+                    <option value="weak_pages_or_vision_expected" selected>Weak pages + vision expected</option>
+                    <option value="weak_pages">Weak pages only</option>
+                    <option value="vision_expected">Vision expected only</option>
+                    <option value="candidate_based">Candidate-based only</option>
+                  </select>
+                </label>
+                <div class="option-note required">
+                  <span>OCR + OpenAI fallback required</span>
+                  <small>Weak/scanned pages use local OCR first, then OpenAI vision OCR fallback is selected by policy and budget. The run fails fast if the OpenAI key/fallback is unavailable.</small>
+                </div>
+                <label class="check-row">
+                  <input name="multipass_visual_all_pages" type="checkbox" />
+                  <span>Broader visual pass</span>
+                </label>
               </div>
-            </div>
-            <div class="card-body option-grid">
-              <label class="field-row">
-                <span>DPI</span>
-                <input name="dpi" type="number" min="72" max="300" value="150" />
-              </label>
-              <label class="field-row">
-                <span>Tesseract profiles</span>
-                <input name="tesseract_profiles" type="text" value="standard" />
-              </label>
-              <label class="field-row">
-                <span>OpenAI fallback budget</span>
-                <input name="openai_ocr_max_pages" type="number" min="1" max="500" value="50" />
-              </label>
-              <label class="field-row">
-                <span>Fallback selection</span>
-                <select name="openai_ocr_selection_mode">
-                  <option value="weak_pages_or_vision_expected" selected>Weak pages + vision expected</option>
-                  <option value="weak_pages">Weak pages only</option>
-                  <option value="vision_expected">Vision expected only</option>
-                  <option value="candidate_based">Candidate-based only</option>
-                </select>
-              </label>
-              <div class="option-note required">
-                <span>OCR + OpenAI fallback required</span>
-                <small>Weak/scanned pages use local OCR first, then OpenAI vision OCR fallback is selected by policy and budget. The run fails fast if the OpenAI key/fallback is unavailable.</small>
-              </div>
-              <label class="check-row">
-                <input name="multipass_visual_all_pages" type="checkbox" />
-                <span>Broader visual pass</span>
-              </label>
-            </div>
-          </section>
+            </section>
+          </details>
 
           ${state.uploadError ? `<div class="inline-error">${escapeHtml(state.uploadError)}</div>` : ''}
 
@@ -312,7 +309,7 @@ function renderUploadShell() {
 
 function renderUploadBucket(kind, title, helper, inputName) {
   return `
-    <section class="upload-bucket ${kind}">
+    <section class="upload-bucket ${kind}" data-drop-target="${escapeAttr(inputName)}">
       <div class="upload-bucket-inner">
         <div class="bucket-icon">${kind === 'received' ? 'R' : 'E'}</div>
         <div>
@@ -321,7 +318,7 @@ function renderUploadBucket(kind, title, helper, inputName) {
         </div>
         <label class="drop-zone">
           <input type="file" name="${escapeAttr(inputName)}" accept="application/pdf,.pdf" multiple data-upload-input="${escapeAttr(inputName)}" />
-          <span>Choose PDF files</span>
+          <span>Choose or drop PDF files</span>
           <small data-file-summary="${escapeAttr(inputName)}">No files selected</small>
         </label>
       </div>
@@ -399,10 +396,26 @@ function renderProcessingShell() {
             ${progressStep('Prepare review queue', succeeded, failed)}
           </div>
           ${events.length ? `<div class="progress-events">${events.map(renderProgressEvent).join('')}</div>` : ''}
-          ${failed ? `<pre class="job-log">${escapeHtml(job.error || '')}\n\n${escapeHtml(job.stderr_tail || job.stdout_tail || '')}</pre>` : ''}
+          ${failed ? renderJobError(job) : ''}
           ${state.pollError ? `<div class="inline-error">Polling error: ${escapeHtml(state.pollError)}</div>` : ''}
         </section>
       </main>
+    </div>
+  `;
+}
+
+function renderJobError(job) {
+  const raw = job.error || '';
+  const isRedacted = raw.includes('DUPE_LOG_PHI') || raw.includes('set DUPE_LOG');
+  const technicalLog = isRedacted ? '' : raw;
+  const jobId = job.job_id ? escapeHtml(job.job_id) : '';
+  const tail = escapeHtml(job.stderr_tail || job.stdout_tail || '');
+  return `
+    <div class="job-error-info">
+      <p>The engine encountered an error and could not complete this run.</p>
+      ${jobId ? `<p class="job-ref">Reference: <code>${jobId}</code></p>` : ''}
+      <p class="job-error-hint">Please try again. If the problem persists, contact your administrator${jobId ? ' and reference the ID above' : ''}.</p>
+      ${technicalLog || tail ? `<pre class="job-log">${escapeHtml(technicalLog)}${technicalLog && tail ? '\n\n' : ''}${tail}</pre>` : ''}
     </div>
   `;
 }
@@ -787,6 +800,26 @@ function bindEvents() {
 function bindUploadEvents() {
   document.querySelectorAll('[data-upload-input]').forEach((input) => {
     input.addEventListener('change', updateUploadCta);
+  });
+  document.querySelectorAll('[data-drop-target]').forEach((zone) => {
+    const inputName = zone.dataset.dropTarget;
+    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragenter', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', (e) => { if (!zone.contains(e.relatedTarget)) zone.classList.remove('drag-over'); });
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      const input = zone.querySelector(`[data-upload-input="${inputName}"]`);
+      if (!input) return;
+      const dropped = Array.from(e.dataTransfer.files).filter(
+        (f) => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf')
+      );
+      if (!dropped.length) return;
+      const dt = new DataTransfer();
+      for (const f of dropped) dt.items.add(f);
+      input.files = dt.files;
+      updateUploadCta();
+    });
   });
   document.querySelector('[data-action="upload-form"]')?.addEventListener('submit', startUploadJob);
   document.querySelector('[data-action="refresh-run"]')?.addEventListener('click', boot);
