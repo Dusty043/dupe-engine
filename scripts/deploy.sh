@@ -49,6 +49,7 @@ run ssh "$SSH_HOST" "
   docker run -d \
     --name review-ui \
     --restart unless-stopped \
+    --user root \
     -p 127.0.0.1:8765:8765 \
     -v /data/runs:/data/runs \
     -v /data/review_ui_jobs:/data/review_ui_jobs \
