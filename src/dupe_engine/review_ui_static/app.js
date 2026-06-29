@@ -405,17 +405,15 @@ function renderProcessingShell() {
 }
 
 function renderJobError(job) {
-  const raw = job.error || '';
-  const isRedacted = raw.includes('DUPE_LOG_PHI') || raw.includes('set DUPE_LOG');
-  const technicalLog = isRedacted ? '' : raw;
+  const errorText = job.error || '';
+  const tail = job.stderr_tail || job.stdout_tail || '';
   const jobId = job.job_id ? escapeHtml(job.job_id) : '';
-  const tail = escapeHtml(job.stderr_tail || job.stdout_tail || '');
+  const log = [errorText, tail].filter(Boolean).join('\n\n');
   return `
     <div class="job-error-info">
       <p>The engine encountered an error and could not complete this run.</p>
       ${jobId ? `<p class="job-ref">Reference: <code>${jobId}</code></p>` : ''}
-      <p class="job-error-hint">Please try again. If the problem persists, contact your administrator${jobId ? ' and reference the ID above' : ''}.</p>
-      ${technicalLog || tail ? `<pre class="job-log">${escapeHtml(technicalLog)}${technicalLog && tail ? '\n\n' : ''}${tail}</pre>` : ''}
+      ${log ? `<pre class="job-log">${escapeHtml(log)}</pre>` : ''}
     </div>
   `;
 }

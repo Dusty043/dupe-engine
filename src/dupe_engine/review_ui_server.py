@@ -107,17 +107,15 @@ def _phi_logging_enabled() -> bool:
 def _sanitize_job_for_api(job: dict[str, Any]) -> dict[str, Any]:
     """Strip internal filesystem paths from a job record.
 
-    By default, stdout_tail / stderr_tail / error are redacted because they may
-    contain extracted text or file names. Set DUPE_LOG_PHI=true to include them
-    in the API response (useful for diagnosing failures).
+    stdout_tail / stderr_tail may contain bulk extracted text so they are
+    gated behind DUPE_LOG_PHI=true. The error field is always returned —
+    reviewers are authorized to work with PHI and need the actual error.
     """
     result = {k: v for k, v in job.items() if k not in _INTERNAL_JOB_FIELDS}
     if not _phi_logging_enabled():
         for phi_field in ("stdout_tail", "stderr_tail"):
             if phi_field in result:
                 result[phi_field] = "[set DUPE_LOG_PHI=true to see]" if result[phi_field] else ""
-        if result.get("error"):
-            result["error"] = "[set DUPE_LOG_PHI=true to see full error]"
     return result
 
 
