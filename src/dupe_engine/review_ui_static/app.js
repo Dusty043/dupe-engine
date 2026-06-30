@@ -239,7 +239,7 @@ function renderUploadShell() {
       <main class="start-shell">
         <section class="hero-card">
           <div class="hero-copy">
-            <span class="eyebrow">Local v0.9.8 workflow</span>
+            <span class="eyebrow">Local v0.10.9 workflow</span>
             <h2>Compare incoming medical records against ERE.</h2>
             <p>Files stay on this local machine. The browser uploads PDFs to the local engine server, the engine creates a run folder, and this UI opens the review queue when processing is complete.</p>
           </div>
@@ -338,7 +338,7 @@ function renderRecentJobs() {
       </div>
       <div class="card-body job-list">
         ${jobs.slice(0, 8).map((job) => {
-          const date = job.created_at ? job.created_at.slice(0, 10) : '';
+          const date = job.created_at ? job.created_at.slice(0, 16).replace('T', ' ') : '';
           const candidates = job.candidate_count != null ? `${job.candidate_count} candidates` : `${(job.received_files || []).length} received · ${(job.ere_files || []).length} ERE`;
           return `
           <div class="job-row">
@@ -731,7 +731,7 @@ function renderDecisionPanel(c) {
         <textarea class="note-box" data-action="note" placeholder="Add a note...">${escapeHtml(state.draftNote || '')}</textarea>
       </div>
       <div class="panel-section">
-        <button class="btn primary block" data-action="save-decision" ${state.draftLabel ? '' : 'disabled'}>Save decision</button>
+        <button class="btn primary block" data-action="save-decision" ${state.draftLabel && state.reviewerName.trim() ? '' : 'disabled'}>${state.draftLabel && !state.reviewerName.trim() ? 'Enter reviewer name to save' : 'Save decision'}</button>
       </div>
     </aside>
   `;
