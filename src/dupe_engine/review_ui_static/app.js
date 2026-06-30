@@ -20,7 +20,7 @@ const state = {
   diagnosticsOpen: false,
   draftLabel: '',
   draftNote: '',
-  reviewerName: '',
+  reviewerName: localStorage.getItem('dupe_reviewer_name') || '',
   jobs: [],
   activeJob: null,
   jobPollTimer: null,
@@ -31,6 +31,51 @@ const state = {
 };
 
 const app = document.getElementById('app');
+
+// ---------------------------------------------------------------------------
+// Keyboard shortcuts (active only when a run is loaded; ignored inside inputs)
+// 1-6 → pick decision  |  ↑/k → prev candidate  |  ↓/j → next candidate
+// Enter/s → save       |  e → expand/collapse comparison
+// ---------------------------------------------------------------------------
+document.addEventListener('keydown', (e) => {
+  if (!state.run) return;
+  if (e.target.matches('input, textarea, select')) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+  const decisionIndex = '123456'.indexOf(e.key);
+  if (decisionIndex !== -1) {
+    e.preventDefault();
+    const label = LABELS[decisionIndex]?.[0];
+    if (label) { state.draftLabel = state.draftLabel === label ? '' : label; render(); }
+    return;
+  }
+
+  if (e.key === 'ArrowUp' || e.key === 'k') {
+    e.preventDefault();
+    const visible = filteredCandidates();
+    const idx = visible.findIndex((c) => c.candidate_id === state.selectedId);
+    const prev = visible[idx - 1];
+    if (prev) { state.selectedId = prev.candidate_id; applyDecisionDraft(); render(); }
+    return;
+  }
+  if (e.key === 'ArrowDown' || e.key === 'j') {
+    e.preventDefault();
+    const visible = filteredCandidates();
+    const idx = visible.findIndex((c) => c.candidate_id === state.selectedId);
+    const next = visible[idx + 1];
+    if (next) { state.selectedId = next.candidate_id; applyDecisionDraft(); render(); }
+    return;
+  }
+  if (e.key === 'Enter' || e.key === 's') {
+    if (state.draftLabel && state.reviewerName.trim()) { e.preventDefault(); saveDecision(); }
+    return;
+  }
+  if (e.key === 'e') {
+    e.preventDefault();
+    state.reviewExpanded = !state.reviewExpanded;
+    render();
+  }
+});
 
 // ---------------------------------------------------------------------------
 // Auth token — stored in sessionStorage so it clears when the tab closes.
@@ -217,6 +262,9 @@ function render() {
   `;
   bindEvents();
   loadAuthImages();
+  requestAnimationFrame(() => {
+    document.querySelector('.candidate-card.active')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  });
 }
 
 function renderUploadShell() {
@@ -733,6 +781,9 @@ function renderDecisionPanel(c) {
       <div class="panel-section">
         <button class="btn primary block" data-action="save-decision" ${state.draftLabel && state.reviewerName.trim() ? '' : 'disabled'}>${state.draftLabel && !state.reviewerName.trim() ? 'Enter reviewer name to save' : 'Save decision'}</button>
       </div>
+      <div class="panel-section keyboard-hints">
+        <p class="hint-row"><kbd>1</kbd>–<kbd>6</kbd> pick decision &nbsp;·&nbsp; <kbd>↑</kbd><kbd>↓</kbd> navigate &nbsp;·&nbsp; <kbd>Enter</kbd> save &nbsp;·&nbsp; <kbd>e</kbd> expand</p>
+      </div>
     </aside>
   `;
 }
@@ -786,6 +837,13 @@ function bindEvents() {
   });
   document.querySelector('[data-action="reviewer-name"]')?.addEventListener('input', (event) => {
     state.reviewerName = event.target.value;
+    localStorage.setItem('dupe_reviewer_name', state.reviewerName);
+    const saveBtn = document.querySelector('[data-action="save-decision"]');
+    if (saveBtn) {
+      const enabled = !!(state.draftLabel && state.reviewerName.trim());
+      saveBtn.disabled = !enabled;
+      saveBtn.textContent = state.draftLabel && !state.reviewerName.trim() ? 'Enter reviewer name to save' : 'Save decision';
+    }
   });
   document.querySelector('[data-action="save-decision"]')?.addEventListener('click', saveDecision);
   document.querySelector('[data-action="export-csv"]')?.addEventListener('click', exportCsv);
