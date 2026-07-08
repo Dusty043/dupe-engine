@@ -213,7 +213,8 @@ def _process_job(message: dict[str, Any], receipt_handle: str) -> bool:
 
         job_status.update_job(
             job_id,
-            status="completed",
+            status="succeeded",
+            stage="completed",
             completed_at=_utc_now(),
             output_prefix=output_prefix,
             pages_processed=len(pages_a) + len(pages_b),

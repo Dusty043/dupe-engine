@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.10.11] - 2026-07-09
+
+### Fixed
+- AWS worker marked completed jobs with `status="completed"`, but the
+  frontend and every other completion path in the app (local-mode job
+  runner, CLI engine, calibration harness) use `status="succeeded"`. The
+  review UI's step tracker, spinner, and "load previous run" list all key
+  off `status === 'succeeded'` — so AWS-processed jobs finished on the
+  backend but the UI never recognized it, appearing permanently stuck on
+  "Working...". Worker now sets `status="succeeded"` and `stage="completed"`
+  to match the reference implementation.
+
 ## [0.10.10] - 2026-07-09
 
 ### Fixed

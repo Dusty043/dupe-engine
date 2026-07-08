@@ -402,7 +402,8 @@ class TestWorkerJobLifecycle:
 
         assert success is True
         record = job_status.get_job("job_worker_ok")
-        assert record["status"] == "completed"
+        assert record["status"] == "succeeded"  # must match app.js's status vocabulary
+        assert record["stage"] == "completed"
 
     def test_marks_failed_on_engine_exception(self, tmp_path, monkeypatch):
         monkeypatch.setenv("DUPE_LOCAL_STATUS_DIR", str(tmp_path / "status"))
