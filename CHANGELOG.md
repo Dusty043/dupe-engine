@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.10.10] - 2026-07-09
+
+### Fixed
+- `GET /api/jobs/<job_id>` 500'd in AWS mode after any job ran: DynamoDB
+  returns `Decimal` for numeric fields (`pages_processed`, `match_count`,
+  etc.), and `job_status._dynamo_deserialize` passed them through unconverted
+  — `json.dumps` has no `Decimal` support. Now converts `Decimal` to
+  `int`/`float` recursively on read.
+
 ## [0.10.9] - 2026-06-23
 
 ### Added

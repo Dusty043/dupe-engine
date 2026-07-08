@@ -4,6 +4,7 @@ import json
 import os
 import threading
 from datetime import datetime, timezone
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
@@ -157,7 +158,19 @@ def _dynamo_serialize_values(values: dict[str, Any]) -> dict[str, Any]:
 
 
 def _dynamo_deserialize(item: dict[str, Any]) -> dict[str, Any]:
-    return dict(item)
+    return {k: _decode_decimal(v) for k, v in item.items()}
+
+
+def _decode_decimal(value: Any) -> Any:
+    """DynamoDB returns Decimal for all numbers; convert back to int/float
+    so job records stay JSON-serializable (json.dumps has no Decimal support)."""
+    if isinstance(value, Decimal):
+        return int(value) if value % 1 == 0 else float(value)
+    if isinstance(value, dict):
+        return {k: _decode_decimal(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_decode_decimal(v) for v in value]
+    return value
 
 
 def _utc_now() -> str:

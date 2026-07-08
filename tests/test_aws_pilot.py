@@ -229,6 +229,35 @@ class TestJobStatusLocalMode:
         jobs = job_status.list_jobs()
         assert len(jobs) == 3
 
+    def test_get_job_converts_dynamo_decimal_to_json_safe_numbers(self, monkeypatch):
+        """Regression: DynamoDB returns Decimal for numbers; get_job() must
+        hand back plain int/float or downstream json.dumps() raises TypeError."""
+        from decimal import Decimal
+        from dupe_engine import job_status
+
+        with _AWSEnv(sqs=False, s3=False, dynamo=True):
+            fake_table = MagicMock()
+            fake_table.get_item.return_value = {
+                "Item": {
+                    "job_id": "job_decimal_001",
+                    "status": "completed",
+                    "pages_processed": Decimal("42"),
+                    "match_count": Decimal("3"),
+                    "confidence": Decimal("0.875"),
+                }
+            }
+            fake_resource = MagicMock()
+            fake_resource.Table.return_value = fake_table
+
+            with patch("boto3.resource", return_value=fake_resource):
+                record = job_status.get_job("job_decimal_001")
+
+            assert record["pages_processed"] == 42
+            assert isinstance(record["pages_processed"], int)
+            assert record["confidence"] == 0.875
+            assert isinstance(record["confidence"], float)
+            json.dumps(record)  # must not raise TypeError
+
     def test_status_persists_across_instantiation(self, tmp_path, monkeypatch):
         """Status written in one module import is readable after module reload."""
         monkeypatch.setenv("DUPE_LOCAL_STATUS_DIR", str(tmp_path / "status"))
