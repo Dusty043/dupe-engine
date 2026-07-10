@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.10.12] - 2026-07-10
+
+### Fixed
+- Review UI's `/api/run/load` only ever looked at a local
+  `<workspace>/<job_id>/run` path — never present for AWS-processed jobs,
+  since the worker runs in a separate ECS task and only uploads results to
+  S3 (`output_prefix`). Every completed AWS job showed "No candidates in
+  this queue" because the run folder didn't exist locally. Now downloads
+  the job's `output_prefix` via `artifact_store.download_prefix` before
+  validating/serving the run, if not already cached locally.
+
 ## [0.10.11] - 2026-07-09
 
 ### Fixed

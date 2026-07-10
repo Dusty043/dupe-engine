@@ -434,6 +434,13 @@ def build_handler(*, store: ReviewJobStore, static_dir: Path, server_host: str =
                     if not job_id or "/" in job_id or ".." in job_id:
                         raise ReviewUiError("Invalid job_id")
                     run_dir = store.workspace_dir / job_id / "run"
+                    if _s3_mode() and not run_dir.exists():
+                        job = store.get_job(job_id)
+                        output_prefix = job.get("output_prefix")
+                        if output_prefix:
+                            _log("info", "run_download_start", job_id=job_id, prefix=output_prefix)
+                            _artifact_store_module.download_prefix(output_prefix, run_dir)
+                            _log("info", "run_download_done", job_id=job_id)
                     validate_run_dir(run_dir)
                     store.set_current_run(run_dir)
                     _audit_module.record_event(

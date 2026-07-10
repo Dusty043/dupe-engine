@@ -5,6 +5,7 @@ Tests verify the adapter modules, the worker loop, and the UI dispatch path.
 """
 from __future__ import annotations
 
+import io
 import json
 import os
 import sys
@@ -483,3 +484,93 @@ class TestWorkerJobLifecycle:
 
         # delete_job must NOT have been called
         assert receipt_handle not in delete_calls
+
+
+# ---------------------------------------------------------------------------
+# 8. /api/run/load — must fetch worker's S3 output before serving it
+# ---------------------------------------------------------------------------
+
+class TestRunLoadDownloadsS3Output(unittest.TestCase):
+    """Regression: worker uploads run artifacts to S3 (output_prefix) but the
+    review UI's /api/run/load only ever looked at a local path — which never
+    existed for AWS-processed jobs, since the worker runs in a separate task.
+    Reviewers saw 'No candidates in this queue' for every completed job."""
+
+    def _post_run_load(self, store, job_id: str):
+        from dupe_engine.review_ui_server import build_handler
+        HandlerClass = build_handler(store=store, static_dir=Path("/nonexistent"), server_host="0.0.0.0")
+        handler = HandlerClass.__new__(HandlerClass)
+        body = json.dumps({"job_id": job_id}).encode("utf-8")
+        handler.path = "/api/run/load"
+        handler.command = "POST"
+        handler.client_address = ("10.0.0.1", 12345)
+        handler.headers = {"Content-Length": str(len(body))}
+        handler.rfile = io.BytesIO(body)
+        handler.wfile = io.BytesIO()
+        handler._is_authenticated = lambda: True
+
+        captured = {}
+
+        def fake_send_json(payload, status=None):
+            captured["payload"] = payload
+            captured["status"] = status
+
+        handler.send_json = fake_send_json
+        handler.send_error_json = lambda status, message: captured.update(
+            payload={"ok": False, "error": message}, status=status
+        )
+        handler.do_POST()
+        return captured
+
+    def test_downloads_output_prefix_when_run_dir_missing(self, tmp_path=None):
+        import tempfile
+        from dupe_engine.review_ui_server import REQUIRED_RUN_FILES, ReviewJobStore
+
+        with tempfile.TemporaryDirectory() as workspace, _AWSEnv(sqs=False, s3=True, dynamo=False):
+            store = ReviewJobStore(workspace_dir=Path(workspace))
+            job_dir = Path(workspace) / "job_s3_run"
+            job_dir.mkdir(parents=True)
+            store.create_job_record(job_dir=job_dir, received_files=["a.pdf"], ere_files=["b.pdf"], settings={})
+            store.update_job("job_s3_run", status="succeeded", stage="completed",
+                              output_prefix="s3://dupe-test-bucket/runs/job_s3_run/")
+
+            def fake_download_prefix(s3_prefix, local_dir):
+                local_dir = Path(local_dir)
+                local_dir.mkdir(parents=True, exist_ok=True)
+                for name in REQUIRED_RUN_FILES:
+                    (local_dir / name).write_text("{}" if name != "candidates.json" else "[]", encoding="utf-8")
+                return [local_dir / name for name in REQUIRED_RUN_FILES]
+
+            from dupe_engine import review_ui_server
+            with patch.object(review_ui_server._artifact_store_module, "download_prefix",
+                               side_effect=fake_download_prefix) as mock_download:
+                result = self._post_run_load(store, "job_s3_run")
+
+            mock_download.assert_called_once_with(
+                "s3://dupe-test-bucket/runs/job_s3_run/", store.workspace_dir / "job_s3_run" / "run"
+            )
+            assert result["payload"].get("has_run") is True, result["payload"]
+
+    def test_skips_download_when_run_dir_already_local(self):
+        import tempfile
+        from dupe_engine.review_ui_server import REQUIRED_RUN_FILES, ReviewJobStore
+
+        with tempfile.TemporaryDirectory() as workspace, _AWSEnv(sqs=False, s3=True, dynamo=False):
+            store = ReviewJobStore(workspace_dir=Path(workspace))
+            job_dir = Path(workspace) / "job_local_cached"
+            job_dir.mkdir(parents=True)
+            store.create_job_record(job_dir=job_dir, received_files=["a.pdf"], ere_files=["b.pdf"], settings={})
+            store.update_job("job_local_cached", status="succeeded", stage="completed",
+                              output_prefix="s3://dupe-test-bucket/runs/job_local_cached/")
+
+            run_dir = job_dir / "run"
+            run_dir.mkdir()
+            for name in REQUIRED_RUN_FILES:
+                (run_dir / name).write_text("{}" if name != "candidates.json" else "[]", encoding="utf-8")
+
+            from dupe_engine import review_ui_server
+            with patch.object(review_ui_server._artifact_store_module, "download_prefix") as mock_download:
+                result = self._post_run_load(store, "job_local_cached")
+
+            mock_download.assert_not_called()
+            assert result["payload"].get("has_run") is True, result["payload"]
