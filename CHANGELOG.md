@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.10.13] - 2026-07-14
+
+### Fixed
+- Visual/perceptual-hash candidate matching (`multipass_visual_matches`)
+  could flag pages as "likely duplicate" on visual similarity alone,
+  ignoring extracted text entirely, whenever a page was routed into the
+  bounded visual-rescue path — which happens for virtually every scanned
+  page needing OCR, regardless of whether the resulting OCR text was
+  actually good. On the Bedrock OCR pilot this surfaced as high-confidence
+  false-positive matches between pages with distinct identifying content
+  (e.g. a receipt vs. an unrelated cover sheet, matched at 96% purely on
+  layout similarity). Now vetoes a visual-only match when both pages carry
+  extracted identifying tokens (case/receipt/claimant IDs, dates, etc. via
+  `source_key_tokens`) that share no overlap — visual similarity alone can
+  no longer override clearly conflicting identifiers.
+
 ## [0.10.12] - 2026-07-10
 
 ### Fixed

@@ -102,6 +102,12 @@ def multipass_visual_matches(pages_a: list[PageRecord], pages_b: list[PageRecord
                 continue
             if config.suppress_low_information_candidates and pages_low_information_for_generation(page_a, page_b, config):
                 continue
+            page_a_keys = source_key_tokens(page_a)
+            page_b_keys = source_key_tokens(page_b)
+            if page_a_keys and page_b_keys and not (page_a_keys & page_b_keys):
+                # Both pages carry real identifiers (case/receipt/claimant IDs, dates, etc.)
+                # and share none — visual similarity alone shouldn't override that.
+                continue
             try:
                 dist = hamming_distance(page_a.perceptual_hash, page_b.perceptual_hash)
             except ValueError:
