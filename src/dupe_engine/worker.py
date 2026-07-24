@@ -19,6 +19,7 @@ from .fallback_audit import build_fallback_audit, write_fallback_audit_json
 from .log import log, log_exception
 from .reporting import build_report, write_json
 from .ui_artifacts import write_ui_run_artifacts
+from .worker_healing import run_post_job_heal
 
 
 ENGINE_VERSION = "v0.10.9"
@@ -203,6 +204,17 @@ def _process_job(message: dict[str, Any], receipt_handle: str) -> bool:
                 "input_prefix": input_prefix,
                 "output_prefix": output_prefix,
             },
+        )
+
+        # Best-effort: diagnose this job and verify a config fix in-process.
+        # Never affects job success — see worker_healing.run_post_job_heal.
+        run_post_job_heal(
+            job_id=job_id,
+            workdir=workdir,
+            run_dir=run_dir,
+            received_dir=received_dir,
+            ere_dir=ere_dir,
+            config=config,
         )
 
         # Upload outputs to S3

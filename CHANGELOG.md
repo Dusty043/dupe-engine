@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.10.14] - 2026-07-24
+
+### Added
+- **Automatic post-job healing** (`worker_healing.py`): the worker now runs
+  assess → diagnose → prescribe → apply → certify on every completed job,
+  in-process, with no human needing to run `dupe-engine heal` by hand.
+  Previously deferred because the healing harness's `--apply` step shells
+  out to `dupe-engine eval-all` (a single-corpus engine mode) while the
+  worker runs `run_ab_compare` (a two-directory received-vs-ERE mode) — the
+  two don't share a config-building path. `_apply_prescription` bridges
+  this: it replays a prescription's CLI flags through the CLI's own
+  `build_config`, diffs the result against an env-only baseline to isolate
+  just the prescription's effect, and re-applies only that diff to the
+  job's actual config, preserving whatever per-job SQS overrides the
+  original request had.
+- Without a reviewer-feedback UI (still not built — see
+  `docs/PROJECT_EPICS_AND_TASK_SIZING.md`), only queue-load and OCR-coverage
+  issues can fire automatically; recall/precision-based diagnosis still
+  needs truth or feedback data.
+- Writes `heal_output/` (`prescription.json`, `heal_report.json`,
+  `healed/results.json`) alongside the job's normal run artifacts, riding
+  along in the existing S3 upload. **Never changes what a reviewer sees** —
+  matches the CLI's own `--apply`, which also never mutates the original
+  run in place, only a sibling `healed/` directory. A better-scoring healed
+  re-run is a signal for a human to review, not something auto-applied to
+  a live job.
+- Fails open: any exception during healing is caught and logged
+  (`heal_failed`) — it can never affect the job's own success.
+
 ## [0.10.13] - 2026-07-14
 
 ### Fixed

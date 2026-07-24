@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dupe-engine"
-version = "0.10.13"
+version = "0.10.14"
 description = "Layered PDF duplicate detection engine with OCR/AI provisions and an integrated local medical-record review UI"
 readme = "README.md"
 requires-python = ">=3.10"
