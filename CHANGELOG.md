@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.10.15] - 2026-07-27
+
+### Fixed
+- Review UI showed "No candidates in this queue" for every AWS-processed job
+  that actually succeeded. `refreshJob()` in `app.js` called `GET /api/run`
+  when a job's status flipped to `succeeded` — that endpoint just returns
+  whatever the server's global "current run" pointer already is, and that
+  pointer is only set automatically in local mode (the engine runs
+  in-process and calls `store.set_current_run()` directly). For AWS jobs the
+  worker is a separate ECS task with no way to reach into the review-UI
+  process and set that pointer. Switched to `POST /api/run/load` with the
+  job's own `job_id` — the same endpoint the "open job" button already used
+  correctly, and the one that does the S3 download-on-load from `0.10.12`.
+  Unreachable until `0.10.11` shipped (`status="succeeded"` fix) — before
+  that, AWS jobs never satisfied `job.status === 'succeeded'` in the
+  frontend at all, so this branch never ran for a real AWS job.
+
 ## [0.10.14] - 2026-07-24
 
 ### Added

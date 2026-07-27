@@ -995,7 +995,12 @@ async function refreshJob(jobId) {
     state.pollError = null;
     if (job.status === 'succeeded') {
       clearJobPolling();
-      const runResponse = await apiFetch('/api/run', { cache: 'no-store' });
+      const runResponse = await apiFetch('/api/run/load', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ job_id: jobId }),
+        cache: 'no-store',
+      });
       if (!runResponse.ok) throw new Error(await responseText(runResponse));
       const runData = await runResponse.json();
       loadRunData(runData);
